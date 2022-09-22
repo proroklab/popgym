@@ -16,7 +16,7 @@ To install the baselines and dependencies, first install ray
 ```bash
 pip install ray[rllib]
 ```
-You must do this, as ray-1.13.0 erroneously pins an old verison of gym and will cause dependency issues. This has been patched but did not make it into the latest release. Once ray is installed, install popgym:
+You must do this, as ray-2.0.0 erroneously pins an old verison of gym and will cause dependency issues. This has been patched but did not make it into the latest release. Once ray is installed, install popgym:
 ```bash
 git clone https://github.com/smorad/popgym
 cd popgym
