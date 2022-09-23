@@ -137,6 +137,9 @@ class DiffNC(BaseModel):
         if not self.dnc_built:
             gpu_id = z.device.index if z.device.index is not None else -1
             self.core = self.build_dnc(gpu_id)
+            self.core.output = torch.nn.Linear(
+                self.core.output.in_features, self.cfg["hidden_size"]
+            ).to(z.device)
             self.dnc_built = True
 
         unpacked = self.unpack_state(state)

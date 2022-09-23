@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import torch
 
+from popgym.baselines.ray_models.ray_diffnc import DiffNC
 from popgym.baselines.ray_models.ray_elman import Elman
 from popgym.baselines.ray_models.ray_frameconv import Frameconv
 from popgym.baselines.ray_models.ray_framestack import Framestack
@@ -53,7 +54,7 @@ def main():
         "Elman": Elman(*rnn_args),
         "IndRNN": IndRNN(*args),
         "LMU": LMU(*args),
-        # "DNC": DiffNC(*args),
+        "DNC": DiffNC(*args),
         "LinearAttention": LinearAttention(*args),
         "FWP": FastWeightProgrammer(*args),
         "S4D": S4D(*args),
