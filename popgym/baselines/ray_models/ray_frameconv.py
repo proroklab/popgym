@@ -9,8 +9,19 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class Frameconv(BaseModel):
-    """Temporal convolution over a series of observations. stack_size determines
-    the temporal extent of the filter"""
+    r"""Temporal convolution over a series of observations. stack_size determines
+    the temporal extent of the filter. See
+
+    @article{bai_empirical_2018,
+        title = {
+            An empirical evaluation of generic convolutional and recurrent networks
+            for sequence modeling
+        },
+        journal = {arXiv preprint arXiv:1803.01271},
+        author = {Bai, Shaojie and Kolter, J Zico and Koltun, Vladlen},
+        year = {2018},
+    }
+    """
 
     MODEL_CONFIG = {
         # Number of consecutive frames to stack into a single input

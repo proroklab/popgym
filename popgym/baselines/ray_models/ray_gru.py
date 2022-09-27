@@ -9,7 +9,20 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class GRU(BaseModel):
-    """A model for traditional RNNs. This supports LSTMs, Elman RNNs, and GRUs"""
+    r"""The gated recurrent unit from
+
+    @article{chung_empirical_2014,
+        title = {
+            Empirical evaluation of gated recurrent neural 
+            networks on sequence modeling
+        },
+        journal = {arXiv preprint arXiv:1412.3555},
+        author = {
+            Chung, Junyoung and Gulcehre, Caglar and Cho, KyungHyun and Bengio, Yoshua
+        },
+        year = {2014},
+    }
+    """
 
     MODEL_CONFIG = {
         # Number of recurrent hidden layers in encoder/decoder

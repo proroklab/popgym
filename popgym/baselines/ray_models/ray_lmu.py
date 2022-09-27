@@ -9,7 +9,22 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class LMU(BaseModel):
-    """A model for traditional RNNs. This supports LSTMs, Elman RNNs, and GRUs"""
+    r"""Legendre Memory Units from
+
+    @inproceedings{voelker_legendre_2019,
+        title = {
+            Legendre Memory Units: Continuous-Time
+            Representation in Recurrent Neural Networks
+        },
+        volume = {32},
+        shorttitle = {Legendre {Memory} {Units}},
+        urldate = {2022-09-22},
+        booktitle = {Advances in {Neural} {Information} {Processing} {Systems}},
+        publisher = {Curran Associates, Inc.},
+        author = {Voelker, Aaron and Kajić, Ivana and Eliasmith, Chris},
+        year = {2019},
+    }
+    """
 
     MODEL_CONFIG = {
         "embedding": None,

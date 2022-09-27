@@ -9,7 +9,19 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class Elman(BaseModel):
-    """A model for traditional RNNs. This supports LSTMs, Elman RNNs, and GRUs"""
+    """The Elman Network (RNN) from
+
+    @article{elman_finding_1990,
+        title = {Finding structure in time},
+        volume = {14},
+        number = {2},
+        journal = {Cognitive science},
+        author = {Elman, Jeffrey L},
+        year = {1990},
+        note = {Publisher: Wiley Online Library},
+        pages = {179--211},
+    }
+    """
 
     MODEL_CONFIG = {
         # Number of recurrent hidden layers in encoder/decoder

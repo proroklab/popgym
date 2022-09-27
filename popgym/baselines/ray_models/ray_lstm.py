@@ -9,7 +9,22 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class LSTM(BaseModel):
-    """A model for traditional RNNs. This supports LSTMs, Elman RNNs, and GRUs"""
+    r"""Long Short-Term Memory from
+
+    @article{hochreiter_long_1997,
+        title = {Long Short-Term Memory},
+        volume = {9},
+        issn = {0899-7667},
+        url = {https://doi.org/10.1162/neco.1997.9.8.1735},
+        doi = {10.1162/neco.1997.9.8.1735},
+        number = {8},
+        journal = {Neural Comput.},
+        author = {Hochreiter, Sepp and Schmidhuber, Jürgen},
+        month = nov,
+        year = {1997},
+        pages = {1735--1780},
+    }
+    """
 
     MODEL_CONFIG = {
         # Number of recurrent hidden layers in encoder/decoder

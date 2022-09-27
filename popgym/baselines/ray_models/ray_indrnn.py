@@ -9,9 +9,36 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class IndRNN(BaseModel):
+    r"""A two-layer independently recurrent neural newtorks from
+
+    @inproceedings{li_independently_2018,
+        address = {Salt Lake City, UT},
+        title = {
+            Independently Recurrent Neural Network (IndRNN):
+            Building a Longer and Deeper RNN
+        },
+        isbn = {978-1-5386-6420-9},
+        shorttitle = {Independently {Recurrent} {Neural} {Network} ({IndRNN})},
+        url = {https://ieeexplore.ieee.org/document/8578670/},
+        doi = {10.1109/CVPR.2018.00572},
+        language = {en},
+        urldate = {2022-09-21},
+        booktitle = {
+            2018 {IEEE}/{CVF} {Conference} on {Computer} {Vision}
+            and {Pattern} {Recognition}
+        },
+        publisher = {IEEE},
+        author = {
+            Li, Shuai and Li, Wanqing and Cook, Chris and Zhu, Ce and Gao, Yanbo
+        },
+        month = jun,
+        year = {2018},
+        pages = {5457--5466},
+    }
+    """
+
     MODEL_CONFIG = {
         "activation": "tanh",
-        "num_layers": 2,
     }
 
     def __init__(
