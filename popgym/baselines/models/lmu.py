@@ -107,26 +107,26 @@ class LMUCell(nn.Module):
         """
         Parameters:
             x (torch.tensor):
-                Input of size [batch_size, input_size]
+                Input of size [batch_size, time, input_size]
             state (tuple):
                 h (torch.tensor) : [batch_size, hidden_size]
                 m (torch.tensor) : [batch_size, memory_size]
         """
 
         h, m = state
+        for t in range(x.shape[1]):
+            # Equation (7) of the paper
+            u = (
+                F.linear(x[:,t], self.e_x) + F.linear(h, self.e_h) + F.linear(m, self.e_m)
+            )  # [batch_size, 1]
 
-        # Equation (7) of the paper
-        u = (
-            F.linear(x, self.e_x) + F.linear(h, self.e_h) + F.linear(m, self.e_m)
-        )  # [batch_size, 1]
+            # Equation (4) of the paper
+            m = F.linear(m, self.A) + F.linear(u, self.B)  # [batch_size, memory_size]
 
-        # Equation (4) of the paper
-        m = F.linear(m, self.A) + F.linear(u, self.B)  # [batch_size, memory_size]
-
-        # Equation (6) of the paper
-        h = self.f(
-            F.linear(x, self.W_x) + F.linear(h, self.W_h) + F.linear(m, self.W_m)
-        )  # [batch_size, hidden_size]
+            # Equation (6) of the paper
+            h = self.f(
+                F.linear(x[:,t], self.W_x) + F.linear(h, self.W_h) + F.linear(m, self.W_m)
+            )  # [batch_size, hidden_size]
 
         return h, m
 
