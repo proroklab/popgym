@@ -184,14 +184,22 @@ class BaseModel(TorchModelV2, nn.Module):
         if self.view_requirements["obs"].shift == 0:
             # Recurrent models do not need to shift the observations
             B = seq_lens.shape[0]
-            T = obs.shape[0] // B
+            orig_T = obs.shape[0] // B
+            unflat = obs.reshape(B, orig_T, *self.view_requirements["obs"].space.shape)
+            # Sometimes RLlib sticks on extra padding for no reason
+            # Remove that padding
+            T = seq_lens.max()
+            unflat = unflat[:, :T]
+
         else:
             # We are in attention-mode and will always receive
             # obs of shape [B, max_seq_len, F]
             B = seq_lens.shape[0]
             T = len(self.view_requirements["obs"].shift_arr)
-        unflat = obs.reshape(B, T, *self.view_requirements["obs"].space.shape)
-        return unflat, B, T
+            orig_T = T
+            unflat = obs.reshape(B, T, *self.view_requirements["obs"].space.shape)
+
+        return unflat, B, T, orig_T
 
     def forward_memory(
         self,
@@ -206,19 +214,19 @@ class BaseModel(TorchModelV2, nn.Module):
             z: Preprocessed features of shape [B, T, F], with padding along the time
                 dimension
             state: Recurrent states of shape [B, ...]
-            t_starts: Tensor of size [B] denoteint the length of the rollout so far. Note that in some cases
-                RLlib might chunk a long rollout into multiple forward passes. This
-                tracks the length throughout all forward passes.
-            seq_lens: Tensor of size [B] denoting the number of non-padding elements in z.
-                E.g. seq_lens == [100, 60], z.shape[1] == 128 means the first 100 elements
-                of the first batch dimension are valid and the first 60 elements of the
-                second batch dimension are valid. Rest are padding.
+            t_starts: Tensor of size [B] denoteint the length of the rollout so far.
+                Note that in some cases RLlib might chunk a long rollout into multiple
+                forward passes. This tracks the length throughout all forward passes.
+            seq_lens: Tensor of size [B] denoting the number of non-padding elements
+                in z. E.g. seq_lens == [100, 60], z.shape[1] == 128 means the first 100
+                elements of the first batch dimension are valid and the first 60
+                elements of the second batch dimension are valid. Rest are padding.
 
         Returns:
-            output: Output features of shape [B, T, D]. Note that the padding must be present here,
-                don't worry we won't actually use it.
-            state: Output states of shape [B, ...]. Note that these shapes should be exactly
-                the same as input state shapes or you will have issues.
+            output: Output features of shape [B, T, D]. Note that the padding
+                must be present here, don't worry we won't actually use it.
+            state: Output states of shape [B, ...]. Note that these shapes should
+                be exactly the same as input state shapes or you will have issues.
         """
 
         raise NotImplementedError()
@@ -261,7 +269,7 @@ class BaseModel(TorchModelV2, nn.Module):
         seq_lens = seq_lens.long()
         # This is always float, fucking rllib doesn't respect dtype
         state[-1] = state[-1].long()
-        x, B, T = self.preprocess_obs(input_dict["obs_flat"], seq_lens)
+        x, B, T, orig_t = self.preprocess_obs(input_dict["obs_flat"], seq_lens)
         # Bug, RLlib will sometimes fail to set self.train() during training
         # and LSTM fails to backprop when self.train() not set
         self.train() if torch.is_grad_enabled() else self.eval()
@@ -281,7 +289,15 @@ class BaseModel(TorchModelV2, nn.Module):
             f" {x.shape}"
         )
 
-        self.features = self.post(x)
-        logits = self.actor(self.features).reshape(B * T, self.num_outputs)
+        features = self.post(x)
+        # Add the extraneous zero-padding back (RLlib needs it)
+        self.features = torch.cat(
+            [
+                features,
+                torch.zeros(B, orig_t - T, features.shape[-1], device=x.device),
+            ],
+            dim=1,
+        )
+        logits = self.actor(self.features).reshape(B * orig_t, self.num_outputs)
 
         return logits, state + [t_ends.unsqueeze(1)]
