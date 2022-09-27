@@ -3,8 +3,8 @@ import pygame
 from popgym.envs.labyrinth_explore import LabyrinthExplore
 
 if __name__ == "__main__":
-    e = LabyrinthExplore()
-    obs = e.reset(seed=0)
+    e = LabyrinthExplore((14, 14))
+    obs = e.reset(seed=1)
     e.render()
     done = False
     rewards = 0

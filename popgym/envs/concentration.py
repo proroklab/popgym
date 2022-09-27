@@ -77,18 +77,19 @@ class Concentration(gym.Env):
 
         return self.obs, reward, done, {}
 
-    def render(self):
+    def render(self, mode="ascii"):
         self.obs.tolist()
         visible_mask = self.obs != self.facedown_card
         rend = np.full(self.obs.shape, "?")
         rend[visible_mask] = self.obs[visible_mask]
+        rend = rend.reshape(4, 13)
         output = (
-            str(rend)
+            " " + str(rend)
             .replace("[", "")
             .replace("]", "")
             .replace(",", "")
             .replace("'", "")
-            .replace("\n", "")
+            #.replace("\n", "")
         )
         print(output)
 

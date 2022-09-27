@@ -64,11 +64,13 @@ class HigherLower(gym.Env):
         else:
             raise Exception("Should not reach this point")
 
-        viz = np.stack(self.deck.show("player", ["suits", "ranks"])).T
         self.deck.discard("player", 0)
         obs = self.deck.show("player", ["ranks_idx"]).reshape(-1)
 
-        return obs, reward, done, {"card": viz}
+        return obs, reward, done, {}
+
+    def render(self, mode="ascii"):
+        return self.deck.visualize_idx(self.deck["player"])
 
     def reset(
         self,

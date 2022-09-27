@@ -1,7 +1,7 @@
-from popgym.envs.concentration import ConcentrationHard
+from popgym.envs.stateless_cartpole import StatelessCartPole
 
 if __name__ == "__main__":
-    game = ConcentrationHard()
+    game = StatelessCartPole()
     done = False
     obs, info = game.reset(return_info=True)
     reward = -float("inf")
