@@ -5,6 +5,17 @@ import numpy as np
 
 
 class MultiarmedBandit(gym.Env):
+    """Multiarmed Bandits over an episode. Bandits are initialized that have some
+    probability of positive reward and negative reward. The agent must sample
+    and then exploit the bandits that pay best.
+
+    Args:
+        num_bandits: Number of individual bandits
+        episode_length: Max episode length
+    Returns:
+        A gym env
+    """
+
     def __init__(self, num_bandits=10, episode_length=200):
         self.num_bandits = num_bandits
         self.episode_length = episode_length

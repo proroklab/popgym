@@ -8,8 +8,8 @@ if __name__ == "__main__":
     game.render()
 
     while not done:
-        action = input("input index:").split(',')
-        action = (int(action[0]), int(action[1]))
-        obs, reward, done, info = game.step(action)
+        action = input("input index:").split(",")
+        action_int = (int(action[0]), int(action[1]))
+        obs, reward, done, info = game.step(action_int)
         game.render()
         print("reward:", reward)

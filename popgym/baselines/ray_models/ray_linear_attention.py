@@ -23,7 +23,7 @@ class LinearAttention(BaseModel):
         language = {en},
         urldate = {2022-09-21},
         booktitle = {
-            Proceedings of the 37th {International} 
+            Proceedings of the 37th {International}
             {Conference} on {Machine} {Learning}
         },
         publisher = {PMLR},

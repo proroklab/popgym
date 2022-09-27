@@ -15,6 +15,11 @@ class StatelessPendulum(PendulumEnv):
     pendulum.py
     We delete the angular velocity component of the state, so that it
     can only be solved by a memory enhanced model (policy).
+
+    Args:
+        max_episode_length: Exactly what it sounds like
+    Returns:
+        A gym environment
     """
 
     def __init__(self, *args, **kwargs):

@@ -8,6 +8,19 @@ from popgym.core.deck import Deck
 
 
 class Concentration(gym.Env):
+    """Classic game of concentration. A deck of cards is shuffled and placed
+    face-down. The player can flip two cards, if they match they get a reward
+    otherwise they dont.
+
+    Args:
+        num_decks: Number of decks to play with
+        deck_type: String denoting what we are matching. Can be the card colors
+        (colors) or the card ranks (ranks)
+
+    Returns:
+        A gym environment
+    """
+
     def __init__(self, num_decks=1, deck_type="ranks"):
         # See https://math.stackexchange.com/questions/1876467/
         # how-many-turns-on-average-does-it-take-for-a-perfect-player
@@ -84,12 +97,13 @@ class Concentration(gym.Env):
         rend[visible_mask] = self.obs[visible_mask]
         rend = rend.reshape(4, 13)
         output = (
-            " " + str(rend)
+            " "
+            + str(rend)
             .replace("[", "")
             .replace("]", "")
             .replace(",", "")
             .replace("'", "")
-            #.replace("\n", "")
+            # .replace("\n", "")
         )
         print(output)
 

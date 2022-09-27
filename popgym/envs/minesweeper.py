@@ -12,9 +12,10 @@ class HiddenSquare(enum.IntEnum):
 
 
 class MineSweeper(gym.Env):
-    """A game where the agent must press buttons in the reverse order it saw
-    them pressed. E.g., seeing [1, 2, 3] means I should press them in the order
-    [3, 2, 1].
+    """Classic Microsoft MineSweeper but with the board obscured. Mines are hidden
+    underneath a grid of tiles. The player clicks a tile, which returns the
+    coordinates of the tile and how many mines are present in adjacent tiles.
+    Clicking a mine loses. Player must click all free squares to win.
 
     Args:
         difficulty: Easy, medium, or hard. Sets the board size and number of

@@ -13,7 +13,7 @@ class GRU(BaseModel):
 
     @article{chung_empirical_2014,
         title = {
-            Empirical evaluation of gated recurrent neural 
+            Empirical evaluation of gated recurrent neural
             networks on sequence modeling
         },
         journal = {arXiv preprint arXiv:1412.3555},

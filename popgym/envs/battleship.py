@@ -5,6 +5,17 @@ import numpy as np
 
 
 class Battleship(gym.Env):
+    """Classic game of Battleship, except the board is obscured. Instead, the agent
+    receives a hit/miss notification with the tile coordinates.
+
+    Args:
+        board_size: The width/height of the board in tiles
+        ship_sizes: A list of ships sizes (in tiles) to place on the board
+
+    Returns:
+        A gym environment
+    """
+
     def __init__(self, board_size=10, ship_sizes=[2, 3, 3, 4]):
         # Params
         self.board_size = board_size
