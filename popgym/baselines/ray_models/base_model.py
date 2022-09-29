@@ -188,7 +188,7 @@ class BaseModel(TorchModelV2, nn.Module):
             unflat = obs.reshape(B, orig_T, *self.view_requirements["obs"].space.shape)
             # Sometimes RLlib sticks on extra padding for no reason
             # Remove that padding
-            T = seq_lens.max()
+            T = seq_lens.max().item()
             unflat = unflat[:, :T]
 
         else:
