@@ -2,15 +2,12 @@
 # Feel free to set the environment variables to whatever envs/models
 # you would like to test
 
-import math
 import os
 from typing import Any, List
 
 import ray
 import torch
-import wandb
 from ray.air.callbacks.wandb import WandbLoggerCallback
-from ray.rllib.algorithms.callbacks import DefaultCallbacks
 from ray.tune.registry import register_env  # noqa: F401
 
 import popgym  # noqa: F401
@@ -18,10 +15,16 @@ from popgym.baselines.ray_models.ray_diffnc import DiffNC  # noqa: F401
 from popgym.baselines.ray_models.ray_elman import Elman
 from popgym.baselines.ray_models.ray_frameconv import Frameconv
 from popgym.baselines.ray_models.ray_framestack import Framestack
-from popgym.baselines.ray_models.ray_fwp import FastWeightProgrammer
+from popgym.baselines.ray_models.ray_fwp import (
+    BigFastWeightProgrammer,
+    FastWeightProgrammer,
+)
 from popgym.baselines.ray_models.ray_gru import GRU
 from popgym.baselines.ray_models.ray_indrnn import IndRNN
-from popgym.baselines.ray_models.ray_linear_attention import LinearAttention
+from popgym.baselines.ray_models.ray_linear_attention import (
+    BigLinearAttention,
+    LinearAttention,
+)
 from popgym.baselines.ray_models.ray_lmu import LMU
 from popgym.baselines.ray_models.ray_lstm import LSTM
 from popgym.baselines.ray_models.ray_mlp import MLP, BasicMLP
@@ -76,6 +79,8 @@ env_names = env_names[split_id::num_splits]
 attn_models = [
     LinearAttention,
     FastWeightProgrammer,
+    BigFastWeightProgrammer,
+    BigLinearAttention,
 ]
 rnn_models = [LSTM, GRU, Elman, LMU, IndRNN, DiffNC]
 conv_models = [S4D]

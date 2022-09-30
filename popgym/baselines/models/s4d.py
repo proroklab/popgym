@@ -1336,10 +1336,10 @@ class SSKernelDiag(OptimModule):
         return state
 
     def step(self, u, state):
-        next_state = contract(
-            "h n, b h n -> b h n", self.dA.to(state.device), state
-        ) + contract("h n, b h -> b h n", self.dB.to(u.device), u)
-        y = contract("c h n, b h n -> b c h", self.dC.to(u.device), next_state)
+        next_state = contract("h n, b h n -> b h n", self.dA, state) + contract(
+            "h n, b h -> b h n", self.dB, u
+        )
+        y = contract("c h n, b h n -> b c h", self.dC, next_state)
         return 2 * y.real, next_state
 
     def forward_state(self, u, state):

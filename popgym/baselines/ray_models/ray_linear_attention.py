@@ -38,7 +38,18 @@ class LinearAttention(BaseModel):
     }
     """
 
-    MODEL_CONFIG = {"embedding": "sine", "S_aggregator": "sum", "Z_aggregator": "sum"}
+    MODEL_CONFIG = {
+        # Which positional embedding to use
+        "embedding": "sine",
+        # Which aggregation operator to use for the S term.
+        # The paper only uses sum, but this can be sum or max
+        "S_aggregator": "sum",
+        # Same as S aggregator, except for the Z (denominator) term
+        "Z_aggregator": "sum",
+        # Whether the recurrent state size should be hidden_size
+        # or hidden_size ** 2
+        "big_hidden": False,
+    }
 
     def __init__(
         self,
@@ -50,14 +61,18 @@ class LinearAttention(BaseModel):
         **custom_model_kwargs,
     ):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
-        self.h = round(math.sqrt(self.cfg["hidden_size"]))
+        if self.cfg["big_hidden"]:
+            self.h = self.cfg["hidden_size"]
+        else:
+            self.h = round(math.sqrt(self.cfg["hidden_size"]))
         self.core = LinearAttentionBlock(
             input_size=self.cfg["preprocessor_output_size"],
             hidden_size=self.h,
             S_aggregator=self.cfg["S_aggregator"],
             Z_aggregator=self.cfg["Z_aggregator"],
         )
-        self.unmap = nn.Linear(self.h, self.cfg["hidden_size"])
+        if not self.cfg["big_hidden"]:
+            self.unmap = nn.Linear(self.h, self.cfg["hidden_size"])
 
     def initial_state(self) -> List[TensorType]:
         return [
@@ -75,9 +90,25 @@ class LinearAttention(BaseModel):
         B, T, _ = z.shape
         z, state = self.core(z, state)
         h = z.shape[-1]
-        y = self.unmap(z)
+        if not self.cfg["big_hidden"]:
+            z = self.unmap(z)
         S, Z = state
-        return y, [
+        return z, [
             S[:, -1].reshape(B, 1, h, h),
             Z[:, -1].reshape(B, 1, h),
         ]
+
+
+class BigLinearAttention(LinearAttention):
+    MODEL_CONFIG = {
+        # Which positional embedding to use
+        "embedding": "sine",
+        # Which aggregation operator to use for the S term.
+        # The paper only uses sum, but this can be sum or max
+        "S_aggregator": "sum",
+        # Same as S aggregator, except for the Z (denominator) term
+        "Z_aggregator": "sum",
+        # Whether the recurrent state size should be hidden_size
+        # or hidden_size ** 2
+        "big_hidden": True,
+    }
