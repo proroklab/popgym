@@ -50,7 +50,8 @@ class FWPBlock(nn.Module):
             Q = Q / (1e-5 + Q.sum(dim=-1, keepdim=True))
 
         kv = torch.einsum("bti, btj -> btij", V, K)
-        state = self.aggregator(kv, state)
+        shape = state.shape
+        state = self.aggregator(kv.flatten(-2), state.flatten(-2)).reshape(shape)
 
         y = torch.einsum("btij, bti -> btj", state, Q)
         return y, state
