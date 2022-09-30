@@ -24,6 +24,7 @@ class S4D(BaseModel):
 
     MODEL_CONFIG = {
         "embedding": None,
+        "big_hidden": False,
     }
 
     def __init__(
@@ -40,7 +41,7 @@ class S4D(BaseModel):
         self.map = torch.nn.Linear(self.cfg["preprocessor_output_size"], self.h)
         self.unmap = torch.nn.Linear(self.h, self.cfg["hidden_size"])
         self.core = S4Model(
-            d_model=self.h,
+            d_model=self.cfg["hidden_size"],
             d_state=self.h,
             mode="diag",
             measure="diag-lin",
@@ -85,3 +86,9 @@ class S4D(BaseModel):
         z = self.unmap(z)
 
         return z, [memory.real, memory.imag]
+
+class BigS4D(BaseModel):
+    MODEL_CONFIG = {
+        "embedding": None,
+        "big_hidden": True,
+    }
