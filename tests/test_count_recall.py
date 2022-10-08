@@ -17,7 +17,7 @@ class TestCountRecall(unittest.TestCase):
 
     def test_perfect(self):
         e = CountRecall()
-        counts = {k: 0 for k in range(4)}
+        counts = {k: 0 for k in range(e.num_distinct_cards)}
 
         obs, info = e.reset(return_info=True)
         d, q = obs
@@ -40,7 +40,7 @@ class TestCountRecall(unittest.TestCase):
 
     def test_awful(self):
         e = CountRecall()
-        counts = {k: 0 for k in range(4)}
+        counts = {k: 0 for k in range(e.num_distinct_cards)}
 
         obs, info = e.reset(return_info=True)
         d, q = obs

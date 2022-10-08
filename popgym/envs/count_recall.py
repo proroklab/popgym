@@ -25,7 +25,7 @@ class CountRecall(gym.Env):
         A gym environment
     """
 
-    def __init__(self, max_episode_length=100, error_clamp=2, deck_type="colors"):
+    def __init__(self, max_episode_length=100, error_clamp=1, deck_type="colors"):
         self.deck = Deck(num_decks=1)
         if deck_type == "colors":
             self.deck_type = self.deck.colors
@@ -41,9 +41,7 @@ class CountRecall(gym.Env):
 
         self.num_distinct_cards = len(self.deck_type)
         # Space: [dealt card, card query]
-        self.observation_space = gym.spaces.MultiDiscrete(
-            np.array([self.num_distinct_cards] * 2, dtype=np.int32)
-        )
+        self.observation_space = gym.spaces.MultiDiscrete([self.num_distinct_cards] * 2)
         self.action_space = gym.spaces.Box(
             high=max_episode_length,
             low=0,
@@ -62,11 +60,12 @@ class CountRecall(gym.Env):
     def step(self, action):
         done = False
         action = action.item()
+        self.timestep += 1
 
         self.prev_query = self.query
         prev_count = self.counts[self.prev_query]
-        self.query = self.sample_deck()
-        self.dealt = self.sample_deck()
+        self.query = self.queries[self.timestep]
+        self.dealt = self.values[self.timestep]
         self.counts[self.dealt] += 1
 
         error = abs(prev_count - action)
@@ -74,17 +73,16 @@ class CountRecall(gym.Env):
         reward_scale = 1.0 / self.max_episode_length
         reward = reward_scale * (1 - 2 * clamped / self.error_clamp)
 
-        self.timestep += 1
         if self.timestep >= self.max_episode_length:
             done = True
 
-        obs = np.array([self.dealt, self.query], dtype=np.float32)
+        obs = np.array([self.dealt, self.query], dtype=np.int64)
         info = {"counts": self.counts}
 
         return obs, reward, done, info
 
     def sample_deck(self):
-        return np.random.choice(self.deck.suits_idx)
+        return np.random.choice(self.deck_idx_type, size=self.max_episode_length + 1)
 
     def reset(
         self,
@@ -98,12 +96,15 @@ class CountRecall(gym.Env):
 
         self.counts = {k: 0 for k in range(self.num_distinct_cards)}
         self.timestep = 0
-        self.dealt = self.sample_deck()
+        self.values = self.sample_deck()
+        self.queries = self.sample_deck()
+
+        self.dealt = self.values[self.timestep]
         self.prev_query = None
-        self.query = self.sample_deck()
+        self.query = self.queries[self.timestep]
         self.counts[self.dealt] += 1
 
-        obs = np.array([self.dealt, self.query], dtype=np.float32)
+        obs = np.array([self.dealt, self.query], dtype=np.int64)
 
         if return_info:
             return obs, {"counts": self.counts}
