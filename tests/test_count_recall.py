@@ -32,6 +32,7 @@ class TestCountRecall(unittest.TestCase):
             d, q = obs
             counts[d] += 1
             action = np.array([counts[q]])
+            self.assertEqual(rew, 1 / (e.value_deck.num_cards - 1))
             reward += rew
             t += 1
 
@@ -59,4 +60,4 @@ class TestCountRecall(unittest.TestCase):
             t += 1
 
         self.assertEqual(t, e.max_episode_length)
-        self.assertAlmostEqual(reward, -1.0)
+        self.assertLess(reward, 1.0 - 0.1)
