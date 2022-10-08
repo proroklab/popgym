@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.core.deck import SUITS, SUITS_UNICODE, Deck
+from popgym.core.deck import Deck
 
 
 class CountRecall(gym.Env):
@@ -18,25 +18,45 @@ class CountRecall(gym.Env):
             than 2 provide the same negative reward as an error of 2. Note as
             error_clamp -> inf, a crappy agent and perfect agent will acheive
             the same total reward.
+        deck_type: What we use to count/differentiate cards.
+            Can be colors, suits, or ranks.
 
     Returns:
         A gym environment
     """
 
-    def __init__(self, num_decks=1, max_episode_length=100, error_clamp=2):
-        self.deck = Deck(num_decks)
-        self.action_space = self.deck.get_obs_space(["suits"])
-        # Dealt card, query card
-        self.observation_space = self.deck.get_obs_space(["suits", "suits"])
+    def __init__(self, max_episode_length=100, error_clamp=2, deck_type="colors"):
+        self.deck = Deck(num_decks=1)
+        if deck_type == "colors":
+            self.deck_type = self.deck.colors
+            self.deck_idx_type = self.deck.colors_idx
+        elif deck_type == "suits":
+            self.deck_type = self.deck.suits
+            self.deck_idx_type = self.deck.suits_idx
+        elif deck_type == "ranks":
+            self.deck_type = self.deck.ranks
+            self.deck_idx_type = self.deck.ranks_idx
+        else:
+            raise NotImplementedError(f"Invalid deck type {deck_type}")
+
+        self.num_distinct_cards = len(self.deck_type)
+        # Space: [dealt card, card query]
+        self.observation_space = gym.spaces.MultiDiscrete(
+            np.array([self.num_distinct_cards] * 2, dtype=np.int32)
+        )
+        self.action_space = gym.spaces.Box(
+            high=max_episode_length,
+            low=0,
+            # Should actually be int but RLlib has issues
+            dtype=np.float32,
+            shape=(1,),
+        )
         self.error_clamp = error_clamp
         self.max_episode_length = max_episode_length
-        self.action_space = gym.spaces.Box(
-            low=0, high=max_episode_length, shape=(1,), dtype=np.float32
-        )
 
     def render(self):
-        dealt = SUITS_UNICODE[self.dealt]
-        queried = SUITS_UNICODE[self.query]
+        dealt = self.deck_type[self.dealt]
+        queried = self.deck_type[self.query]
         print(f"Dealt {dealt}, recall {queried} count")
 
     def step(self, action):
@@ -76,7 +96,7 @@ class CountRecall(gym.Env):
         super().reset(seed=seed)
         self.deck.reset(rng=self.np_random)
 
-        self.counts = {k: 0 for k in range(len(SUITS))}
+        self.counts = {k: 0 for k in range(self.num_distinct_cards)}
         self.timestep = 0
         self.dealt = self.sample_deck()
         self.prev_query = None
@@ -89,3 +109,17 @@ class CountRecall(gym.Env):
             return obs, {"counts": self.counts}
 
         return obs
+
+
+class CountRecallEasy(CountRecall):
+    pass
+
+
+class CountRecallMedium(CountRecall):
+    def __init__(self, *args, **kwargs):
+        super().__init__(max_episode_length=200, deck_type="suits")
+
+
+class CountRecallHard(CountRecall):
+    def __init__(self, *args, **kwargs):
+        super().__init__(max_episode_length=400, deck_type="ranks")

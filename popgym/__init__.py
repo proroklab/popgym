@@ -3,6 +3,12 @@ from typing import Any, Dict
 
 import gym
 
+from popgym.envs.autoencode import (
+    Autoencode,
+    AutoencodeEasy,
+    AutoencodeHard,
+    AutoencodeMedium,
+)
 from popgym.envs.battleship import (
     Battleship,
     BattleshipEasy,
@@ -14,6 +20,12 @@ from popgym.envs.concentration import (
     ConcentrationEasy,
     ConcentrationHard,
     ConcentrationMedium,
+)
+from popgym.envs.count_recall import (
+    CountRecall,
+    CountRecallEasy,
+    CountRecallHard,
+    CountRecallMedium,
 )
 from popgym.envs.higher_lower import (
     HigherLower,
@@ -57,12 +69,6 @@ from popgym.envs.noisy_stateless_pendulum import (
     NoisyStatelessPendulumHard,
     NoisyStatelessPendulumMedium,
 )
-from popgym.envs.autoencode import (
-    Autoencode,
-    AutoencodeEasy,
-    AutoencodeHard,
-    AutoencodeMedium,
-)
 from popgym.envs.repeat_first import (
     RepeatFirst,
     RepeatFirstEasy,
@@ -95,24 +101,28 @@ SIMPLE_ENVS: Dict[gym.Env, Dict[str, Any]] = {
     Autoencode: {"id": "popgym-Autoencode-v0"},
     RepeatPrevious: {"id": "popgym-RepeatPrevious-v0"},
     RepeatFirst: {"id": "popgym-RepeatFirst-v0"},
+    CountRecall: {"id": "popgym-CountRecall-v0"},
 }
 
 SIMPLE_ENVS_EASY: Dict[gym.Env, Dict[str, Any]] = {
     AutoencodeEasy: {"id": "popgym-AutoencodeEasy-v0"},
     RepeatPreviousEasy: {"id": "popgym-RepeatPreviousEasy-v0"},
     RepeatFirstEasy: {"id": "popgym-RepeatFirstEasy-v0"},
+    CountRecallEasy: {"id": "popgym-CountRecallEasy-v0"},
 }
 
 SIMPLE_ENVS_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
     AutoencodeMedium: {"id": "popgym-AutoencodeMedium-v0"},
     RepeatPreviousMedium: {"id": "popgym-RepeatPreviousMedium-v0"},
     RepeatFirstMedium: {"id": "popgym-RepeatFirstMedium-v0"},
+    CountRecallMedium: {"id": "popgym-CountRecallMedium-v0"},
 }
 
 SIMPLE_ENVS_HARD: Dict[gym.Env, Dict[str, Any]] = {
     AutoencodeHard: {"id": "popgym-AutoencodeHard-v0"},
     RepeatPreviousHard: {"id": "popgym-RepeatPreviousHard-v0"},
     RepeatFirstHard: {"id": "popgym-RepeatFirstHard-v0"},
+    CountRecallHard: {"id": "popgym-CountRecallHard-v0"},
 }
 
 ALL_SIMPLE_ENVS = {**SIMPLE_ENVS_EASY, **SIMPLE_ENVS_MEDIUM, **SIMPLE_ENVS_HARD}

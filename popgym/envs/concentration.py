@@ -44,9 +44,9 @@ class Concentration(gym.Env):
 
         # cards = 14 * np.ones(len(self.deck))
         self.facedown_card = len(self.deck_type)
-        cards = (1 + self.facedown_card) * np.ones(len(self.deck))
+        cards = (1 + self.facedown_card) * np.ones(self.deck.num_cards)
         self.observation_space = gym.spaces.MultiDiscrete(cards)
-        self.action_space = gym.spaces.Discrete(np.array(len(self.deck)))
+        self.action_space = gym.spaces.Discrete(np.array(self.deck.num_cards))
         self.deck.add_players("face_up", "face_up_idx", "in_play", "in_play_idx")
 
     def step(self, action):
