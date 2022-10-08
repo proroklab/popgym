@@ -25,12 +25,12 @@ class Concentration(gym.Env):
         # See https://math.stackexchange.com/questions/1876467/
         # how-many-turns-on-average-does-it-take-for-a-perfect-player
         # -to-win-concentrati
+        self.deck = Deck(num_decks=num_decks)
         n = 52 * num_decks
         self.episode_length = math.ceil(2 * n - (n / (2 * n - 1)))
-        self.success_reward_scale = 1 / (52 * num_decks // 2)
+        self.success_reward_scale = 1 / (self.deck.num_cards // 2)
         self.failure_reward_scale = -1 / (self.episode_length)
 
-        self.deck = Deck(num_decks=num_decks)
         if deck_type == "colors":
             self.deck_type = self.deck.colors
             self.deck_idx_type = self.deck.colors_idx
@@ -43,7 +43,7 @@ class Concentration(gym.Env):
             raise NotImplementedError(f"Invalid deck type {deck_type}")
 
         # cards = 14 * np.ones(len(self.deck))
-        self.facedown_card = len(self.deck_type)
+        self.facedown_card = len(np.unique(self.deck_type))
         cards = (1 + self.facedown_card) * np.ones(self.deck.num_cards)
         self.observation_space = gym.spaces.MultiDiscrete(cards)
         self.action_space = gym.spaces.Discrete(np.array(self.deck.num_cards))
