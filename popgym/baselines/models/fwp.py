@@ -30,7 +30,9 @@ class FWPBlock(nn.Module):
         self.value = nn.Linear(input_size, hidden_size, bias=False)
         self.norm = nn.LayerNorm(input_size)
         self.sum_normalization = sum_normalization
-        self.aggregator = get_aggregator(aggregator)()
+        self.aggregator = get_aggregator(aggregator)(
+            max_len=1024, d_model=hidden_size**2
+        )
 
     def forward(self, x: torch.Tensor, state: torch.Tensor) -> torch.Tensor:
         """
@@ -50,7 +52,7 @@ class FWPBlock(nn.Module):
             Q = Q / (1e-5 + Q.sum(dim=-1, keepdim=True))
 
         kv = torch.einsum("bti, btj -> btij", V, K)
-        shape = state.shape
+        shape = kv.shape
         state = self.aggregator(kv.flatten(-2), state.flatten(-2)).reshape(shape)
 
         y = torch.einsum("btij, bti -> btj", state, Q)
