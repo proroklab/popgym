@@ -133,7 +133,8 @@ config = {
     # each batch the temporal dim shrinks by one
     # for now, just use complete_episodes
     "batch_mode": "complete_episodes",
-    "min_sample_timesteps_per_reporting": train_batch_size,
+    # "min_sample_timesteps_per_reporting": train_batch_size,
+    "min_sample_timesteps_per_iteration": train_batch_size,
     # Describe your RL model here
     "model": {
         # Truncate sequences into no more than this many timesteps
