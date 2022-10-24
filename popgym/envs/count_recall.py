@@ -25,7 +25,7 @@ class CountRecall(gym.Env):
         A gym environment
     """
 
-    def __init__(self, num_decks=1, deck_type="colors"):
+    def __init__(self, num_decks=1, error_clamp=0.5, deck_type="colors"):
         self.value_deck = Deck(num_decks=num_decks)
         self.query_deck = Deck(num_decks=num_decks)
         self.value_deck.add_players("in_play")
@@ -54,6 +54,8 @@ class CountRecall(gym.Env):
             shape=(1,),
         )
         self.max_episode_length = self.value_deck.num_cards - 1
+        self.error_clamp = error_clamp
+        self.reward_scale = 1 / self.max_episode_length
 
     def render(self):
         dealt = self.deck_type[self.value]
@@ -69,12 +71,11 @@ class CountRecall(gym.Env):
         self.value, self.query = self.deal()
         self.counts[self.value] += 1
 
-        # Error in [-1, 1]
-        error = 2 * (0.5 - abs(prev_count - action) / self.max_card_count)
-        reward_scale = 1.0 / self.max_episode_length
-        reward = reward_scale * error
+        error = abs(prev_count - action)
+        clamped = min(error, self.error_clamp)
+        reward = self.reward_scale * (1 - 2 * clamped / self.error_clamp)
 
-        if len(self.value_deck) == 0:  # self.timestep >= self.max_episode_length:
+        if len(self.value_deck) == 0:
             done = True
 
         obs = np.array([self.value, self.query], dtype=np.int64)
@@ -103,7 +104,7 @@ class CountRecall(gym.Env):
         super().reset(seed=seed)
         self.value_deck.reset(rng=self.np_random)
         # We dont want the decks to have the same order so reseed
-        rng2, _ = gym.utils.seeding.np_random(self.np_random.randint(0, 1e15))
+        rng2, _ = gym.utils.seeding.np_random(self.np_random.integers(0, 1e15).item())
         self.query_deck.reset(rng=rng2)
 
         self.counts = {k: 0 for k in range(self.num_distinct_cards)}
