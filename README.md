@@ -34,22 +34,23 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 ### Environment Overview
 The environments are split into set or sequence tasks. Ordering matters in sequence tasks (e.g. the order of the button presses in simon matters), and does not matter in set tasks (e.g. the "count" in blackjack does not change if you swap o<sub>t-1</sub> and o<sub>t-k</sub>). We provide a table of the environments. The frames per second (FPS) was computed by running the `popgym-perf-test.ipynb` notebook on the Google Colab free tier by stepping and resetting single environment for 100k timesteps. We also provide the same benchmark run on a Macbook Air (2020). With `multiprocessing`, environment FPS scales roughly linearly with the number of processes.
 
-| Environment              | Problem Class   | Temporal Ordering | Colab FPS         | Macbook Air (2020) FPS    |
-|--------------------------|-----------------|-------------------|-------------------|----------------|
-| Battleship               |Long-term memory |None               |  117,158          |  235,402       |
-| Concentration            |Long-term memory |Weak               |  47,515           |  157,217       |
-| Higher/Lower             |Card counting    |None               |  24,312           |  76,903        |
-| Labyrinth Escape         |Navigation       |Strong             |  1,399            |  41,122        |
-| Labyrinth Explore        |Navigation       |Strong             |  1,374            |  30,611        |
-| Minesweeper              |Long-term memory |None               |  8,434            |  32,003        |
-| Multiarmed Bandit        |Noisy dynamics   |None               |  48,751           |  469,325       |
-| Autoencode               |Long-term memory |Strong             |  121,756          |  251,997       |
-| Repeat First             |Simple           |None               |  23,895           |  155,201       |
-| Repeat Previous          |Simple           |Strong             |  50,349           |  136,392       |
-| Stateless Cartpole       |Control          |Strong             |  73,622           |  218,446       |
-| Noisy Stateless Cartpole |Noisy dynamics   |Strong             |  6,269            |  66,891        |
-| Stateless Pendulum       |Control          |Strong             |  8,168            |  26,358        |
-| Noisy Stateless Pendulum |Noisy dynamics   |Strong             |  6,808            |  20,090        |
+| Environment                                                                                             |         Tags      | Temporal Ordering | Colab FPS         | Macbook Air (2020) FPS    |
+|---------------------------------------------------------------------------------------------------------|-------------------|-------------------|-------------------|---------------------------|
+| [Battleship](#battleship) [(Code)](popgym/envs/battleship.py)                                           |Game               |None               |  117,158          |  235,402                  |
+| [Concentration](#concentration) [(Code)](popgym/envs/concentration.py)                                  |Game               |Weak               |  47,515           |  157,217                  |
+| [Higher Lower](#higher-lower) [(Code)](popgym/envs/higher_lower.py)                                     |Game, Noisy        |None               |  24,312           |  76,903                   |
+| [Labyrinth Escape](#labyrinth-escape) [(Code)](popgym/envs/labyrinth_escape.py)                         |Navigation         |Strong             |  1,399            |  41,122                   |
+| [Labyrinth Explore](#labyrinth-explore) [(Code)](popgym/envs/labyrinth_explore.py)                      |Navigation         |Strong             |  1,374            |  30,611                   |
+| [Minesweeper](#minesweeper) [(Code)](popgym/envs/minesweeper.py)                                        |Game               |None               |  8,434            |  32,003                   |
+| [Multiarmed Bandit](#multiarmed-bandit) [(Code)](popgym/envs/multiarmed_bandit.py)                      |Noisy              |None               |  48,751           |  469,325                  |
+| [Autoencode](#autoencode) [(Code)](popgym/envs/autoencode.py)                                           |Diagnostic         |Strong             |  121,756          |  251,997                  |
+| [Count Recall](#count-recall) [(Code)](popgym/envs/count_recall.py)                                     |Diagnostic, Noisy  |None               |  16,799           |  50,311                   |
+| [Repeat First](#repeat-first) [(Code)](popgym/envs/repeat_first.py)                                     |Diagnostic         |None               |  23,895           |  155,201                  |
+| [Repeat Previous](#repeat-previous) [(Code)](popgym/envs/repeat_previous.py)                            |Diagnostic         |Strong             |  50,349           |  136,392                  |
+| [Stateless Cartpole](#stateless-cartpole) [(Code)](popgym/envs/stateless_cartpole.py)                   |Control            |Strong             |  73,622           |  218,446                  |
+| [Noisy Stateless Cartpole](#noisy-stateless-cartpole) [(Code)](popgym/envs/noisy_stateless_cartpole.py) |Control, Noisy     |Strong             |  6,269            |  66,891                   |
+| [Stateless Pendulum](#noisy-stateless-pendulum) [(Code)](popgym/envs/stateless_pendulum.py)             |Control            |Strong             |  8,168            |  26,358                   |
+| [Noisy Stateless Pendulum](#noisy-stateless-pendulum) [(Code)](popgym/envs/noisy_stateless_pendulum.py) |Control, Noisy     |Strong             |  6,808            |  20,090                   |
 
 Feel free to rerun this benchmark using [this colab notebook](https://colab.research.google.com/drive/1_ew-Piq5d9R_NkmP1lSzFX1fbK-swuAN?usp=sharing).
 
@@ -57,7 +58,7 @@ Feel free to rerun this benchmark using [this colab notebook](https://colab.rese
 ### Environment Descriptions
 #### Concentration
   The quintessential memory game, sometimes known as "memory". A deck of cards is shuffled and placed face-down. The agent picks two cards to flip face up, if the cards match ranks, the cards are removed from play and the agent receives a reward. If they don't match, they are placed back face-down. The agent must remember where it has seen cards in the past.
-#### Higher/Lower
+#### Higher Lower
 Guess whether the next card drawn from the deck is higher or lower than the previously drawn card. The agent should keep a count like blackjack and modify bets, but this game is significantly simpler than blackjack.
 #### Battleship
 One-player battleship. Select a gridsquare to launch an attack, and receive confirmation whether you hit the target. The agent should use memory to remember which gridsquares were hits and which were misses, completing an episode sooner.
@@ -73,12 +74,18 @@ Output the zeroth observation for a reward
 The agent will receive k observations then must output them in the same order
 #### Stateless Cartpole
 Classic cartpole, except the velocity and angular velocity magnitudes are hidden. The agent must use memory to compute rates of change.
+#### Noisy Stateless Cartpole
+Stateless Cartpole with added Gaussian noise
 #### Stateless Pendulum
 Classic pendulum, but the velocity and angular velocity are hidden from the agent. The agent must use memory to compute rates of change.
-#### Laybrinth Escape
+#### Noisy Stateless Pendulum
+Stateless Pendulum with added Gaussian noise
+#### Labyrinth Escape
 Escape randomly-generated labyrinths. The agent must remember wrong turns it has taken to find the exit.
 #### Labyrinth Explore
 Explore as much of the labyrinth as possible in the time given. The agent must remember where it has been to maximize reward.
+#### Count Recall
+The player is given a sequence of cards and is asked to recall how many times it has seen a specific card.
 
 
 ## POPGym Baselines
