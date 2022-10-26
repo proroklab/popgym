@@ -85,6 +85,10 @@ class Concentration(gym.Env):
             # Flip two last flipped-up cards face down again
             self.deck.discard_hands("in_play", "in_play_idx")
             self.hand = []
+        elif self.deck["in_play_idx"][0] in self.deck["face_up_idx"]:
+            # Trying to turn a card that is already face up
+            reward = self.failure_reward_scale
+            self.deck.discard_hands("in_play", "in_play_idx")
 
         self.curr_step += 1
 
