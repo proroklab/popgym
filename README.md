@@ -4,7 +4,32 @@
 
 POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines).
 
-## Setup
+
+## Table of Contents
+1. [POPGym Environments](#popgym-environments)
+    1. [Setup](#setup)
+    2. [Usage](#usage)
+    3. [Table of Environments](#environment)
+    4. [Environment Descriptions](#environment-descriptions)
+2. [POPGym Baselines](#popgym-baselines)
+    1. [Setup](#setup-1)
+    2. [Usage](#usage-1)
+    3. [Available Baselines](#available-baselines)
+3. [Contributing](#contributing)
+4. [Citing](#citing)
+
+
+
+
+## POPGym Environments
+
+POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Openai Gym](https://github.com/openai/gym) interface. Our environments follow a few basic tenets:
+
+1. **Painless Setup** - `popgym` environments require only `gym`, `numpy`, and `mazelib` as dependencies
+2. **Laptop-Sized Tasks** - Most tasks can be solved in less than a day on the CPU 
+3. **True Generalization** - All environments are heavily randomized.
+
+### Setup
 Packages will be sent to pypi soon. Until then, to install the environments:
 ```bash
 git clone https://github.com/smorad/popgym
@@ -12,28 +37,23 @@ cd popgym
 pip install .
 ```
 
-To install the baselines and dependencies, first install ray
-```bash
-pip install ray[rllib]
+### Usage
+```python
+import gym
+import popgym
+# List all envs, see popgym/__init__.py 
+env_classes = popgym.ALL_ENVS.keys()
+print(env_classes)
+env_names = [e["id"] for e in popgym.ALL_ENVS.values()]
+print(env_names)
+# Create env
+env = popgym.envs.concentration.ConcentrationEasy()
+# Alternative way to create env, after importing gym and popgym
+env = gym.make('popgym-ConcentrationEasy-v0')
+obs, reward, done, info = env.step(env.action_space.sample())
 ```
-You must do this, as ray-2.0.0 erroneously pins an old verison of gym and will cause dependency issues. This has been patched but did not make it into the latest release. Once ray is installed, install popgym:
-```bash
-git clone https://github.com/smorad/popgym
-cd popgym
-pip install ".[baselines]"
-```
 
-## POPGym Environments
-
-POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Openai Gym](https://github.com/openai/gym) interface, where every single environment is procedurally generated. We find that much of RL is a huge pain-in-the-rear to get up and running, so our environments follow a few basic tenets:
-
-1. **Painless setup** - `popgym` environments requires only `gym`, `numpy`, and `mazelib` as core dependencies, and can be installed with a single `pip install`.
-2. **Laptop-sized tasks** - None of our environments have large observation spaces or require GPUs to render. Well-designed models should be able to solve a majority of tasks in less than a day.
-3. **True generalization** - It is possible for memoryless agents to receive high rewards on environments by memorizing the layout of each level. To avoid this, all environments are heavily randomized. 
-
-### Environment Overview
-The environments are split into set or sequence tasks. Ordering matters in sequence tasks (e.g. the order of the button presses in simon matters), and does not matter in set tasks (e.g. the "count" in blackjack does not change if you swap o<sub>t-1</sub> and o<sub>t-k</sub>). We provide a table of the environments. The frames per second (FPS) was computed by running the `popgym-perf-test.ipynb` notebook on the Google Colab free tier by stepping and resetting single environment for 100k timesteps. We also provide the same benchmark run on a Macbook Air (2020). With `multiprocessing`, environment FPS scales roughly linearly with the number of processes.
-
+### Table of Environments
 | Environment                                                                                             |         Tags      | Temporal Ordering | Colab FPS         | Macbook Air (2020) FPS    |
 |---------------------------------------------------------------------------------------------------------|-------------------|-------------------|-------------------|---------------------------|
 | [Battleship](#battleship) [(Code)](popgym/envs/battleship.py)                                           |Game               |None               |  117,158          |  235,402                  |
@@ -52,7 +72,7 @@ The environments are split into set or sequence tasks. Ordering matters in seque
 | [Stateless Pendulum](#noisy-stateless-pendulum) [(Code)](popgym/envs/stateless_pendulum.py)             |Control            |Strong             |  8,168            |  26,358                   |
 | [Noisy Stateless Pendulum](#noisy-stateless-pendulum) [(Code)](popgym/envs/noisy_stateless_pendulum.py) |Control, Noisy     |Strong             |  6,808            |  20,090                   |
 
-Feel free to rerun this benchmark using [this colab notebook](https://colab.research.google.com/drive/1_ew-Piq5d9R_NkmP1lSzFX1fbK-swuAN?usp=sharing).
+We report the frames per second (FPS) for a single instance of each of our environments below. With `multiprocessing`, environment FPS scales roughly linearly with the number of processes. Feel free to rerun this benchmark using [this colab notebook](https://colab.research.google.com/drive/1_ew-Piq5d9R_NkmP1lSzFX1fbK-swuAN?usp=sharing).
 
 
 ### Environment Descriptions
@@ -89,40 +109,102 @@ The player is given a sequence of cards and is asked to recall how many times it
 
 
 ## POPGym Baselines
-We implement the following baselines as `RLlib` custom models:
+POPGym baselines implements recurrent and memory model in an efficient manner. POPGym baselines is implemented on top of [`rllib`](https://github.com/ray-project/ray) using their custom model API.
 
+### Setup
+To install the baselines and dependencies, first install ray
+```bash
+pip install ray[rllib]
+```
+You must do this, as ray-2.0.0 erroneously pins an old verison of gym and will cause dependency issues. This has been patched but did not make it into the latest release. Once ray is installed, install popgym:
+```bash
+git clone https://github.com/smorad/popgym
+cd popgym
+pip install ".[baselines]"
+```
+
+### Usage
+Our baselines exist in the `ray_models` directory. Here is how to use
+the `GRU` model with `rllib`.
+```python
+import popgym
+import ray
+from torch import nn
+from popgym.baselines.ray_models.ray_gru import GRU
+# See what GRU-specific hyperparameters we can set
+print(GRU.MODEL_CONFIG)
+# Show other settable model hyperparameters like 
+# what the actor/critic branches look like,
+# what hidden size to use, 
+# whether to add a positional embedding, etc.
+print(GRU.BASE_CONFIG)
+# How long the temporal window for backprop is
+# This doesn't need to be longer than 1024
+bptt_size = 1024
+config = {
+   "model": {
+      "max_seq_len": bptt_size,
+      "custom_model": GRU,
+      "custom_model_config": {
+        # Override the hidden_size from BASE_CONFIG
+        # The input and output sizes of the MLP feeding the memory model
+        "preprocessor_input_size": 128,
+        "preprocessor_output_size": 64,
+        "preprocessor": nn.Sequential(nn.Linear(128, 64), nn.ReLU()),
+        # this is the size of the recurrent state in most cases
+        "hidden_size": 128,
+        # We should also change other parts of the architecture to use
+        # this new hidden size
+        # For the GRU, the output is of size hidden_size
+        "postprocessor": nn.Sequential(nn.Linear(128, 64), nn.ReLU()),
+        "postprocessor_output_size": 64,
+        # Actor and critic networks
+        "actor": nn.Linear(64, 64),
+        "critic": nn.Linear(64, 64),
+        # We can also override GRU-specific hyperparams
+        "num_recurrent_layers": 1,
+      },
+   },
+   # Some other rllib defaults you might want to change
+   # See https://docs.ray.io/en/latest/rllib/rllib-training.html#common-parameters
+   # for a full list of rllib settings
+   # 
+   # These should be a factor of bptt_size
+   "sgd_minibatch_size": bptt_size * 4,
+   # Should be a factor of sgd_minibatch_size
+   "train_batch_size": bptt_size * 8,
+   # The environment we are training on
+   "env": "popgym-ConcentrationEasy-v0",
+   # You probably don't want to change these values
+   "rollout_fragment_length": bptt_size,
+   "framework": "torch",
+   "horizon": bptt_size,
+   "batch_mode": "complete_episodes",
+}
+# Stop after 50k environment steps
+ray.tune.run("PPO", config=config, stop={"timesteps_total": 50_000})
+```
+
+To add your own custom model, inherit from [BaseModel](popgym/baselines/ray_models/base_model.py) and implement the `initial_state` and `memory_forward` functions, as well as define your model configuration using `MODEL_CONFIG`. To use any of these or your own custom model in `ray`, make it the `custom_model` in the `rllib` config.
+
+
+### Available Baselines
 1. [MLP](popgym/baselines/ray_models/ray_mlp.py)
 2. [Positional MLP](popgym/baselines/ray_models/ray_mlp.py)
-3. [Framestacking](popgym/baselines/ray_models/ray_framestack.py)
-4. [Temporal Convolution](popgym/baselines/ray_models/ray_frameconv.py)
-5. [Elman Networks](https://github.com/smorad/popgym/blob/master/popgym/baselines/ray_models/ray_elman.py)
-6. [Long Short-Term Memory](popgym/baselines/ray_models/ray_lstm.py)
-7. [Gated Recurrent Units](popgym/baselines/ray_models/ray_gru.py)
-8. [Independently Recurrent Neural Networks](popgym/baselines/ray_models/ray_indrnn.py)
-9. [Fast Autoregressive Transformers](popgym/baselines/ray_models/ray_linear_attention.py)
-10. [Fast Weight Programmers](popgym/baselines/ray_models/ray_fwp.py)
-12. [Legendre Memory Units](popgym/baselines/ray_models/ray_lmu.py)
-12. [Diagonal State Space Models](popgym/baselines/ray_models/ray_s4d.py)
-13. [Differentiable Neural Computers](popgym/baselines/ray_models/ray_diffnc.py)
-
-To add your own custom model, please inherit from [BaseModel](popgym/baselines/ray_models/base_model.py) and implement the `initial_state` and `memory_forward` functions, as well as define your model configuration using `MODEL_CONFIG`. To use any of these or your own custom model in `ray`, simply add it to the `ray` config:
-
-```python
-import ray
-from popgym.baselines.ray_models.ray_lstm import LSTM
-config = {
-   ...
-   "model": {
-      custom_model: LSTM,
-      custom_model_config: {"hidden_size": 128}
-   }
-}
-ray.tune.run("PPO", config)
-```
-Each model defines a MODEL_CONFIG that you can set by adding keys and values to `custom_model_config`. See [ppo.py](popgym/baselines/ppo.py) for an in-depth example.
+3. [Framestacking](popgym/baselines/ray_models/ray_framestack.py) [Paper](https://arxiv.org/abs/1312.5602)
+4. [Temporal Convolution Networks](popgym/baselines/ray_models/ray_frameconv.py) [Paper](https://arxiv.org/pdf/1803.01271.pdf)
+5. [Elman Networks](https://github.com/smorad/popgym/blob/master/popgym/baselines/ray_models/ray_elman.py) [Paper](http://faculty.otterbein.edu/dstucki/COMP4230/FindingStructureInTime.pdf)
+6. [Long Short-Term Memory](popgym/baselines/ray_models/ray_lstm.py) [Paper](http://www.bioinf.jku.at/publications/older/2604.pdf)
+7. [Gated Recurrent Units](popgym/baselines/ray_models/ray_gru.py) [Paper](https://arxiv.org/abs/1412.3555)
+8. [Independently Recurrent Neural Networks](popgym/baselines/ray_models/ray_indrnn.py) [Paper](https://openaccess.thecvf.com/content_cvpr_2018/papers_backup/Li_Independently_Recurrent_Neural_CVPR_2018_paper.pdf)
+9. [Fast Autoregressive Transformers](popgym/baselines/ray_models/ray_linear_attention.py) [Paper](https://proceedings.mlr.press/v119/katharopoulos20a.html)
+10. [Fast Weight Programmers](popgym/baselines/ray_models/ray_fwp.py) [Paper](https://proceedings.mlr.press/v139/schlag21a.html) 
+12. [Legendre Memory Units](popgym/baselines/ray_models/ray_lmu.py) [Paper](https://proceedings.neurips.cc/paper/2019/hash/952285b9b7e7a1be5aa7849f32ffff05-Abstract.html)
+12. [Diagonal State Space Models](popgym/baselines/ray_models/ray_s4d.py) [Paper](https://arxiv.org/abs/2206.11893)
+13. [Differentiable Neural Computers](popgym/baselines/ray_models/ray_diffnc.py) [Paper](http://clgiles.ist.psu.edu/IST597/materials/slides/papers-memory/2016-graves.pdf)
 
 
-## Contributing
+# Contributing
 Steps to follow:
 1. Fork this repo in github
 2. Clone your fork to your machine
@@ -143,7 +225,7 @@ cd popgym
 pre-commit install
 ```
 
-## Citing
+# Citing
 If you found POPGym useful, please cite it
 ```bibtex
 @misc{
