@@ -14,6 +14,38 @@ class TestConcentration(unittest.TestCase):
             if done:
                 _ = e.reset()
 
+    def test_repeatedly_flip_faceup(self):
+        # Ensure we cannot match facedown cards
+        # with previously-matched faceup cards
+        env = Concentration()
+        obs = env.reset()
+        r_c = 0
+        obs, r, d, _ = env.step(0)
+        r_c += r
+        cards = [obs[0]]
+        found = False
+        i = 0
+        while not d and not found:
+            i += 1
+            obs, r, d, _ = env.step(i)
+            r_c += r
+            found = obs[i] in cards
+            cards.append(obs[i])
+        j = cards.index(obs[i])
+        if not d and i % 2 != 1:
+            obs, r, d, _ = env.step(j)
+            r_c += r
+        while not d:
+            obs, r, d, _ = env.step(i)
+            r_c += r
+            i, j = j, i
+
+        self.assertAlmostEqual(
+            r_c,
+            env.success_reward_scale
+            + (env.episode_length - 2) * env.failure_reward_scale,
+        )
+
     def test_perfect_game(self):
         e = Concentration()
         obs = e.reset()
