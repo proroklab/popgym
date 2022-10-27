@@ -1,4 +1,4 @@
-# Partially Observable Process Gym (POPGym)
+# POPGym: Partially Observable Process Gym
 ![tests](https://github.com/smorad/popgym/actions/workflows/python-app.yml/badge.svg)
 [![codecov](https://codecov.io/gh/smorad/popgym/branch/master/graph/badge.svg?token=I47IDFZXSV)](https://codecov.io/gh/smorad/popgym)
 
