@@ -142,3 +142,17 @@ git clone https://github.com/smorad/popgym
 cd popgym
 pre-commit install
 ```
+
+## Citing
+If you found POPGym useful, please cite it
+```bibtex
+@misc{
+  morad_kortvelesy_prorok_2022, 
+  url={https://github.com/smorad/popgym}, 
+  journal={POPGym: Partially Observable Process Gym}, 
+  publisher={GitHub}, 
+  author={Morad, Steven and Kortvelesy, Ryan and Prorok, Amanda}, 
+  year={2022}, 
+  month={Sep}
+}
+```
