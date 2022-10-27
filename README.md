@@ -191,17 +191,17 @@ To add your own custom model, inherit from [BaseModel](popgym/baselines/ray_mode
 ### Available Baselines
 1. [MLP](popgym/baselines/ray_models/ray_mlp.py)
 2. [Positional MLP](popgym/baselines/ray_models/ray_mlp.py)
-3. [Framestacking](popgym/baselines/ray_models/ray_framestack.py) [Paper](https://arxiv.org/abs/1312.5602)
-4. [Temporal Convolution Networks](popgym/baselines/ray_models/ray_frameconv.py) [Paper](https://arxiv.org/pdf/1803.01271.pdf)
-5. [Elman Networks](https://github.com/smorad/popgym/blob/master/popgym/baselines/ray_models/ray_elman.py) [Paper](http://faculty.otterbein.edu/dstucki/COMP4230/FindingStructureInTime.pdf)
-6. [Long Short-Term Memory](popgym/baselines/ray_models/ray_lstm.py) [Paper](http://www.bioinf.jku.at/publications/older/2604.pdf)
-7. [Gated Recurrent Units](popgym/baselines/ray_models/ray_gru.py) [Paper](https://arxiv.org/abs/1412.3555)
-8. [Independently Recurrent Neural Networks](popgym/baselines/ray_models/ray_indrnn.py) [Paper](https://openaccess.thecvf.com/content_cvpr_2018/papers_backup/Li_Independently_Recurrent_Neural_CVPR_2018_paper.pdf)
-9. [Fast Autoregressive Transformers](popgym/baselines/ray_models/ray_linear_attention.py) [Paper](https://proceedings.mlr.press/v119/katharopoulos20a.html)
-10. [Fast Weight Programmers](popgym/baselines/ray_models/ray_fwp.py) [Paper](https://proceedings.mlr.press/v139/schlag21a.html) 
-12. [Legendre Memory Units](popgym/baselines/ray_models/ray_lmu.py) [Paper](https://proceedings.neurips.cc/paper/2019/hash/952285b9b7e7a1be5aa7849f32ffff05-Abstract.html)
-12. [Diagonal State Space Models](popgym/baselines/ray_models/ray_s4d.py) [Paper](https://arxiv.org/abs/2206.11893)
-13. [Differentiable Neural Computers](popgym/baselines/ray_models/ray_diffnc.py) [Paper](http://clgiles.ist.psu.edu/IST597/materials/slides/papers-memory/2016-graves.pdf)
+3. [Framestacking](popgym/baselines/ray_models/ray_framestack.py) [(Paper)](https://arxiv.org/abs/1312.5602)
+4. [Temporal Convolution Networks](popgym/baselines/ray_models/ray_frameconv.py) [(Paper)](https://arxiv.org/pdf/1803.01271.pdf)
+5. [Elman Networks](https://github.com/smorad/popgym/blob/master/popgym/baselines/ray_models/ray_elman.py) [(Paper)](http://faculty.otterbein.edu/dstucki/COMP4230/FindingStructureInTime.pdf)
+6. [Long Short-Term Memory](popgym/baselines/ray_models/ray_lstm.py) [(Paper)](http://www.bioinf.jku.at/publications/older/2604.pdf)
+7. [Gated Recurrent Units](popgym/baselines/ray_models/ray_gru.py) [(Paper)](https://arxiv.org/abs/1412.3555)
+8. [Independently Recurrent Neural Networks](popgym/baselines/ray_models/ray_indrnn.py) [(Paper)](https://openaccess.thecvf.com/content_cvpr_2018/papers_backup/Li_Independently_Recurrent_Neural_CVPR_2018_paper.pdf)
+9. [Fast Autoregressive Transformers](popgym/baselines/ray_models/ray_linear_attention.py) [(Paper)](https://proceedings.mlr.press/v119/katharopoulos20a.html)
+10. [Fast Weight Programmers](popgym/baselines/ray_models/ray_fwp.py) [(Paper)](https://proceedings.mlr.press/v139/schlag21a.html) 
+12. [Legendre Memory Units](popgym/baselines/ray_models/ray_lmu.py) [(Paper)](https://proceedings.neurips.cc/paper/2019/hash/952285b9b7e7a1be5aa7849f32ffff05-Abstract.html)
+12. [Diagonal State Space Models](popgym/baselines/ray_models/ray_s4d.py) [(Paper)](https://arxiv.org/abs/2206.11893)
+13. [Differentiable Neural Computers](popgym/baselines/ray_models/ray_diffnc.py) [(Paper)](http://clgiles.ist.psu.edu/IST597/materials/slides/papers-memory/2016-graves.pdf)
 
 
 # Contributing
@@ -233,7 +233,7 @@ If you found POPGym useful, please cite it
   url={https://github.com/smorad/popgym}, 
   journal={POPGym: Partially Observable Process Gym}, 
   publisher={GitHub}, 
-  author={Morad, Steven and Kortvelesy, Ryan and Prorok, Amanda}, 
+  author={Morad, Steven and Kortvelesy, Ryan and Liwicki, Stephan and Prorok, Amanda}, 
   year={2022}, 
   month={Sep}
 }
