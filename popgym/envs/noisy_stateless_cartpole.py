@@ -10,7 +10,7 @@ class NoisyStatelessCartPole(StatelessCartPole):
     def __init__(self, *args, **kwargs):
         noise_sigma = kwargs.pop("noise_sigma", 0.1)
         super().__init__(*args, **kwargs)
-        self.noise_sigma = np.full_like(self.observation_space.shape, noise_sigma)
+        self.noise_sigma = np.full(self.observation_space.shape, noise_sigma)
 
     def step(
         self, action: gym.core.ActType
