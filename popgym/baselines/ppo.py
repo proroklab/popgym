@@ -40,6 +40,7 @@ project_id = os.environ.get("POPGYM_PROJECT", "popgym-debug")
 gpu_per_worker = float(os.environ.get("POPGYM_GPU", 0.25))
 max_steps = int(os.environ.get("POPGYM_STEPS", 10e6))
 storage_path = os.environ.get("POPGYM_STORAGE", "/tmp/ray_results")
+num_samples = int(os.environ.get("POPGYM_SAMPLES", 1))
 
 # Hidden size of linear layers
 h = 128
@@ -79,10 +80,8 @@ env_names = env_names[split_id::num_splits]
 attn_models = [
     LinearAttention,
     FastWeightProgrammer,
-    BigFastWeightProgrammer,
-    BigLinearAttention,
 ]
-rnn_models = [LSTM, GRU, Elman, LMU, IndRNN, DiffNC]
+rnn_models = [LSTM, GRU, Elman, LMU, IndRNN]
 conv_models = [S4D]
 basic_models = [
     BasicMLP,
@@ -184,6 +183,6 @@ ray.tune.run(
     callbacks=logging_callbacks,
     trial_name_creator=trial_name,
     verbose=1,
-    num_samples=1,
+    num_samples=num_samples,
     local_dir=storage_path,
 )

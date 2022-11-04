@@ -62,9 +62,9 @@ class NoisyStatelessPendulumEasy(NoisyStatelessPendulum):
 
 class NoisyStatelessPendulumMedium(NoisyStatelessPendulum):
     def __init__(self):
-        super().__init__(noise_sigma=0.3)
+        super().__init__(noise_sigma=0.2)
 
 
 class NoisyStatelessPendulumHard(NoisyStatelessPendulum):
     def __init__(self):
-        super().__init__(noise_sigma=0.5)
+        super().__init__(noise_sigma=0.3)
