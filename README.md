@@ -2,7 +2,7 @@
 ![tests](https://github.com/smorad/popgym/actions/workflows/python-app.yml/badge.svg)
 [![codecov](https://codecov.io/gh/smorad/popgym/branch/master/graph/badge.svg?token=I47IDFZXSV)](https://codecov.io/gh/smorad/popgym)
 
-POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines).
+POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines). The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K).
 
 
 ## Table of Contents
@@ -15,11 +15,9 @@ POPGym is designed to benchmark memory in deep reinforcement learning. It contai
     1. [Setup](#setup-1)
     2. [Usage](#usage-1)
     3. [Available Baselines](#available-baselines)
-3. [Contributing](#contributing)
-4. [Citing](#citing)
-
-
-
+3. [Leaderboard](#leaderboard)
+4. [Contributing](#contributing)
+5. [Citing](#citing)
 
 ## POPGym Environments
 
@@ -30,7 +28,15 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 3. **True Generalization** - All environments are heavily randomized.
 
 ### Setup
-Packages will be sent to pypi soon. Until then, to install the environments:
+You may install `popgym` via `pip` or from source.
+#### Pip
+```bash
+# Works with python <= 3.10
+pip install popgym
+```
+
+#### From Source
+To install the environments:
 ```bash
 git clone https://github.com/smorad/popgym
 cd popgym
@@ -114,9 +120,16 @@ POPGym baselines implements recurrent and memory model in an efficient manner. P
 ### Setup
 To install the baselines and dependencies, first install ray
 ```bash
-pip install ray[rllib]
+pip install "ray[rllib]==2.0.0"
 ```
-You must do this, as ray-2.0.0 erroneously pins an old verison of gym and will cause dependency issues. This has been patched but did not make it into the latest release. Once ray is installed, install popgym:
+`ray` must be installed separately, as it erroneously pins an old verison of gym and will cause dependency issues. Once ray is installed, install popgym either via pip or from source.
+
+#### Pip 
+```bash
+pip install "popgym[baselines]"
+```
+
+### From Source
 ```bash
 git clone https://github.com/smorad/popgym
 cd popgym
@@ -203,6 +216,11 @@ To add your own custom model, inherit from [BaseModel](popgym/baselines/ray_mode
 12. [Diagonal State Space Models](popgym/baselines/ray_models/ray_s4d.py) [(Paper)](https://arxiv.org/abs/2206.11893)
 13. [Differentiable Neural Computers](popgym/baselines/ray_models/ray_diffnc.py) [(Paper)](http://clgiles.ist.psu.edu/IST597/materials/slides/papers-memory/2016-graves.pdf)
 
+
+# Leaderboard
+We provide a leaderboard of the best module in each environment. Using `ppo.py`, we run 3 trials of each trial. We compute the mean episodic reward over each batch, and store the maximum for each episode. We report the mean and standard deviations over the maximums, taken from at least 3 distinct trials.
+
+The leaderboard is hosted at [paperswithcode](https://paperswithcode.com/dataset/popgym).
 
 # Contributing
 Steps to follow:
