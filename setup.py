@@ -8,5 +8,4 @@ setup(
     install_requires=["gym==0.24.0", "numpy", "mazelib"],
     # Add "ray[rllib]" when they fix their gym dep
     extras_require={"baselines": ["torch", "opt_einsum", "wandb", "dnc", "einops"]},
-    # packages=find_packages('popgym'),
 )

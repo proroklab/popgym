@@ -81,7 +81,7 @@ attn_models = [
     LinearAttention,
     FastWeightProgrammer,
 ]
-rnn_models = [LSTM, GRU, Elman, LMU, IndRNN]
+rnn_models = [LSTM, GRU, Elman, LMU, IndRNN, DiffNC]
 conv_models = [S4D]
 basic_models = [
     BasicMLP,
