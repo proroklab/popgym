@@ -1,27 +1,22 @@
 import unittest
 
 from popgym.envs.repeat_first import RepeatFirst
+from tests.base_env_test import AbstractTest
 
 
-class TestRepeatFirst(unittest.TestCase):
-    def test_all(self):
-        e = RepeatFirst()
-        _ = e.reset()
-        for i in range(100):
-            _, _, done, _ = e.step(0)
-            if done:
-                e.reset()
+class TestRepeatFirst(AbstractTest.POPGymTest):
+    def setUp(self) -> None:
+        self.env = RepeatFirst()
 
     def test_perfect(self):
-        e = RepeatFirst()
         done = False
-        init_obs = e.reset()
+        init_obs = self.env.reset()
         is_start, init_item = init_obs
         self.assertEqual(is_start, 1)
         reward = 0
         for i in range(51):
             self.assertFalse(done)
-            obs, rew, done, info = e.step(init_item)
+            obs, rew, done, info = self.env.step(init_item)
             is_start, item = obs
             self.assertTrue(item < 4)
             self.assertEqual(is_start, 0)

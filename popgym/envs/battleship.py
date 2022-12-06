@@ -3,8 +3,10 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
+from popgym.envs.popgym_env import POPGymEnv
 
-class Battleship(gym.Env):
+
+class Battleship(POPGymEnv):
     """Classic game of Battleship, except the board is obscured. Instead, the agent
     receives a hit/miss notification with the tile coordinates.
 
@@ -21,11 +23,18 @@ class Battleship(gym.Env):
         self.board_size = board_size
         self.ship_sizes = ship_sizes
         self.max_episode_length = self.board_size**2
-        self.observation_space = gym.spaces.MultiDiscrete(
-            np.array([2, self.board_size, self.board_size])
-        )
+        self.observation_space = gym.spaces.Discrete(2)
+        self.state_space = gym.spaces.Tuple((
+            gym.spaces.MultiDiscrete(np.full((self.board_size, self.board_size), 2, dtype=int)),
+            gym.spaces.MultiDiscrete(np.full((self.board_size, self.board_size), 2, dtype=int)),
+            self.observation_space,
+        ))
         self.action_space = gym.spaces.MultiDiscrete([self.board_size, self.board_size])
-        self.reset()
+        self.last_obs = 0
+
+    def get_state(self):
+        state = (self.board.copy(), self.guesses.copy(), self.last_obs)
+        return state
 
     def step(self, action):
         hit = False
@@ -45,12 +54,7 @@ class Battleship(gym.Env):
             self.hits == self.needed_hits
         )
         # Obs is 1 for a hit and 0 for a miss
-        obs = np.concatenate(
-            [
-                np.array([int(hit)]),
-                action,
-            ]
-        )
+        obs = int(hit)
         # Reward is structured so that an episode of all hits will have a
         # total reward of 1.0,
         #
@@ -63,6 +67,8 @@ class Battleship(gym.Env):
             int(not hit) * (-1.0 / (self.max_episode_length - self.needed_hits))
         )
         info = {}
+        # obs = np.array(obs)
+        self.last_obs = obs
 
         return obs, reward, done, info
 
@@ -71,8 +77,8 @@ class Battleship(gym.Env):
         start = None
         end = None
         while not valid:
-            idx_start = np.random.randint(self.board_size, size=2)
-            direction = np.random.randint(2, size=2)
+            idx_start = self.np_random.integers(self.board_size, size=2)
+            direction = self.np_random.integers(2, size=2)
             idx_end = idx_start.copy()
             idx_end[direction[0]] = idx_start[direction[0]] + (-1) ** direction[1] * (
                 ship_size - 1
@@ -103,8 +109,7 @@ class Battleship(gym.Env):
         options: Optional[dict] = None,
     ) -> Union[gym.core.ObsType, Tuple[gym.core.ObsType, Dict[str, Any]]]:
 
-        if seed is not None:
-            np.random.seed(seed)
+        super(Battleship, self).reset(seed=seed)
         self.num_steps = 0
 
         self.board = np.zeros((self.board_size, self.board_size), dtype=np.int8)
@@ -114,10 +119,12 @@ class Battleship(gym.Env):
         self.guesses = np.zeros((self.board_size, self.board_size), dtype=np.int8)
 
         self.hits = 0
-        # Freebie
-        free_idx = np.random.choice(np.where(self.board.ravel() == 0)[0])
-        free = np.array(np.unravel_index(free_idx, self.board.shape))
-        obs = np.concatenate([np.array([0]), free])
+        # # Freebie
+        # free_idx = np.random.choice(np.where(self.board.ravel() == 0)[0])
+        # free = np.array(np.unravel_index(free_idx, self.board.shape))
+        # obs = np.concatenate([np.array([0]), free])
+        obs = 0
+        self.last_obs = obs
 
         self.needed_hits = sum(self.ship_sizes)
         if return_info:

@@ -42,7 +42,7 @@ class MazeEnv(gym.Env):
     def __init__(self, maze_dims=(10, 10), episode_length=1024):
         assert maze_dims[0] % 2 == 0 and maze_dims[1] % 2 == 0, "Maze dims must be even"
         self.maze_dims = [m // 2 for m in maze_dims]
-        self.episode_length = episode_length
+        self.max_episode_length = episode_length
         # This could be MultiBinary but that uses int8 dtype
         # which causes RLlib obs preprocessor to crash
         self.observation_space = gym.spaces.MultiDiscrete(
@@ -138,7 +138,7 @@ class MazeEnv(gym.Env):
         return_info: bool = False,
         options: Optional[dict] = None,
     ) -> Union[gym.core.ObsType, Tuple[gym.core.ObsType, Dict[str, Any]]]:
-        res = super().reset(seed=seed)
+        super().reset(seed=seed)
         if seed is not None:
             random.seed(seed)
             np.random.seed(seed)
@@ -153,4 +153,3 @@ class MazeEnv(gym.Env):
         self.explored[y, x] = Explored.YES
         self.curr_step = 0
 
-        return res

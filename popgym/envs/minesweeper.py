@@ -4,6 +4,8 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
+from popgym.envs.popgym_env import POPGymEnv
+
 
 class HiddenSquare(enum.IntEnum):
     CLEAR = 0
@@ -11,7 +13,7 @@ class HiddenSquare(enum.IntEnum):
     VIEWED = 2
 
 
-class MineSweeper(gym.Env):
+class MineSweeper(POPGymEnv):
     """Classic Microsoft MineSweeper but with the board obscured. Mines are hidden
     underneath a grid of tiles. The player clicks a tile, which returns the
     coordinates of the tile and how many mines are present in adjacent tiles.
@@ -41,16 +43,18 @@ class MineSweeper(gym.Env):
 
         self.dims = dims
         self.num_mines = num_mines
-        self.max_timesteps = dims[0] * dims[1] - num_mines
-        self.success_reward_scale = 1 / self.max_timesteps
+        self.max_episode_length = dims[0] * dims[1] - num_mines
+        self.success_reward_scale = 1 / self.max_episode_length
         self.fail_reward_scale = -0.5 - self.success_reward_scale
         # -1 for one step less (last action must be mine for lowest G)
         # -1 for one step less (first action is a view which will give reward)
-        self.bad_action_reward_scale = -0.5 / (self.max_timesteps - 2)
-        self.observation_space = gym.spaces.MultiDiscrete(
-            np.array([9, *dims], dtype=np.int8)
-        )
+        self.bad_action_reward_scale = -0.5 / (self.max_episode_length - 2)
+        self.observation_space = gym.spaces.Discrete(min(num_mines + 1, 10))
+        self.state_space = gym.spaces.MultiDiscrete([3] * np.prod(self.dims))
         self.action_space = gym.spaces.MultiDiscrete(np.array(dims))
+
+    def get_state(self):
+        return self.hidden_grid.flatten().copy()
 
     def step(self, action):
         done = False
@@ -65,14 +69,9 @@ class MineSweeper(gym.Env):
             self.hidden_grid[action] = HiddenSquare.VIEWED
             reward = self.success_reward_scale
 
-        if self.timestep == self.max_timesteps:
-            done = True
+        done |= (self.timestep == self.max_episode_length) or np.all(self.hidden_grid != HiddenSquare.CLEAR).item()
 
-        if np.all(self.hidden_grid != HiddenSquare.CLEAR):
-            # Uncovered all non-mine squares
-            done = True
-
-        obs = np.array([self.neighbor_grid[action], *action])
+        obs = self.neighbor_grid[action].item()
         self.timestep += 1
 
         return obs, reward, done, {}
@@ -94,7 +93,7 @@ class MineSweeper(gym.Env):
         super().reset(seed=seed)
         # Init grids
         self.hidden_grid = np.full(self.dims, HiddenSquare.CLEAR, dtype=np.int8)
-        mines_flat = np.random.choice(
+        mines_flat = self.np_random.choice(
             np.arange(self.dims[0] * self.dims[1]), size=self.num_mines, replace=False
         )
         self.hidden_grid.ravel()[mines_flat] = HiddenSquare.MINE
@@ -106,9 +105,8 @@ class MineSweeper(gym.Env):
                     np.roll(src_grid, shift_i, 0), shift_j, 1
                 )[1:-1, 1:-1]
 
-        random_start = tuple(np.random.randint(self.dims))
         self.timestep = 0
-        obs = np.array([self.neighbor_grid[random_start], *random_start])
+        obs = 0
 
         if return_info:
             return obs, {}

@@ -46,8 +46,16 @@ class Concentration(gym.Env):
         self.facedown_card = len(np.unique(self.deck_type))
         cards = (1 + self.facedown_card) * np.ones(self.deck.num_cards)
         self.observation_space = gym.spaces.MultiDiscrete(cards)
+        self.state_space = gym.spaces.Tuple((
+            gym.spaces.MultiDiscrete(cards - 1),  # cards values
+            gym.spaces.MultiBinary(self.deck.num_cards),  # cards faces on
+            gym.spaces.Discrete(n),  # first card turned
+            gym.spaces.Discrete(n),  # second card turned
+        ))
         self.action_space = gym.spaces.Discrete(np.array(self.deck.num_cards))
         self.deck.add_players("face_up", "face_up_idx", "in_play", "in_play_idx")
+        self.last_in_play_idx = []
+        self.last_trying_card_already_up = False
 
     def step(self, action):
         reward = 0
@@ -64,12 +72,18 @@ class Concentration(gym.Env):
         assert len(self.deck["in_play"]) <= 2
         # Cannot flip the same card twice
         self.obs = self.get_obs()
+        self.last_in_play_idx = self.deck["in_play_idx"].copy()
 
         assert len(self.deck["face_up"]) == len(self.deck["face_up_idx"])
         assert len(self.deck["in_play"]) == len(self.deck["in_play_idx"])
 
+        trying_card_already_up = any(idx in self.deck["face_up_idx"] for idx in self.deck["in_play_idx"])
+
         # End of phase
-        if len(self.deck["in_play"]) == 2:
+        if trying_card_already_up:
+            reward = self.failure_reward_scale * len(self.deck["in_play_idx"])
+            self.deck.discard_hands("in_play", "in_play_idx")
+        elif len(self.deck["in_play"]) == 2:
             inplay_cards = self.deck_type[self.deck["in_play"]]
             cards_match = inplay_cards[0] == inplay_cards[1]
             flipped_same_idx = self.deck["in_play"][0] == self.deck["in_play"][1]
@@ -77,18 +91,13 @@ class Concentration(gym.Env):
                 reward = self.success_reward_scale
                 self.deck["face_up"].extend(self.deck["in_play"])
                 self.deck["face_up_idx"].extend(self.deck["in_play_idx"])
-                if len(self.deck["face_up"]) == len(self.deck):
-                    done = True
+                done |= len(self.deck["face_up"]) == len(self.deck)
             else:
                 reward = 2 * self.failure_reward_scale
 
             # Flip two last flipped-up cards face down again
             self.deck.discard_hands("in_play", "in_play_idx")
             self.hand = []
-        elif self.deck["in_play_idx"][0] in self.deck["face_up_idx"]:
-            # Trying to turn a card that is already face up
-            reward = self.failure_reward_scale
-            self.deck.discard_hands("in_play", "in_play_idx")
 
         self.curr_step += 1
 
@@ -118,6 +127,16 @@ class Concentration(gym.Env):
         obs[hand_idx] = self.deck_idx_type[deck_idx]
         return obs
 
+    def get_state(self):
+        cards_face_up = np.zeros(len(self.deck,), dtype=np.int8)
+        cards_face_up[self.deck["face_up_idx"]] = 1
+        first_card, second_card = self.facedown_card, self.facedown_card
+        if len(self.last_in_play_idx) == 2:
+            first_card, second_card = self.last_in_play_idx
+        elif len(self.last_in_play_idx) == 1:
+            first_card = self.last_in_play_idx[0]
+        return self.state.copy(), cards_face_up, first_card, second_card
+
     def reset(
         self,
         *,
@@ -128,9 +147,12 @@ class Concentration(gym.Env):
         super().reset(seed=seed)
         self.flip_next_turn = False
         self.deck.reset(rng=self.np_random)
+        self.state = self.deck_idx_type[self.deck.idx].copy().astype(np.float32)
         self.curr_step = 0
         self.turn_counter = 0
         self.flipped_counter = 0
+        self.last_in_play_idx = []
+        self.last_trying_card_already_up = False
         self.obs = self.get_obs()
         info: Dict[str, Any] = {}
         if return_info:

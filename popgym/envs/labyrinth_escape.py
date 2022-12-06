@@ -6,8 +6,8 @@ from popgym.core.maze import Actions, Cell, MazeEnv
 
 
 class LabyrinthEscape(MazeEnv):
-    """A maze environment where the agent receives reward for visiting
-    new grid squares
+    """A maze environment where the agent receives negative rewards
+     until it finds the goal.
 
     Args:
         maze_dims: (heigh, width) of the generated mazes in blocks
@@ -20,7 +20,10 @@ class LabyrinthEscape(MazeEnv):
 
     def __init__(self, maze_dims=(10, 10), episode_length=1024):
         super().__init__(maze_dims, episode_length)
-        self.neg_reward_scale = -1 / self.episode_length
+        self.neg_reward_scale = -1 / self.max_episode_length
+
+    def get_state(self, obs):
+        pass
 
     def step(self, action):
         super().step(action)
@@ -30,8 +33,7 @@ class LabyrinthEscape(MazeEnv):
         if self.maze.grid[y, x] == Cell.GOAL:
             reward += 1.0
             done = True
-        if self.curr_step == self.episode_length - 1:
-            done = True
+        done |= self.curr_step == self.max_episode_length - 1
 
         obs = self.get_obs(action)
         info = {"position": (x, y)}

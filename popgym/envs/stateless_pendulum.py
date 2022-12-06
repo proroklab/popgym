@@ -8,8 +8,10 @@ import numpy as np
 from gym.envs.classic_control import PendulumEnv
 from gym.spaces import Box
 
+from popgym.envs.popgym_env import POPGymEnv
 
-class StatelessPendulum(PendulumEnv):
+
+class StatelessPendulum(PendulumEnv, POPGymEnv):
     """Partially observable variant of the Pendulum gym environment.
     https://github.com/openai/gym/blob/master/gym/envs/classic_control/
     pendulum.py
@@ -28,6 +30,7 @@ class StatelessPendulum(PendulumEnv):
 
         # Fix our observation-space (remove angular velocity component).
         high = np.array([1.0, 1.0], dtype=np.float32)
+        self.state_space = self.observation_space
         self.observation_space = Box(low=-high, high=high, dtype=np.float32)
 
     def reward_transform(self, reward):

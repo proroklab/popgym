@@ -20,7 +20,7 @@ class TestLabyrinthEscape(unittest.TestCase):
         for i in range(5):
             while not done:
                 _, _, done, _ = e.step(e.action_space.sample())
-            self.assertTrue(e.curr_step < e.episode_length)
+            self.assertTrue(e.curr_step < e.max_episode_length)
             e.reset()
 
     def test_known(self):

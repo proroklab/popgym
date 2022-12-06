@@ -1,16 +1,12 @@
 import unittest
 
 from popgym.envs.repeat_previous import RepeatPrevious
+from tests.base_env_test import AbstractTest
 
 
-class TestRepeatPrevious(unittest.TestCase):
-    def test_all(self):
-        e = RepeatPrevious()
-        _ = e.reset()
-        for i in range(100):
-            _, _, done, _ = e.step(0)
-            if done:
-                e.reset()
+class TestRepeatPrevious(AbstractTest.POPGymTest):
+    def setUp(self) -> None:
+        self.env = RepeatPrevious()
 
     def test_k(self):
         e = RepeatPrevious(k=2)

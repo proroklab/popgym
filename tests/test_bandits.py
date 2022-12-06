@@ -1,13 +1,9 @@
-import unittest
+from tests.base_env_test import AbstractTest
 
-import numpy as np
 
 from popgym.envs.multiarmed_bandit import MultiarmedBandit
 
 
-class TestBandits(unittest.TestCase):
-    def test_step(self):
-        m = MultiarmedBandit()
-        m.reset()
-        for i in range(100):
-            obs, reward, done, info = m.step(np.random.randint(10))
+class TestBandits(AbstractTest.POPGymTest):
+    def setUp(self) -> None:
+        self.env = MultiarmedBandit()
