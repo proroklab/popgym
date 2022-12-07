@@ -4,7 +4,7 @@ import gym
 import numpy as np
 
 from popgym.core.deck import Deck, RANKS
-from popgym.envs.popgym_env import POPGymEnv
+from popgym.core.popgym_env import POPGymEnv
 
 
 def value_fn(hand):

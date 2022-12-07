@@ -5,7 +5,7 @@ import gym
 from popgym.core.deck import Deck
 import numpy as np
 
-from popgym.envs.popgym_env import POPGymEnv
+from popgym.core.popgym_env import POPGymEnv
 
 
 class RepeatPrevious(POPGymEnv):

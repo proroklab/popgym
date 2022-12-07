@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.envs.popgym_env import POPGymEnv
+from popgym.core.popgym_env import POPGymEnv
 
 
 class MultiarmedBandit(POPGymEnv):

@@ -23,7 +23,7 @@ class LabyrinthEscape(MazeEnv):
         self.neg_reward_scale = -1 / self.max_episode_length
 
     def get_state(self, obs):
-        pass
+        raise NotImplementedError
 
     def step(self, action):
         super().step(action)

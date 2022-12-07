@@ -1,3 +1,4 @@
+import math
 import unittest
 import random
 import numpy as np
@@ -23,6 +24,8 @@ def is_close(x, y):
         close = all([is_close(x[key], y[key]) for key in x.keys()])
     elif isinstance(x, np.ndarray):
         close = np.allclose(x, y)
+    elif isinstance(x, float):
+        close = math.isclose(x, y)
     else:
         close = x == y
     return close

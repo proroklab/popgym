@@ -98,7 +98,7 @@ from popgym.util.definitions import (
     OBS,
     STATE,
     LAST_ACTION,
-    ObservabilityLevel,
+    Observability,
 )
 
 #

@@ -10,15 +10,6 @@ class TestMineSweeper(AbstractTest.POPGymTest):
     def setUp(self) -> None:
         self.env = MineSweeper()
 
-    # def test_step(self):
-    #     e = MineSweeper()
-    #     e.reset()
-    #     done = False
-    #     for i in range(1000):
-    #         _, _, done, _ = e.step(e.action_space.sample())
-    #         if done:
-    #             e.reset()
-
     def test_perfect(self):
         self.env.reset()
         xs, ys = np.where(self.env.hidden_grid == HiddenSquare.CLEAR)

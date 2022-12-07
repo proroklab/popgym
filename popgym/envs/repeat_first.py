@@ -1,12 +1,11 @@
 from typing import Any, Dict, Optional, Tuple, Union
 
 import gym
-from gym import spaces
 from popgym.core.deck import Deck
 
 import numpy as np
 
-from popgym.envs.popgym_env import POPGymEnv
+from popgym.core.popgym_env import POPGymEnv
 
 
 class RepeatFirst(POPGymEnv):

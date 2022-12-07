@@ -1,19 +1,19 @@
 from gym import Wrapper, spaces, Env
-from popgym.envs.popgym_env import POPGymEnv
-from popgym.util.definitions import OBS, STATE, ObservabilityLevel
+from popgym.core.popgym_env import POPGymEnv
+from popgym.util.definitions import OBS, STATE, Observability
 
 
 class ObservabilityWrapper(Wrapper):
-    def __init__(self, env: Env, observability_level: ObservabilityLevel):
+    def __init__(self, env: Env, observability_level: Observability):
         super(ObservabilityWrapper, self).__init__(env)
         assert isinstance(env.unwrapped, POPGymEnv), "This wrapper is made for POPGymEnvs."
         self.observability_level = observability_level
-        if observability_level == ObservabilityLevel.FULL_AND_PARTIAL:
+        if observability_level == Observability.FULL_AND_PARTIAL:
             self.observation_space = spaces.Dict({
                 OBS: self.env.observation_space,
                 STATE: self.state_space,
             })
-        elif observability_level == ObservabilityLevel.FULL:
+        elif observability_level == Observability.FULL:
             self.observation_space = self.state_space
 
     def reset(self, **kwargs):
@@ -27,11 +27,11 @@ class ObservabilityWrapper(Wrapper):
             return obs
 
     def add_state(self, obs, info):
-        if self.observability_level == ObservabilityLevel.FULL:
+        if self.observability_level == Observability.FULL:
             obs = self.get_state()
-        elif self.observability_level == ObservabilityLevel.FULL_AND_PARTIAL:
+        elif self.observability_level == Observability.FULL_AND_PARTIAL:
             obs = {OBS: obs, STATE: self.get_state()}
-        elif self.observability_level == ObservabilityLevel.FULL_IN_INFO_DICT:
+        elif self.observability_level == Observability.FULL_IN_INFO_DICT:
             info[STATE] = self.get_state()
         return obs, info
 

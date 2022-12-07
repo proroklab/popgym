@@ -44,6 +44,9 @@ class LabyrinthExplore(MazeEnv):
 
         return obs, reward, done, info
 
+    def get_state(self, obs):
+        raise NotImplementedError
+
     def render(self):
         print(self.tostring(start=True, end=False, agent=True, visited=True))
 

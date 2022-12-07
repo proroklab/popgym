@@ -7,9 +7,9 @@ from typing import Optional, Tuple, Union
 import gym
 import numpy as np
 from gym.envs.classic_control import CartPoleEnv
-from gym.spaces import Box, Dict
+from gym.spaces import Box
 
-from popgym.envs.popgym_env import POPGymEnv
+from popgym.core.popgym_env import POPGymEnv
 
 
 class StatelessCartPole(CartPoleEnv, POPGymEnv):

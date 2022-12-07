@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.envs.popgym_env import POPGymEnv
+from popgym.core.popgym_env import POPGymEnv
 
 
 class Battleship(POPGymEnv):
@@ -67,7 +67,6 @@ class Battleship(POPGymEnv):
             int(not hit) * (-1.0 / (self.max_episode_length - self.needed_hits))
         )
         info = {}
-        # obs = np.array(obs)
         self.last_obs = obs
 
         return obs, reward, done, info
