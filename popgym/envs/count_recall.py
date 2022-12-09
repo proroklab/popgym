@@ -84,9 +84,6 @@ class CountRecall(POPGymEnv):
 
         reward = 1 if action == prev_count else -1
         reward *= self.reward_scale
-        # error = abs(prev_count - action)
-        # clamped = min(error, self.error_clamp)
-        # reward = self.reward_scale * (1 - 2 * clamped / self.error_clamp)
 
         done = len(self.value_deck) == 0
 

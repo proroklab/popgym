@@ -4,6 +4,15 @@ from popgym.util.definitions import OBS, STATE, Observability
 
 
 class ObservabilityWrapper(Wrapper):
+    """Wrapper that adds the last action to the observation.
+
+    Args:
+        env: The environment.
+        observability_level: The observability level.
+
+    Returns:
+        A gym environment
+    """
     def __init__(self, env: Env, observability_level: Observability):
         super(ObservabilityWrapper, self).__init__(env)
         assert isinstance(env.unwrapped, POPGymEnv), "This wrapper is made for POPGymEnvs."

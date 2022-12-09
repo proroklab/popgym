@@ -118,10 +118,6 @@ class Battleship(POPGymEnv):
         self.guesses = np.zeros((self.board_size, self.board_size), dtype=np.int8)
 
         self.hits = 0
-        # # Freebie
-        # free_idx = np.random.choice(np.where(self.board.ravel() == 0)[0])
-        # free = np.array(np.unravel_index(free_idx, self.board.shape))
-        # obs = np.concatenate([np.array([0]), free])
         obs = 0
         self.last_obs = obs
 
