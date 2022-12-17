@@ -25,12 +25,11 @@ class Autoencode(POPGymEnv):
         A gym environment
     """
 
-    def __init__(self, num_decks=1, with_state=False):
+    def __init__(self, num_decks=1):
         self.deck = Deck(num_decks)
         self.deck.add_players("system")
         self.max_episode_length = self.deck.num_cards * 2 - 1
         self.action_space = self.deck.get_obs_space(["suits"])
-        self.with_state = with_state
         self.observation_space = gym.spaces.Tuple(
             (
                 gym.spaces.Discrete(2),

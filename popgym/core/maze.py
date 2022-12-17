@@ -1,11 +1,15 @@
+import math
 import random
 from enum import IntEnum
-from typing import Any, Dict, Optional, Tuple, Union
+from typing import Optional
+from warnings import warn
 
 import gym
 import numpy as np
 from mazelib import Maze
 from mazelib.generate.HuntAndKill import HuntAndKill
+
+from popgym.core.env import POPGymEnv
 
 
 class Explored(IntEnum):
@@ -14,6 +18,7 @@ class Explored(IntEnum):
 
 
 class Cell(IntEnum):
+    HIDDEN = -1
     FREE = 0
     OBSTACLE = 1
     START = 2
@@ -28,7 +33,7 @@ class Actions(IntEnum):
     NONE = 4
 
 
-class MazeEnv(gym.Env):
+class MazeEnv(POPGymEnv):
     """A base class for maze-based environments.
 
     Args:
@@ -38,6 +43,8 @@ class MazeEnv(gym.Env):
     Returns:
         A gym environment
     """
+
+    obs_requires_prev_action = True
 
     def __init__(self, maze_dims=(10, 10), episode_length=1024):
         assert maze_dims[0] % 2 == 0 and maze_dims[1] % 2 == 0, "Maze dims must be even"
@@ -50,6 +57,15 @@ class MazeEnv(gym.Env):
             # np.full(9, len(Cell), dtype=np.int32)
         )
         self.action_space = gym.spaces.Discrete(len(Actions) - 1)
+        self.state_space = gym.spaces.MultiDiscrete(
+            np.array(math.prod(maze_dims) * [len(Cell)])
+        )
+        warn(
+            "Maze environments have been shown to be solvable without the use "
+            "of memory (e.g. MLP outperforms LSTM). We suggest not using them "
+            "as POMDP benchmarks.",
+            DeprecationWarning,
+        )
 
     def get_obs(self, action):
         view = self.local_view(self.maze.grid).reshape(9).astype(np.int32)
@@ -131,13 +147,18 @@ class MazeEnv(gym.Env):
         self.explored[y, x] = Explored.YES
         self.curr_step += 1
 
+    def get_state(self) -> gym.core.ObsType:
+        state = self.maze.copy()
+        state[self.explored == Explored.NO] = Cell.HIDDEN
+        return state
+
     def reset(
         self,
         *,
         seed: Optional[int] = None,
         return_info: bool = False,
         options: Optional[dict] = None,
-    ) -> Union[gym.core.ObsType, Tuple[gym.core.ObsType, Dict[str, Any]]]:
+    ) -> None:
         super().reset(seed=seed)
         if seed is not None:
             random.seed(seed)
@@ -152,4 +173,3 @@ class MazeEnv(gym.Env):
         self.maze.grid[y, x] = Cell.START
         self.explored[y, x] = Explored.YES
         self.curr_step = 0
-

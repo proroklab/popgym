@@ -11,24 +11,20 @@ from ray.air.callbacks.wandb import WandbLoggerCallback
 from ray.tune.registry import register_env  # noqa: F401
 
 import popgym  # noqa: F401
+from popgym import wrappers
 from popgym.baselines.ray_models.ray_diffnc import DiffNC  # noqa: F401
 from popgym.baselines.ray_models.ray_elman import Elman
 from popgym.baselines.ray_models.ray_frameconv import Frameconv
 from popgym.baselines.ray_models.ray_framestack import Framestack
-from popgym.baselines.ray_models.ray_fwp import (
-    BigFastWeightProgrammer,
-    FastWeightProgrammer,
-)
+from popgym.baselines.ray_models.ray_fwp import FastWeightProgrammer
 from popgym.baselines.ray_models.ray_gru import GRU
 from popgym.baselines.ray_models.ray_indrnn import IndRNN
-from popgym.baselines.ray_models.ray_linear_attention import (
-    BigLinearAttention,
-    LinearAttention,
-)
+from popgym.baselines.ray_models.ray_linear_attention import LinearAttention
 from popgym.baselines.ray_models.ray_lmu import LMU
 from popgym.baselines.ray_models.ray_lstm import LSTM
 from popgym.baselines.ray_models.ray_mlp import MLP, BasicMLP
 from popgym.baselines.ray_models.ray_s4d import S4D
+from popgym.core.env import POPGymEnv
 
 env_names: List[Any] = []
 
@@ -53,11 +49,15 @@ num_envs_per_worker = 16
 train_batch_size = bptt_cutoff * max(num_workers, 1) * num_envs_per_worker
 
 
+def wrap(env: POPGymEnv) -> POPGymEnv:
+    return wrappers.Antialias(wrappers.PreviousAction(env))
+
+
 # Register all envs with ray
 envs = popgym.ALL_ENVS
 for cls, info in envs.items():
     env_name = info["id"]
-    register_env(env_name, lambda x: cls())
+    register_env(env_name, lambda x: wrap(cls()))
 
 
 # Of the registered envs, pick out the ones we actually want to run
