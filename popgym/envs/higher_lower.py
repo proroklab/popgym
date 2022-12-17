@@ -3,7 +3,8 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.core.deck import Deck
+from popgym.core.deck import Deck, RANKS
+from popgym.core.popgym_env import POPGymEnv
 
 
 def value_fn(hand):
@@ -15,7 +16,7 @@ def value_fn(hand):
         return -1
 
 
-class HigherLower(gym.Env):
+class HigherLower(POPGymEnv):
     """A game of higher/lower. Given a deck of cards, the agent predicts whether the
     next card drawn from the deck is higher or lower than the last card drawn from
     the deck. A push results in zero reward, while a correct/incorrect guess result
@@ -34,38 +35,34 @@ class HigherLower(gym.Env):
         self.deck = Deck(num_decks)
         self.deck.add_players("player")
         self.action_space = gym.spaces.Discrete(2)
+        self.state = np.zeros((len(RANKS, )), dtype=np.uint8)
         self.observation_space = self.deck.get_obs_space(["ranks"])
+        self.state_space = gym.spaces.Box(0, 1, self.state.shape)
         self.value_map = dict(zip(self.deck.ranks, range(len(self.deck.ranks))))
         self.deck_size = len(self.deck)
 
+    def get_state(self):
+        return (self.state.copy() / 4 / self.num_decks).astype(np.float32)
+
     def step(self, action):
         guess_higher = action == 0
-        if len(self.deck) <= 1:
-            done = True
-        else:
-            done = False
+        done = len(self.deck) <= 1
 
         self.deck.deal("player", 1)
         assert self.deck.hand_size("player") == 2
-        curr_idx, next_idx = self.deck["player"]
-        curr_value, next_value = self.deck.ranks_idx[[curr_idx, next_idx]]
+        curr_value, next_value = self.deck.show("player", ["ranks_idx"]).reshape(-1)
+        self.state[next_value] += 1
 
         rew_scale = 1 / self.deck_size
         if next_value == curr_value:
             reward = 0
-        elif next_value > curr_value and guess_higher:
+        elif (next_value > curr_value) == guess_higher:
             reward = rew_scale
-        elif next_value < curr_value and guess_higher:
-            reward = -rew_scale
-        elif next_value < curr_value and not guess_higher:
-            reward = rew_scale
-        elif next_value > curr_value and not guess_higher:
-            reward = -rew_scale
         else:
-            raise Exception("Should not reach this point")
+            reward = -rew_scale
 
         self.deck.discard("player", 0)
-        obs = self.deck.show("player", ["ranks_idx"]).reshape(-1)
+        obs = self.deck.show("player", ["ranks_idx"]).item()
 
         return obs, reward, done, {}
 
@@ -82,7 +79,9 @@ class HigherLower(gym.Env):
         super().reset(seed=seed)
         self.deck.reset(rng=self.np_random)
         self.deck.deal("player", 1)
-        obs = self.deck.show("player", ["ranks_idx"]).reshape(-1)
+        self.state = np.zeros((len(RANKS,)), dtype=np.uint8)
+        obs = self.deck.show("player", ["ranks_idx"]).item()
+        self.state[obs] = 1
         viz = np.concatenate(self.deck.show("player", ["suits", "ranks"]))
         if return_info:
             return obs, {"card": viz}

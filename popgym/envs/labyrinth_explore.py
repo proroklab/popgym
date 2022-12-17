@@ -21,7 +21,7 @@ class LabyrinthExplore(MazeEnv):
 
     def __init__(self, maze_dims=(10, 10), episode_length=1024):
         super().__init__(maze_dims, episode_length)
-        self.neg_reward_scale = -1 / self.episode_length
+        self.neg_reward_scale = -1 / self.max_episode_length
 
     def step(self, action):
         new_square = self.explored[tuple(self.move(action))] == Explored.NO
@@ -31,7 +31,7 @@ class LabyrinthExplore(MazeEnv):
         y, x = self.position
         if new_square:
             reward = self.pos_reward_scale
-        if self.curr_step == self.episode_length - 1:
+        if self.curr_step == self.max_episode_length - 1:
             done = True
         free_mask = self.maze.grid != Cell.OBSTACLE
         visit_mask = self.explored == Explored.YES
@@ -43,6 +43,9 @@ class LabyrinthExplore(MazeEnv):
         info = {"position": (x, y)}
 
         return obs, reward, done, info
+
+    def get_state(self, obs):
+        raise NotImplementedError
 
     def render(self):
         print(self.tostring(start=True, end=False, agent=True, visited=True))

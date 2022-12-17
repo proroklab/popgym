@@ -1,11 +1,14 @@
 from typing import Any, Dict, Optional, Tuple, Union
 
 import gym
-
 from popgym.core.deck import Deck
 
+import numpy as np
 
-class RepeatFirst(gym.Env):
+from popgym.core.popgym_env import POPGymEnv
+
+
+class RepeatFirst(POPGymEnv):
     """A game where the agent must repeat the suit of the first card it saw
 
     Args:
@@ -19,6 +22,7 @@ class RepeatFirst(gym.Env):
     def __init__(self, num_decks=1):
         self.deck = Deck(num_decks)
         self.deck.add_players("player")
+        self.max_episode_length = self.deck.num_cards - 1
         self.action_space = self.deck.get_obs_space(["suits"])
         self.observation_space = gym.spaces.Tuple(
             (
@@ -26,20 +30,27 @@ class RepeatFirst(gym.Env):
                 self.action_space,
             )
         )
+        self.state_space = gym.spaces.Tuple((
+                gym.spaces.MultiDiscrete([4] * len(self.deck)),
+                gym.spaces.Box(0, 1, (1,))
+            ))
 
     def make_obs(self, card, is_start=False):
-        return (int(is_start), card.reshape(-1))
+        return int(is_start), card.item()
+
+    def get_state(self):
+        cards = self.deck.suits_idx[self.deck.idx]
+        pos = np.array([len(self.deck) / (self.deck.num_cards - 1)], dtype=np.float32)
+        return cards, pos
 
     def step(self, action):
-        done = False
         reward_scale = 1 / (self.deck.num_cards - 1)
         if action == self.card:
             reward = reward_scale
         else:
             reward = -reward_scale
 
-        if len(self.deck) == 1:
-            done = True
+        done = len(self.deck) == 1
 
         self.deck.deal("player", 1)
         card = self.deck.show("player", ["suits_idx"])[0, -1]

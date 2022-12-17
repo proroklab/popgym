@@ -4,9 +4,10 @@ import gym
 import numpy as np
 
 from popgym.core.deck import Deck
+from popgym.core.popgym_env import POPGymEnv
 
 
-class CountRecall(gym.Env):
+class CountRecall(POPGymEnv):
     """A game where the agent is queried on how many times it has observed
     an event in the past. This tests long-term order-agnostic memory like sets.
 
@@ -46,13 +47,14 @@ class CountRecall(gym.Env):
         self.max_card_count = self.value_deck.num_cards / self.num_distinct_cards
         # Space: [dealt card, card query]
         self.observation_space = gym.spaces.MultiDiscrete([self.num_distinct_cards] * 2)
-        self.action_space = gym.spaces.Box(
-            high=self.max_card_count,
-            low=0,
-            # Should actually be int but RLlib has issues
-            dtype=np.float32,
-            shape=(1,),
-        )
+        self.state_space = gym.spaces.Tuple((
+            gym.spaces.Box(0., 1., (self.num_distinct_cards,)),
+            gym.spaces.Box(0., 1., (self.num_distinct_cards,)),
+            self.observation_space,  # The current query is need, but not the dealt card
+        ))
+        self.last_obs = np.array([0, 0])
+
+        self.action_space = gym.spaces.Discrete(self.max_card_count)
         self.max_episode_length = self.value_deck.num_cards - 1
         self.error_clamp = error_clamp
         self.reward_scale = 1 / self.max_episode_length
@@ -62,26 +64,34 @@ class CountRecall(gym.Env):
         queried = self.deck_type[self.query]
         print(f"Dealt {dealt}, recall {queried} count")
 
+    def get_state(self):
+        state = (
+            (self.counts / self.max_card_count).astype(np.float32),
+            (self.query_counts / self.max_card_count).astype(np.float32),
+            self.last_obs.copy(),
+        )
+        return state
+
     def step(self, action):
-        done = False
-        action = action.item()
+        if isinstance(action, np.ndarray):
+            action = action.item()
 
         self.prev_query = self.query
         prev_count = self.counts[self.prev_query]
         self.value, self.query = self.deal()
         self.counts[self.value] += 1
+        self.query_counts[self.query] += 1
 
-        error = abs(prev_count - action)
-        clamped = min(error, self.error_clamp)
-        reward = self.reward_scale * (1 - 2 * clamped / self.error_clamp)
+        reward = 1 if action == prev_count else -1
+        reward *= self.reward_scale
 
-        if len(self.value_deck) == 0:
-            done = True
+        done = len(self.value_deck) == 0
 
         obs = np.array([self.value, self.query], dtype=np.int64)
+        self.last_obs = obs
         info = {"counts": self.counts}
 
-        return obs, reward, done, info
+        return obs.copy(), reward, done, info
 
     def sample_deck(self):
         return np.random.choice(self.deck_idx_type, size=self.max_episode_length + 1)
@@ -103,18 +113,18 @@ class CountRecall(gym.Env):
     ) -> Union[gym.core.ObsType, Tuple[gym.core.ObsType, Dict[str, Any]]]:
         super().reset(seed=seed)
         self.value_deck.reset(rng=self.np_random)
-        # We dont want the decks to have the same order so reseed
-        rng2, _ = gym.utils.seeding.np_random(self.np_random.integers(0, 1e15).item())
-        self.query_deck.reset(rng=rng2)
+        self.query_deck.reset(rng=self.np_random)  # Having another PRNG is not needed.
 
-        self.counts = {k: 0 for k in range(self.num_distinct_cards)}
+        self.counts = np.zeros((self.num_distinct_cards,), dtype=np.int64)
+        self.query_counts = np.zeros((self.num_distinct_cards,), dtype=np.int64)
 
         self.value, self.query = self.deal()
         self.prev_query = None
         self.counts[self.value] += 1
+        self.query_counts[self.query] += 1
 
         obs = np.array([self.value, self.query], dtype=np.int64)
-
+        self.last_obs = obs.copy()
         if return_info:
             return obs, {"counts": self.counts}
 

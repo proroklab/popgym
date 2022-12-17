@@ -94,6 +94,13 @@ from popgym.envs.stateless_pendulum import (
     StatelessPendulumMedium,
 )
 
+from popgym.util.definitions import (
+    OBS,
+    STATE,
+    LAST_ACTION,
+    Observability,
+)
+
 #
 # Simple envs
 #

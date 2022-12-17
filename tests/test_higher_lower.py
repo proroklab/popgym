@@ -2,20 +2,21 @@ import math
 import unittest
 
 from popgym.envs.higher_lower import HigherLower
+from tests.base_env_test import AbstractTest
 
 
-class TestHigherLower(unittest.TestCase):
-    def test_init(self):
-        HigherLower()
+class TestHigherLower(AbstractTest.POPGymTest):
+
+    def setUp(self) -> None:
+        self.env = HigherLower()
 
     def test_episode_higher(self):
-        env = HigherLower()
         done = False
-        obs_list = [env.reset()]
+        obs_list = [self.env.reset()]
         reward_list = []
         decklen = 52
         while not done:
-            obs, reward, done, info = env.step(0)
+            obs, reward, done, info = self.env.step(0)
             obs_list.append(obs)
             reward_list.append(reward)
         pairs = list(zip(obs_list[:-1], obs_list[1:]))

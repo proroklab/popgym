@@ -7,10 +7,18 @@ from popgym.envs.multiarmed_bandit import MultiarmedBandit
 
 
 class NonstationaryBandit(MultiarmedBandit):
+    def __init__(self, *args, **kwargs):
+        super(NonstationaryBandit, self).__init__(*args, *kwargs)
+        self.state_space = gym.spaces.Tuple(self.state_space, self.state_space)
+        self.final_bandits = np.zeros((self.num_bandits,))
+
+    def get_state(self):
+        state = super(NonstationaryBandit, self).get_state()
+        return state, self.final_bandits.copy()
+
     def step(self, action, increment=True):
         obs, reward, done, info = super().step(action, increment)
-        self.bandits = (self.final_bandits - self.bandits) / self.episode_length
-
+        self.bandits = (self.final_bandits - self.bandits) / self.max_episode_length
         return obs, reward, done, self.info
 
     def reset(
@@ -21,8 +29,8 @@ class NonstationaryBandit(MultiarmedBandit):
         options: Optional[dict] = None,
     ) -> Union[gym.core.ObsType, Tuple[gym.core.ObsType, Dict[str, Any]]]:
 
-        self.final_bandits = np.random.rand(self.num_bandits)
         out = super().reset(seed=seed, return_info=return_info, options=options)
+        self.final_bandits = self.np_random.rand(self.num_bandits)
         if return_info:
             obs, info = out
         else:

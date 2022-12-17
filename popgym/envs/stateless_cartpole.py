@@ -9,8 +9,10 @@ import numpy as np
 from gym.envs.classic_control import CartPoleEnv
 from gym.spaces import Box
 
+from popgym.core.popgym_env import POPGymEnv
 
-class StatelessCartPole(CartPoleEnv):
+
+class StatelessCartPole(CartPoleEnv, POPGymEnv):
     """Partially observable variant of the CartPole gym environment.
     https://github.com/openai/gym/blob/master/gym/envs/classic_control/
     cartpole.py
@@ -35,8 +37,12 @@ class StatelessCartPole(CartPoleEnv):
             ],
             dtype=np.float32,
         )
-
+        self.state_space = self.observation_space
         self.observation_space = Box(low=-high, high=high, dtype=np.float32)
+
+    def get_state(self):
+        state = np.array(self.state, dtype=np.float32)
+        return state
 
     def reward_transform(self, reward):
         if math.isclose(reward, 0):
@@ -55,7 +61,8 @@ class StatelessCartPole(CartPoleEnv):
             done = True
         reward = self.reward_transform(reward)
         # next_obs is [x-pos, x-veloc, angle, angle-veloc]
-        return np.array([next_obs[0], next_obs[2]]), reward, done, info
+        next_obs = np.array([next_obs[0], next_obs[2]])
+        return next_obs, reward, done, info
 
     def reset(
         self,
@@ -69,13 +76,15 @@ class StatelessCartPole(CartPoleEnv):
             init_obs, info = super().reset(
                 seed=seed, return_info=return_info, options=options
             )
-            return np.array([init_obs[0], init_obs[2]]), info
+            init_obs = np.array([init_obs[0], init_obs[2]])
+            return init_obs, info
         else:
             init_obs = super().reset(
                 seed=seed, return_info=return_info, options=options
             )
             # init_obs is [x-pos, x-veloc, angle, angle-veloc]
-            return np.array([init_obs[0], init_obs[2]])
+            init_obs = np.array([init_obs[0], init_obs[2]])
+            return init_obs
 
 
 class StatelessCartPoleEasy(StatelessCartPole):

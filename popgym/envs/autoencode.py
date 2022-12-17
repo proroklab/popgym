@@ -5,6 +5,7 @@ import gym
 import numpy as np
 
 from popgym.core.deck import Deck
+from popgym.core.popgym_env import POPGymEnv
 
 
 class Mode(enum.IntEnum):
@@ -12,7 +13,7 @@ class Mode(enum.IntEnum):
     WATCH = 1
 
 
-class Autoencode(gym.Env):
+class Autoencode(POPGymEnv):
     """A game where the agent must press buttons in order it saw
     them pressed. E.g., seeing [1, 2, 3] means I should press them in the order
     [1, 2, 3].
@@ -24,23 +25,34 @@ class Autoencode(gym.Env):
         A gym environment
     """
 
-    def __init__(self, num_decks=1):
+    def __init__(self, num_decks=1, with_state=False):
         self.deck = Deck(num_decks)
         self.deck.add_players("system")
+        self.max_episode_length = self.deck.num_cards * 2 - 1
         self.action_space = self.deck.get_obs_space(["suits"])
+        self.with_state = with_state
         self.observation_space = gym.spaces.Tuple(
             (
                 gym.spaces.Discrete(2),
                 self.action_space,
             )
         )
+        self.state_space = gym.spaces.Tuple((
+                gym.spaces.MultiDiscrete([4] * self.deck.num_cards),
+                gym.spaces.Discrete(2),
+                gym.spaces.Box(0, 1, (1,)),
+        ))
         self.mode = Mode.WATCH
 
     def make_obs(self, card_idx):
         card_suit = self.deck.suits_idx[card_idx].reshape(-1)
-        return (self.mode.value, card_suit)
+        return int(self.mode.value), card_suit.item()
 
-        # return (self.mode.value, button)
+    def get_state(self):
+        cards = self.deck.suits_idx[self.deck.idx].copy()
+        mode = int(self.mode.value)
+        pos = np.array([len(self.deck['system']) / self.deck.num_cards], dtype=np.float32)
+        return cards, mode, pos
 
     def step(self, action):
         done = False
@@ -58,8 +70,7 @@ class Autoencode(gym.Env):
             obs = self.make_obs(self.deck["system"][-1])
         else:
             # Recited all cards
-            if len(self.deck["system"]) == 1:
-                done = True
+            done = len(self.deck["system"]) == 1
             correct_card = self.deck.suits_idx[self.deck["system"].pop(-1)]
             if action == correct_card:
                 reward = reward_scale
