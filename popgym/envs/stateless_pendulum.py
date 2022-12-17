@@ -8,7 +8,7 @@ import numpy as np
 from gym.envs.classic_control import PendulumEnv
 from gym.spaces import Box
 
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class StatelessPendulum(PendulumEnv, POPGymEnv):

@@ -5,9 +5,10 @@ import gym
 import numpy as np
 
 from popgym.core.deck import Deck
+from popgym.core.env import POPGymEnv
 
 
-class Concentration(gym.Env):
+class Concentration(POPGymEnv):
     """Classic game of concentration. A deck of cards is shuffled and placed
     face-down. The player can flip two cards, if they match they get a reward
     otherwise they dont.
@@ -20,6 +21,8 @@ class Concentration(gym.Env):
     Returns:
         A gym environment
     """
+
+    obs_requires_prev_action = True
 
     def __init__(self, num_decks=1, deck_type="ranks"):
         # See https://math.stackexchange.com/questions/1876467/
@@ -46,12 +49,14 @@ class Concentration(gym.Env):
         self.facedown_card = len(np.unique(self.deck_type))
         cards = (1 + self.facedown_card) * np.ones(self.deck.num_cards)
         self.observation_space = gym.spaces.MultiDiscrete(cards)
-        self.state_space = gym.spaces.Tuple((
-            gym.spaces.MultiDiscrete(cards - 1),  # cards values
-            gym.spaces.MultiBinary(self.deck.num_cards),  # cards faces on
-            gym.spaces.Discrete(n),  # first card turned
-            gym.spaces.Discrete(n),  # second card turned
-        ))
+        self.state_space = gym.spaces.Tuple(
+            (
+                gym.spaces.MultiDiscrete(cards - 1),  # cards values
+                gym.spaces.MultiBinary(self.deck.num_cards),  # cards faces on
+                gym.spaces.Discrete(n),  # first card turned
+                gym.spaces.Discrete(n),  # second card turned
+            )
+        )
         self.action_space = gym.spaces.Discrete(np.array(self.deck.num_cards))
         self.deck.add_players("face_up", "face_up_idx", "in_play", "in_play_idx")
         self.last_in_play_idx = []
@@ -77,7 +82,9 @@ class Concentration(gym.Env):
         assert len(self.deck["face_up"]) == len(self.deck["face_up_idx"])
         assert len(self.deck["in_play"]) == len(self.deck["in_play_idx"])
 
-        trying_card_already_up = any(idx in self.deck["face_up_idx"] for idx in self.deck["in_play_idx"])
+        trying_card_already_up = any(
+            idx in self.deck["face_up_idx"] for idx in self.deck["in_play_idx"]
+        )
 
         # End of phase
         if trying_card_already_up:
@@ -128,7 +135,12 @@ class Concentration(gym.Env):
         return obs
 
     def get_state(self):
-        cards_face_up = np.zeros(len(self.deck,), dtype=np.int8)
+        cards_face_up = np.zeros(
+            len(
+                self.deck,
+            ),
+            dtype=np.int8,
+        )
         cards_face_up[self.deck["face_up_idx"]] = 1
         first_card, second_card = self.facedown_card, self.facedown_card
         if len(self.last_in_play_idx) == 2:

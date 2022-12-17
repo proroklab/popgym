@@ -1,6 +1,7 @@
-from gym import Wrapper, spaces, Env
-from popgym.core.popgym_env import POPGymEnv
-from popgym.util.definitions import OBS, STATE, Observability
+from gym import Env, Wrapper, spaces
+
+from popgym.core.env import POPGymEnv
+from popgym.core.observability import OBS, STATE, Observability
 
 
 class ObservabilityWrapper(Wrapper):
@@ -13,15 +14,20 @@ class ObservabilityWrapper(Wrapper):
     Returns:
         A gym environment
     """
+
     def __init__(self, env: Env, observability_level: Observability):
         super(ObservabilityWrapper, self).__init__(env)
-        assert isinstance(env.unwrapped, POPGymEnv), "This wrapper is made for POPGymEnvs."
+        assert isinstance(
+            env.unwrapped, POPGymEnv
+        ), "This wrapper is made for POPGymEnvs."
         self.observability_level = observability_level
         if observability_level == Observability.FULL_AND_PARTIAL:
-            self.observation_space = spaces.Dict({
-                OBS: self.env.observation_space,
-                STATE: self.state_space,
-            })
+            self.observation_space = spaces.Dict(
+                {
+                    OBS: self.env.observation_space,
+                    STATE: self.state_space,
+                }
+            )
         elif observability_level == Observability.FULL:
             self.observation_space = self.state_space
 

@@ -1,11 +1,10 @@
 from typing import Any, Dict, Optional, Tuple, Union
 
 import gym
-from popgym.core.deck import Deck
-
 import numpy as np
 
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.deck import Deck
+from popgym.core.env import POPGymEnv
 
 
 class RepeatFirst(POPGymEnv):
@@ -30,10 +29,9 @@ class RepeatFirst(POPGymEnv):
                 self.action_space,
             )
         )
-        self.state_space = gym.spaces.Tuple((
-                gym.spaces.MultiDiscrete([4] * len(self.deck)),
-                gym.spaces.Box(0, 1, (1,))
-            ))
+        self.state_space = gym.spaces.Tuple(
+            (gym.spaces.MultiDiscrete([4] * len(self.deck)), gym.spaces.Box(0, 1, (1,)))
+        )
 
     def make_obs(self, card, is_start=False):
         return int(is_start), card.item()

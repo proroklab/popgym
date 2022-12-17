@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class HiddenSquare(enum.IntEnum):
@@ -26,6 +26,8 @@ class MineSweeper(POPGymEnv):
     Returns:
         A gym environment
     """
+
+    obs_requires_prev_action = True
 
     def __init__(self, difficulty="easy"):
         assert difficulty in ["easy", "medium", "hard"]
@@ -69,7 +71,9 @@ class MineSweeper(POPGymEnv):
             self.hidden_grid[action] = HiddenSquare.VIEWED
             reward = self.success_reward_scale
 
-        done |= (self.timestep == self.max_episode_length) or np.all(self.hidden_grid != HiddenSquare.CLEAR).item()
+        done |= (self.timestep == self.max_episode_length) or np.all(
+            self.hidden_grid != HiddenSquare.CLEAR
+        ).item()
 
         obs = self.neighbor_grid[action].item()
         self.timestep += 1

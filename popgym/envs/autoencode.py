@@ -5,7 +5,7 @@ import gym
 import numpy as np
 
 from popgym.core.deck import Deck
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class Mode(enum.IntEnum):
@@ -37,11 +37,13 @@ class Autoencode(POPGymEnv):
                 self.action_space,
             )
         )
-        self.state_space = gym.spaces.Tuple((
+        self.state_space = gym.spaces.Tuple(
+            (
                 gym.spaces.MultiDiscrete([4] * self.deck.num_cards),
                 gym.spaces.Discrete(2),
                 gym.spaces.Box(0, 1, (1,)),
-        ))
+            )
+        )
         self.mode = Mode.WATCH
 
     def make_obs(self, card_idx):
@@ -51,7 +53,9 @@ class Autoencode(POPGymEnv):
     def get_state(self):
         cards = self.deck.suits_idx[self.deck.idx].copy()
         mode = int(self.mode.value)
-        pos = np.array([len(self.deck['system']) / self.deck.num_cards], dtype=np.float32)
+        pos = np.array(
+            [len(self.deck["system"]) / self.deck.num_cards], dtype=np.float32
+        )
         return cards, mode, pos
 
     def step(self, action):
