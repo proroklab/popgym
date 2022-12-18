@@ -7,7 +7,6 @@ from typing import Any, List
 
 import ray
 import torch
-from ray.air.callbacks.wandb import WandbLoggerCallback
 from ray.tune.registry import register_env  # noqa: F401
 
 import popgym  # noqa: F401
@@ -177,6 +176,8 @@ def main():
 
     # Write your own wandb entity here
     if project_id:
+        from ray.air.callbacks.wandb import WandbLoggerCallback
+
         logging_callbacks = [
             WandbLoggerCallback(
                 project=project_id, entity="prorok-lab", log_config=True
