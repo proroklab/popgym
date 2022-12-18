@@ -9,7 +9,7 @@ import numpy as np
 from gym.envs.classic_control import CartPoleEnv
 from gym.spaces import Box
 
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class StatelessCartPole(CartPoleEnv, POPGymEnv):

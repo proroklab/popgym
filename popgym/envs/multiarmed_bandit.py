@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class MultiarmedBandit(POPGymEnv):
@@ -17,6 +17,8 @@ class MultiarmedBandit(POPGymEnv):
     Returns:
         A gym env
     """
+
+    obs_requires_prev_action = True
 
     def __init__(self, num_bandits=10, episode_length=200):
         self.num_bandits = num_bandits

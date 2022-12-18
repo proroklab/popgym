@@ -3,8 +3,8 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.core.deck import Deck, RANKS
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.deck import RANKS, Deck
+from popgym.core.env import POPGymEnv
 
 
 def value_fn(hand):
@@ -35,7 +35,14 @@ class HigherLower(POPGymEnv):
         self.deck = Deck(num_decks)
         self.deck.add_players("player")
         self.action_space = gym.spaces.Discrete(2)
-        self.state = np.zeros((len(RANKS, )), dtype=np.uint8)
+        self.state = np.zeros(
+            (
+                len(
+                    RANKS,
+                )
+            ),
+            dtype=np.uint8,
+        )
         self.observation_space = self.deck.get_obs_space(["ranks"])
         self.state_space = gym.spaces.Box(0, 1, self.state.shape)
         self.value_map = dict(zip(self.deck.ranks, range(len(self.deck.ranks))))
@@ -79,7 +86,14 @@ class HigherLower(POPGymEnv):
         super().reset(seed=seed)
         self.deck.reset(rng=self.np_random)
         self.deck.deal("player", 1)
-        self.state = np.zeros((len(RANKS,)), dtype=np.uint8)
+        self.state = np.zeros(
+            (
+                len(
+                    RANKS,
+                )
+            ),
+            dtype=np.uint8,
+        )
         obs = self.deck.show("player", ["ranks_idx"]).item()
         self.state[obs] = 1
         viz = np.concatenate(self.deck.show("player", ["suits", "ranks"]))

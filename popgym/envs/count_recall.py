@@ -4,7 +4,7 @@ import gym
 import numpy as np
 
 from popgym.core.deck import Deck
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class CountRecall(POPGymEnv):
@@ -47,11 +47,14 @@ class CountRecall(POPGymEnv):
         self.max_card_count = self.value_deck.num_cards / self.num_distinct_cards
         # Space: [dealt card, card query]
         self.observation_space = gym.spaces.MultiDiscrete([self.num_distinct_cards] * 2)
-        self.state_space = gym.spaces.Tuple((
-            gym.spaces.Box(0., 1., (self.num_distinct_cards,)),
-            gym.spaces.Box(0., 1., (self.num_distinct_cards,)),
-            self.observation_space,  # The current query is need, but not the dealt card
-        ))
+        self.state_space = gym.spaces.Tuple(
+            (
+                gym.spaces.Box(0.0, 1.0, (self.num_distinct_cards,)),
+                gym.spaces.Box(0.0, 1.0, (self.num_distinct_cards,)),
+                # The current query is needed, but not the dealt card
+                self.observation_space,
+            )
+        )
         self.last_obs = np.array([0, 0])
 
         self.action_space = gym.spaces.Discrete(self.max_card_count)

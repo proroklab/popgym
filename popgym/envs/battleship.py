@@ -3,7 +3,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import gym
 import numpy as np
 
-from popgym.core.popgym_env import POPGymEnv
+from popgym.core.env import POPGymEnv
 
 
 class Battleship(POPGymEnv):
@@ -18,17 +18,25 @@ class Battleship(POPGymEnv):
         A gym environment
     """
 
+    obs_requires_prev_action = True
+
     def __init__(self, board_size=10, ship_sizes=[2, 3, 3, 4]):
         # Params
         self.board_size = board_size
         self.ship_sizes = ship_sizes
         self.max_episode_length = self.board_size**2
         self.observation_space = gym.spaces.Discrete(2)
-        self.state_space = gym.spaces.Tuple((
-            gym.spaces.MultiDiscrete(np.full((self.board_size, self.board_size), 2, dtype=int)),
-            gym.spaces.MultiDiscrete(np.full((self.board_size, self.board_size), 2, dtype=int)),
-            self.observation_space,
-        ))
+        self.state_space = gym.spaces.Tuple(
+            (
+                gym.spaces.MultiDiscrete(
+                    np.full((self.board_size, self.board_size), 2, dtype=int)
+                ),
+                gym.spaces.MultiDiscrete(
+                    np.full((self.board_size, self.board_size), 2, dtype=int)
+                ),
+                self.observation_space,
+            )
+        )
         self.action_space = gym.spaces.MultiDiscrete([self.board_size, self.board_size])
         self.last_obs = 0
 

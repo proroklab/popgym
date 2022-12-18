@@ -13,6 +13,11 @@ class TestLabyrinthEscape(unittest.TestCase):
             if done:
                 e.reset()
 
+    def test_tostring(self):
+        e = LabyrinthEscape((6, 6))
+        e.reset()
+        e.tostring()
+
     def test_goal(self):
         e = LabyrinthEscape((6, 6))
         done = False
