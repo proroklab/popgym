@@ -40,6 +40,7 @@ def main():
     num_samples = int(os.environ.get("POPGYM_SAMPLES", 1))
 
     # Used for testing
+    # Maximum episode length and backprop thru time truncation length
     bptt_cutoff = int(os.environ.get("POPGYM_BPTT_CUTOFF", 1024))
     num_workers = int(os.environ.get("POPGYM_WORKERS", 4))
     num_minibatch = int(os.environ.get("POPGYM_MINIBATCH", 8))
@@ -49,10 +50,6 @@ def main():
     h = 128
     # Hidden size of memory
     h_memory = 256
-    # Maximum episode length and backprop thru time truncation length
-    # bptt_cutoff = 1024
-    # num_workers = 4
-    # num_envs_per_worker = 16
     train_batch_size = bptt_cutoff * max(num_workers, 1) * num_envs_per_worker
 
     def wrap(env: POPGymEnv) -> POPGymEnv:

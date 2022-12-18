@@ -56,16 +56,16 @@ class Antialias(Wrapper):
 
     @staticmethod
     def antialias_obs(
-        observation_space: spaces.Space, obs: ObsType, timestep: int
+        observation_space: spaces.Space, obs: ObsType, is_t0: bool
     ) -> ObsType:
-        is_t0 = int(timestep == 0)
+        is_t0_asint = int(is_t0)
         if isinstance(
             observation_space,
             (spaces.Box, spaces.Discrete, spaces.MultiDiscrete, spaces.MultiBinary),
         ):
-            obs = (obs, is_t0)
+            obs = (obs, is_t0_asint)
         elif isinstance(observation_space, spaces.Tuple):
-            obs = tuple(obs) + (is_t0,)
+            obs = tuple(obs) + (is_t0_asint,)
         elif isinstance(observation_space, spaces.Dict):
             if set(observation_space.keys()) == {OBS, STATE}:
                 # Observation comes from ObservabilityWrapper
@@ -74,24 +74,22 @@ class Antialias(Wrapper):
                     observation_space[OBS], obs[OBS], is_t0
                 )
             else:
-                obs[IS_T0] = is_t0
+                obs[IS_T0] = is_t0_asint
         else:
             raise NotImplementedError("Unknown observation space")
         return obs
 
     def step(self, action: ActType) -> Tuple[ObsType, float, bool, dict]:
         obs, reward, done, info = self.env.step(action)
-        self._tstep += 1
-        obs = Antialias.antialias_obs(self.env.observation_space, obs, self._tstep)
+        obs = Antialias.antialias_obs(self.env.observation_space, obs, False)
         return obs, reward, done, info
 
     def reset(self, **kwargs):
-        self._tstep = 0
         if kwargs.get("return_info", False):
             obs, info = self.env.reset(**kwargs)
-            obs = self.antialias_obs(self.env.observation_space, obs, self._tstep)
+            obs = self.antialias_obs(self.env.observation_space, obs, True)
             return obs, info
         else:
             obs = self.env.reset(**kwargs)
-            obs = self.antialias_obs(self.env.observation_space, obs, self._tstep)
+            obs = self.antialias_obs(self.env.observation_space, obs, True)
             return obs
