@@ -4,32 +4,36 @@ from popgym.core.env import POPGymEnv
 from popgym.core.observability import OBS, STATE, Observability
 
 
-class ObservabilityWrapper(Wrapper):
-    """Wrapper that adds the last action to the observation.
+class Markovian(Wrapper):
+    """Wrapper that adds the hidden Markov state to the observation or info dict
 
     Args:
         env: The environment.
-        observability_level: The observability level.
+        observability: The observability level.
 
     Returns:
         A gym environment
     """
 
-    def __init__(self, env: Env, observability_level: Observability):
-        super(ObservabilityWrapper, self).__init__(env)
+    def __init__(self, env: Env, observability: Observability):
+        super(Markovian, self).__init__(env)
         assert isinstance(
             env.unwrapped, POPGymEnv
         ), "This wrapper is made for POPGymEnvs."
-        self.observability_level = observability_level
-        if observability_level == Observability.FULL_AND_PARTIAL:
+        self.observability = observability
+        if observability == Observability.FULL_AND_PARTIAL:
             self.observation_space = spaces.Dict(
                 {
                     OBS: self.env.observation_space,
                     STATE: self.state_space,
                 }
             )
-        elif observability_level == Observability.FULL:
+        elif observability == Observability.FULL:
             self.observation_space = self.state_space
+        elif observability in [Observability.PARTIAL, Observability.FULL_IN_INFO_DICT]:
+            pass
+        else:
+            raise NotImplementedError("Invalid observability level:", observability)
 
     def reset(self, **kwargs):
         if kwargs.get("return_info", False):
@@ -42,11 +46,11 @@ class ObservabilityWrapper(Wrapper):
             return obs
 
     def add_state(self, obs, info):
-        if self.observability_level == Observability.FULL:
+        if self.observability == Observability.FULL:
             obs = self.get_state()
-        elif self.observability_level == Observability.FULL_AND_PARTIAL:
+        elif self.observability == Observability.FULL_AND_PARTIAL:
             obs = {OBS: obs, STATE: self.get_state()}
-        elif self.observability_level == Observability.FULL_IN_INFO_DICT:
+        elif self.observability == Observability.FULL_IN_INFO_DICT:
             info[STATE] = self.get_state()
         return obs, info
 

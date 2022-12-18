@@ -1,4 +1,3 @@
-import math
 import random
 from enum import IntEnum
 from typing import Optional
@@ -18,11 +17,11 @@ class Explored(IntEnum):
 
 
 class Cell(IntEnum):
-    HIDDEN = -1
     FREE = 0
     OBSTACLE = 1
     START = 2
     GOAL = 3
+    HIDDEN = 4
 
 
 class Actions(IntEnum):
@@ -58,7 +57,7 @@ class MazeEnv(POPGymEnv):
         )
         self.action_space = gym.spaces.Discrete(len(Actions) - 1)
         self.state_space = gym.spaces.MultiDiscrete(
-            np.array(math.prod(maze_dims) * [len(Cell)])
+            np.full([m + 1 for m in maze_dims], len(Cell))
         )
         warn(
             "Maze environments have been shown to be solvable without the use "
@@ -148,7 +147,7 @@ class MazeEnv(POPGymEnv):
         self.curr_step += 1
 
     def get_state(self) -> gym.core.ObsType:
-        state = self.maze.copy()
+        state = self.maze.grid.copy()
         state[self.explored == Explored.NO] = Cell.HIDDEN
         return state
 
@@ -158,7 +157,7 @@ class MazeEnv(POPGymEnv):
         seed: Optional[int] = None,
         return_info: bool = False,
         options: Optional[dict] = None,
-    ) -> None:
+    ):
         super().reset(seed=seed)
         if seed is not None:
             random.seed(seed)

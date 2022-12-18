@@ -40,10 +40,14 @@ class StatelessPendulum(PendulumEnv, POPGymEnv):
         transformed = scaled / self.max_episode_length
         return transformed
 
+    def get_state(self):
+        return self._state
+
     def step(
         self, action: gym.core.ActType
     ) -> Tuple[gym.core.ObsType, float, bool, dict]:
         next_obs, reward, done, info = super().step(action)
+        self._state = next_obs
         self.num_steps += 1
         if self.num_steps >= self.max_episode_length:
             done = True
@@ -63,12 +67,14 @@ class StatelessPendulum(PendulumEnv, POPGymEnv):
             init_obs, info = super().reset(
                 seed=seed, return_info=return_info, options=options
             )
+            self._state = init_obs
             return init_obs[:-1], info
 
         else:
             init_obs = super().reset(
                 seed=seed, return_info=return_info, options=options
             )
+            self._state = init_obs
             # init_obs is [cos(theta), sin(theta), theta-dot (angular velocity)]
             return init_obs[:-1]
 
