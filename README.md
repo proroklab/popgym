@@ -47,16 +47,45 @@ pip install .
 ```python
 import gym
 import popgym
+from popgym.wrappers import PreviousAction, Antialias, Markovian
+from popgym.core.observability import Observability, STATE
 # List all envs, see popgym/__init__.py 
 env_classes = popgym.ALL_ENVS.keys()
 print(env_classes)
 env_names = [e["id"] for e in popgym.ALL_ENVS.values()]
 print(env_names)
 # Create env
-env = popgym.envs.concentration.ConcentrationEasy()
+env = popgym.envs.stateless_cartpole.StatelessCartPoleEasy()
 # Alternative way to create env, after importing gym and popgym
-env = gym.make('popgym-ConcentrationEasy-v0')
-obs, reward, done, info = env.step(env.action_space.sample())
+env = gym.make('popgym-StatelessCartPoleEasy-v0')
+# In POMDPs, we often condition on the last action along with the observation.
+# We can do this using the PreviousAction wrapper.
+wrapped_env = PreviousAction(env)
+# To prevent observation aliasing during the first timestep of
+# each episode (where the previous action is undefined), we can also 
+# combine the PreviousAction wrapper with the Antialias wrapper
+wrapped_env = Antialias(wrapped_env)
+# Finally, we can decide if we want the hidden Markov state.
+# This can be part of the observation, placed in the info dict, etc.
+wrapped_env = Markovian(wrapped_env, Observability.FULL_IN_INFO_DICT)
+
+wrapped_env.reset()
+obs, reward, done, info = wrapped_env.step(wrapped_env.action_space.sample())
+print(obs)
+# Outputs:
+# (
+  ## Original observation
+  # array([0.0348076 , 0.02231686], dtype=float32), 
+  ## Previous action
+  # 1, 
+  ## Is initial timestep (antialias)
+  #0
+#)
+
+# Print the hidden Markov state
+print(info[STATE])
+# Outputs:
+# array([ 0.0348076 ,  0.14814377,  0.02231686, -0.31778395], dtype=float32)
 ```
 
 ### Table of Environments
