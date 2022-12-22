@@ -8,7 +8,7 @@ from popgym.core.env import POPGymEnv
 
 
 class RepeatPrevious(POPGymEnv):
-    """A game where the agent must repeat the suit of the first card it saw
+    """A game where the agent must repeat the suit of the k-previous card it saw
 
     Args:
         num_decks: The number of decks to cycle through, which determines
@@ -27,24 +27,23 @@ class RepeatPrevious(POPGymEnv):
         assert self.deck.num_cards > k, "k cannot be less than 52 * num_decks"
         self.deck.add_players("player")
         self.action_space = self.deck.get_obs_space(["suits"])
-        self.observation_space = gym.spaces.Tuple(
-            (
-                gym.spaces.Discrete(2),
-                self.action_space,
-            )
-        )
+        self.observation_space = self.action_space
         self.state_space = gym.spaces.Tuple(
-            (gym.spaces.MultiDiscrete([4] * len(self.deck)), gym.spaces.Box(0, 1, (1,)))
+            (gym.spaces.MultiDiscrete([4] * k), gym.spaces.Box(0, 1, (4,)))
         )
-
-    def make_obs(self, card):
-        should_act = self.deck.hand_size("player") >= self.k
-        return int(should_act), card.item()
+        self.dealt_cards = np.zeros((4,), dtype=int)
 
     def get_state(self):
-        cards = self.deck.suits_idx[self.deck.idx]
-        pos = np.array([len(self.deck) / (self.deck.num_cards - 1)], dtype=np.float32)
-        return cards, pos
+        cards = self.deck.show("player", ["suits_idx"])[0, -self.k:]
+        if len(cards) != self.k:
+            cards_ = np.zeros((self.k,), dtype=cards.dtype)
+            cards_[-len(cards):] = cards
+            cards = cards_
+
+        dealt_cards = 1. - self.dealt_cards / (self.deck.num_cards / 4)
+        dealt_cards = dealt_cards.astype(np.float32)
+
+        return cards.copy(), dealt_cards
 
     def step(self, action):
         reward_scale = 1 / (self.deck.num_cards - self.k)
@@ -60,7 +59,8 @@ class RepeatPrevious(POPGymEnv):
 
         self.deck.deal("player", 1)
         card = self.deck.show("player", ["suits_idx"])[0, -1]
-        obs = self.make_obs(card)
+        self.dealt_cards[card] += 1
+        obs = card.item()
 
         info = {}
 
@@ -77,7 +77,9 @@ class RepeatPrevious(POPGymEnv):
         self.deck.reset(rng=self.np_random)
         self.deck.deal("player", 1)
         self.card = self.deck.show("player", ["suits_idx"])[0, -1]
-        obs = self.make_obs(self.card)
+        self.dealt_cards[:] = 0
+        self.dealt_cards[self.card] += 1
+        obs = self.card.item()
         if return_info:
             return obs, {}
 

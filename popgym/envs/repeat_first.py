@@ -23,23 +23,16 @@ class RepeatFirst(POPGymEnv):
         self.deck.add_players("player")
         self.max_episode_length = self.deck.num_cards - 1
         self.action_space = self.deck.get_obs_space(["suits"])
-        self.observation_space = gym.spaces.Tuple(
-            (
-                gym.spaces.Discrete(2),
-                self.action_space,
-            )
-        )
+        self.observation_space = self.action_space
         self.state_space = gym.spaces.Tuple(
-            (gym.spaces.MultiDiscrete([4] * len(self.deck)), gym.spaces.Box(0, 1, (1,)))
+            (gym.spaces.Discrete(4), gym.spaces.Box(0, 1, (4,)))
         )
-
-    def make_obs(self, card, is_start=False):
-        return int(is_start), card.item()
+        self.dealt_cards = np.zeros((4,), dtype=int)
 
     def get_state(self):
-        cards = self.deck.suits_idx[self.deck.idx]
-        pos = np.array([len(self.deck) / (self.deck.num_cards - 1)], dtype=np.float32)
-        return cards, pos
+        dealt_cards = 1. - self.dealt_cards / (self.deck.num_cards / 4)
+        dealt_cards = dealt_cards.astype(np.float32)
+        return self.card.copy(), dealt_cards
 
     def step(self, action):
         reward_scale = 1 / (self.deck.num_cards - 1)
@@ -52,7 +45,8 @@ class RepeatFirst(POPGymEnv):
 
         self.deck.deal("player", 1)
         card = self.deck.show("player", ["suits_idx"])[0, -1]
-        obs = self.make_obs(card)
+        self.dealt_cards[card] += 1
+        obs = card.item()
         self.deck.discard_all()
 
         info = {}
@@ -69,8 +63,10 @@ class RepeatFirst(POPGymEnv):
         super().reset(seed=seed)
         self.deck.reset(rng=self.np_random)
         self.deck.deal("player", 1)
+        self.dealt_cards[:] = 0
         self.card = self.deck.show("player", ["suits_idx"])[0, -1]
-        obs = self.make_obs(self.card, is_start=True)
+        self.dealt_cards[self.card] += 1
+        obs = self.card.item()
         if return_info:
             return obs, {}
 
