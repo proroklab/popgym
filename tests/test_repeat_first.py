@@ -10,16 +10,12 @@ class TestRepeatFirst(AbstractTest.POPGymTest):
 
     def test_perfect(self):
         done = False
-        init_obs = self.env.reset()
-        is_start, init_item = init_obs
-        self.assertEqual(is_start, 1)
+        init_item = self.env.reset()
         reward = 0
         for i in range(51):
             self.assertFalse(done)
-            obs, rew, done, info = self.env.step(init_item)
-            is_start, item = obs
+            item, rew, done, info = self.env.step(init_item)
             self.assertTrue(item < 4)
-            self.assertEqual(is_start, 0)
             reward += rew
 
         self.assertTrue(done)

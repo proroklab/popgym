@@ -13,9 +13,9 @@ class TestRepeatPrevious(AbstractTest.POPGymTest):
         obs0 = e.reset()
         obs1, rew1, done1, info1 = e.step(0)
         self.assertFalse(done1)
-        obs2, rew2, done2, info2 = e.step(obs0[1])
+        obs2, rew2, done2, info2 = e.step(obs0)
         self.assertFalse(done2)
-        obs3, rew3, done3, info3 = e.step(obs1[1])
+        obs3, rew3, done3, info3 = e.step(obs1)
         self.assertFalse(done3)
 
     def test_full(self):
@@ -25,17 +25,13 @@ class TestRepeatPrevious(AbstractTest.POPGymTest):
         obs2, reward, done, info = e.step(0)
         cum_rew += reward
 
-        all_obs = [obs1[1], obs2[1]]
-        should_act = [obs1[0], obs2[0]]
-        self.assertEqual(should_act[0], 0)
-        self.assertEqual(should_act[1], 1)
+        all_obs = [obs1, obs2]
 
         iters = 2
         while not done:
             a = all_obs[-2]
             obs, reward, done, info = e.step(a)
-            self.assertEqual(obs[0], 1)
-            all_obs.append(obs[1])
+            all_obs.append(obs)
             cum_rew += reward
             iters += 1
 
@@ -45,7 +41,7 @@ class TestRepeatPrevious(AbstractTest.POPGymTest):
 
     def test_full_16(self):
         e = RepeatPrevious(k=16)
-        all_obs = [e.reset()[1]]
+        all_obs = [e.reset()]
         iters = 1
         cum_rew = 0
         while iters < 16:
@@ -53,7 +49,7 @@ class TestRepeatPrevious(AbstractTest.POPGymTest):
             self.assertFalse(done)
             self.assertEqual(reward, 0)
             cum_rew += reward
-            all_obs.append(obs[1])
+            all_obs.append(obs)
             iters += 1
 
         while iters < 52:
@@ -61,7 +57,7 @@ class TestRepeatPrevious(AbstractTest.POPGymTest):
             self.assertFalse(done)
             obs, reward, done, info = e.step(a)
             cum_rew += reward
-            all_obs.append(obs[1])
+            all_obs.append(obs)
             iters += 1
 
         self.assertTrue(done)
