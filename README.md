@@ -335,4 +335,13 @@ pre-commit install
 </details>
 
 # Citing
-Forthcoming
+```
+@inproceedings{
+morad2023popgym,
+title={{POPG}ym: Benchmarking Partially Observable Reinforcement Learning},
+author={Steven Morad and Ryan Kortvelesy and Matteo Bettini and Stephan Liwicki and Amanda Prorok},
+booktitle={The Eleventh International Conference on Learning Representations},
+year={2023},
+url={https://openreview.net/forum?id=chDrutUTs0K}
+}
+```
