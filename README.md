@@ -23,7 +23,7 @@ POPGym is designed to benchmark memory in deep reinforcement learning. It contai
 
 POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Openai Gym](https://github.com/openai/gym) interface. Our environments follow a few basic tenets:
 
-1. **Painless Setup** - `popgym` environments require only `gym`, `numpy`, and `mazelib` as dependencies
+1. **Painless Setup** - `popgym` environments require only `gymnasium`, `numpy`, and `mazelib` as dependencies
 2. **Laptop-Sized Tasks** - Most tasks can be solved in less than a day on the CPU 
 3. **True Generalization** - All environments are heavily randomized.
 
@@ -35,7 +35,7 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 You may install `popgym` via `pip` or from source.
 #### Pip
 ```bash
-# Works with python <= 3.10
+# Works with python <= 3.10 due to mazelib dependency
 pip install popgym
 ```
 
