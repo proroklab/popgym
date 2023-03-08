@@ -35,13 +35,13 @@ class RepeatPrevious(POPGymEnv):
         self.dealt_cards = np.zeros((4,), dtype=int)
 
     def get_state(self):
-        cards = self.deck.show("player", ["suits_idx"])[0, -self.k:]
+        cards = self.deck.show("player", ["suits_idx"])[0, -self.k :]
         if len(cards) != self.k:
             cards_ = np.zeros((self.k,), dtype=cards.dtype)
-            cards_[-len(cards):] = cards
+            cards_[-len(cards) :] = cards
             cards = cards_
 
-        dealt_cards = 1. - self.dealt_cards / (self.deck.num_cards / 4)
+        dealt_cards = 1.0 - self.dealt_cards / (self.deck.num_cards / 4)
         dealt_cards = dealt_cards.astype(np.float32)
 
         return cards.copy(), dealt_cards
@@ -81,7 +81,6 @@ class RepeatPrevious(POPGymEnv):
         self.dealt_cards[self.card] += 1
         obs = self.card.item()
         return obs, {}
-
 
 
 class RepeatPreviousEasy(RepeatPrevious):

@@ -31,7 +31,7 @@ class RepeatFirst(POPGymEnv):
         self.dealt_cards = np.zeros((4,), dtype=int)
 
     def get_state(self):
-        dealt_cards = 1. - self.dealt_cards / (self.deck.num_cards / 4)
+        dealt_cards = 1.0 - self.dealt_cards / (self.deck.num_cards / 4)
         dealt_cards = dealt_cards.astype(np.float32)
         return self.card.copy(), dealt_cards
 
@@ -68,6 +68,7 @@ class RepeatFirst(POPGymEnv):
         self.dealt_cards[self.card] += 1
         obs = self.card.item()
         return obs, {}
+
 
 class RepeatFirstEasy(RepeatFirst):
     def __init__(self):

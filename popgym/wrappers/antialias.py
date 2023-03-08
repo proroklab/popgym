@@ -3,9 +3,9 @@ from typing import Tuple
 from gymnasium import spaces
 from gymnasium.core import ActType, ObsType
 
+from popgym.core.env import POPGymEnv
 from popgym.core.observability import OBS, STATE
 from popgym.core.wrapper import POPGymWrapper
-from popgym.core.env import POPGymEnv
 
 IS_T0 = "is_t0"
 
