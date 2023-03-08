@@ -1,7 +1,7 @@
 import inspect
 from typing import Any, Dict
 
-import gym
+import gymnasium as gym
 
 from popgym.envs.autoencode import (
     Autoencode,
@@ -307,4 +307,6 @@ ALL_ENVS: Dict[gym.Env, Dict[str, Any]] = {
 # Register envs
 for e, v in ALL_ENVS.items():
     mod_name = inspect.getmodule(e).__name__  # type: ignore
-    gym.envs.register(entry_point=":".join([mod_name, e.__name__]), order_enforce=False, **v)
+    gym.envs.register(
+        entry_point=":".join([mod_name, e.__name__]), order_enforce=False, **v
+    )

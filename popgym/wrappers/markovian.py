@@ -1,4 +1,7 @@
-from gym import spaces
+from typing import Any, Dict, Tuple
+
+from gymnasium import spaces
+from gymnasium.core import ObsType
 
 from popgym.core.env import POPGymEnv
 from popgym.core.observability import OBS, STATE, Observability
@@ -36,15 +39,10 @@ class Markovian(POPGymWrapper):
         else:
             raise NotImplementedError("Invalid observability level:", observability)
 
-    def reset(self, **kwargs):
-        if kwargs.get("return_info", False):
-            obs, info = self.env.reset(**kwargs)
-            obs, info = self.add_state(obs, info)
-            return obs, info
-        else:
-            obs = self.env.reset(**kwargs)
-            obs, _ = self.add_state(obs, {})
-            return obs
+    def reset(self, **kwargs) -> Tuple[ObsType, Dict[Any, Any]]:
+        obs, info = self.env.reset(**kwargs)
+        obs, info = self.add_state(obs, info)
+        return obs, info
 
     def add_state(self, obs, info):
         if self.observability == Observability.FULL:
@@ -56,6 +54,6 @@ class Markovian(POPGymWrapper):
         return obs, info
 
     def step(self, action):
-        obs, reward, done, info = self.env.step(action)
+        obs, reward, terminated, truncated, info = self.env.step(action)
         obs, info = self.add_state(obs, info)
-        return obs, reward, done, info
+        return obs, reward, terminated, truncated, info

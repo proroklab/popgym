@@ -1,14 +1,13 @@
 from typing import Optional
 
-import gym
-from gym import spaces
-from gym.core import ObsType
+import gymnasium as gym
+from gymnasium import spaces
+from gymnasium.core import ObsType
 
 from popgym.core.env import POPGymEnv
 
 
 class POPGymWrapper(gym.Wrapper, POPGymEnv):
-
     def __init__(self, env: POPGymEnv):
         super().__init__(env)
         assert isinstance(env, POPGymEnv)

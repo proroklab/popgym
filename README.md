@@ -55,7 +55,7 @@ pip install .
 <p>
 
 ```python
-import gym
+import gymnasium as gym
 import popgym
 from popgym.wrappers import PreviousAction, Antialias, Markovian
 from popgym.core.observability import Observability, STATE
@@ -66,8 +66,6 @@ env_names = [e["id"] for e in popgym.ALL_ENVS.values()]
 print(env_names)
 # Create env
 env = popgym.envs.stateless_cartpole.StatelessCartPoleEasy()
-# Alternative way to create env, after importing gym and popgym
-env = gym.make('popgym-StatelessCartPoleEasy-v0')
 # In POMDPs, we often condition on the last action along with the observation.
 # We can do this using the PreviousAction wrapper.
 wrapped_env = PreviousAction(env)
@@ -80,7 +78,7 @@ wrapped_env = Antialias(wrapped_env)
 wrapped_env = Markovian(wrapped_env, Observability.FULL_IN_INFO_DICT)
 
 wrapped_env.reset()
-obs, reward, done, info = wrapped_env.step(wrapped_env.action_space.sample())
+obs, reward, terminated, truncated, info = wrapped_env.step(wrapped_env.action_space.sample())
 print(obs)
 # Outputs:
 # (
