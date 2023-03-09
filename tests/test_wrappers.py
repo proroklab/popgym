@@ -1,3 +1,4 @@
+from popgym.wrappers.flatten import Flatten
 import pytest
 from gymnasium.utils.env_checker import check_env
 
@@ -97,3 +98,11 @@ def test_state_space_full_and_partial(env):
         check_space(wrapped.observation_space[STATE], obs[STATE])
         check_space(wrapped.observation_space[OBS], obs[OBS])
         check_space(e.observation_space, obs[OBS])
+
+
+@pytest.mark.parametrize("env", ALL_ENVS.keys())
+def test_flatten_step(env):
+    wrapped_aa = Flatten(env())
+    obs, _ = wrapped_aa.reset()
+    assert wrapped_aa.observation_space.contains(obs)
+    check_env(wrapped_aa, skip_render_check=True)
