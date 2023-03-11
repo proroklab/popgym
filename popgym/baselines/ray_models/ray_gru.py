@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
@@ -11,17 +11,20 @@ from popgym.baselines.ray_models.base_model import BaseModel
 class GRU(BaseModel):
     r"""The gated recurrent unit from
 
-    @article{chung_empirical_2014,
-        title = {
-            Empirical evaluation of gated recurrent neural
-            networks on sequence modeling
-        },
-        journal = {arXiv preprint arXiv:1412.3555},
-        author = {
-            Chung, Junyoung and Gulcehre, Caglar and Cho, KyungHyun and Bengio, Yoshua
-        },
-        year = {2014},
-    }
+    .. code-block:: text
+
+        @article{chung_empirical_2014,
+            title = {
+                Empirical evaluation of gated recurrent neural
+                networks on sequence modeling
+            },
+            journal = {arXiv preprint arXiv:1412.3555},
+            author = {
+                Chung, Junyoung and Gulcehre, Caglar and Cho,
+                KyungHyun and Bengio, Yoshua
+            },
+            year = {2014},
+        }
     """
 
     MODEL_CONFIG = {

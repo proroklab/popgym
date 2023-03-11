@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 
@@ -11,15 +11,17 @@ from popgym.baselines.ray_models.base_model import BaseModel
 class S4D(BaseModel):
     r"""The diagonal version of Structured State Spaces (S4) from
 
-    @inproceedings{gu_efficiently_2022,
-        title = {Efficiently Modeling Long Sequences with Structured State Spaces},
-        url = {https://openreview.net/forum?id=uYLFoz1vlAC},
-        language = {en},
-        urldate = {2022-09-22},
-        author = {Gu, Albert and Goel, Karan and Re, Christopher},
-        month = mar,
-        year = {2022},
-    }
+    .. code-block:: text
+
+        @inproceedings{gu_efficiently_2022,
+            title = {Efficiently Modeling Long Sequences with Structured State Spaces},
+            url = {https://openreview.net/forum?id=uYLFoz1vlAC},
+            language = {en},
+            urldate = {2022-09-22},
+            author = {Gu, Albert and Goel, Karan and Re, Christopher},
+            month = mar,
+            year = {2022},
+        }
     """
 
     MODEL_CONFIG = {

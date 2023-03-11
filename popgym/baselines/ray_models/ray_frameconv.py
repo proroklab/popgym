@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
@@ -12,15 +12,17 @@ class Frameconv(BaseModel):
     r"""Temporal convolution over a series of observations. stack_size determines
     the temporal extent of the filter. See
 
-    @article{bai_empirical_2018,
-        title = {
-            An empirical evaluation of generic convolutional and recurrent networks
-            for sequence modeling
-        },
-        journal = {arXiv preprint arXiv:1803.01271},
-        author = {Bai, Shaojie and Kolter, J Zico and Koltun, Vladlen},
-        year = {2018},
-    }
+    .. code-block:: text
+
+        @article{bai_empirical_2018,
+            title = {
+                An empirical evaluation of generic convolutional and recurrent networks
+                for sequence modeling
+            },
+            journal = {arXiv preprint arXiv:1803.01271},
+            author = {Bai, Shaojie and Kolter, J Zico and Koltun, Vladlen},
+            year = {2018},
+        }
     """
 
     MODEL_CONFIG = {

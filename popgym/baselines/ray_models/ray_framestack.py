@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
@@ -12,21 +12,23 @@ class Framestack(BaseModel):
     r"""Concatenate sequential frames along the feature dimension,
     pushing them through an MLP. From
 
-    @article{mnih_human-level_2015,
-        title = {Human-level control through deep reinforcement learning},
-        volume = {518},
-        number = {7540},
-        journal = {nature},
-        author = {
-            Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Rusu,
-            Andrei A and Veness, Joel and Bellemare, Marc G and Graves,
-            Alex and Riedmiller, Martin and Fidjeland, Andreas K and Ostrovski,
-            Georg and {others}
-        },
-        year = {2015},
-        note = {Publisher: Nature Publishing Group},
-        pages = {529--533},
-    }
+    .. code-block:: text
+
+        @article{mnih_human-level_2015,
+            title = {Human-level control through deep reinforcement learning},
+            volume = {518},
+            number = {7540},
+            journal = {nature},
+            author = {
+                Mnih, Volodymyr and Kavukcuoglu, Koray and Silver, David and Rusu,
+                Andrei A and Veness, Joel and Bellemare, Marc G and Graves,
+                Alex and Riedmiller, Martin and Fidjeland, Andreas K and Ostrovski,
+                Georg and {others}
+            },
+            year = {2015},
+            note = {Publisher: Nature Publishing Group},
+            pages = {529--533},
+        }
     """
 
     MODEL_CONFIG = {

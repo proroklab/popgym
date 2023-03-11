@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Tuple
 
-import gym
+import gymnasium as gym
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
 
@@ -8,8 +8,9 @@ from popgym.baselines.ray_models.base_model import BaseModel
 
 
 class MLP(BaseModel):
-    """A good old MLP that has no memory whatsoever. Useful to see if your
-    memory model is actually using its memory."""
+    """A good old MLP that has no memory whatsoever.
+
+    Useful to see if your memory model is actually using its memory."""
 
     MODEL_CONFIG: Dict[str, Any] = {
         "embedding": "sine",

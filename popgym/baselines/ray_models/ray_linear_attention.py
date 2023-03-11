@@ -1,7 +1,7 @@
 import math
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
@@ -13,29 +13,31 @@ from popgym.baselines.ray_models.base_model import BaseModel
 class LinearAttention(BaseModel):
     r"""The Fast Autoregressive Transformer (FART, lol) from
 
-    @inproceedings{katharopoulos_transformers_2020,
-        title = {
-            Transformers are RNNs: Fast Autoregressive
-            Transformers with Linear Attention
-        },
-        shorttitle = {Transformers are {RNNs}},
-        url = {https://proceedings.mlr.press/v119/katharopoulos20a.html},
-        language = {en},
-        urldate = {2022-09-21},
-        booktitle = {
-            Proceedings of the 37th {International}
-            {Conference} on {Machine} {Learning}
-        },
-        publisher = {PMLR},
-        author = {
-            Katharopoulos, Angelos and Vyas, Apoorv and Pappas,
-            Nikolaos and Fleuret, François
-        },
-        month = nov,
-        year = {2020},
-        note = {ISSN: 2640-3498},
-        pages = {5156--5165},
-    }
+    .. code-block:: text
+
+        @inproceedings{katharopoulos_transformers_2020,
+            title = {
+                Transformers are RNNs: Fast Autoregressive
+                Transformers with Linear Attention
+            },
+            shorttitle = {Transformers are {RNNs}},
+            url = {https://proceedings.mlr.press/v119/katharopoulos20a.html},
+            language = {en},
+            urldate = {2022-09-21},
+            booktitle = {
+                Proceedings of the 37th {International}
+                {Conference} on {Machine} {Learning}
+            },
+            publisher = {PMLR},
+            author = {
+                Katharopoulos, Angelos and Vyas, Apoorv and Pappas,
+                Nikolaos and Fleuret, François
+            },
+            month = nov,
+            year = {2020},
+            note = {ISSN: 2640-3498},
+            pages = {5156--5165},
+        }
     """
 
     MODEL_CONFIG = {

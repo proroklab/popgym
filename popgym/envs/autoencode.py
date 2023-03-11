@@ -1,3 +1,4 @@
+"""A game very similar to Simon, but backwards."""
 import enum
 from typing import Any, Dict, Optional, Tuple
 
@@ -15,9 +16,15 @@ class Mode(enum.IntEnum):
 
 
 class Autoencode(POPGymEnv):
-    """A game where the agent must press buttons in order it saw
-    them pressed. E.g., seeing [1, 2, 3] means I should press them in the order
+    """A game very similar to Simon, but backwards.
+
+    The agent receives a sequence of cards, and must output the cards it saw
+    in reverse order. E.g., seeing [1, 2, 3] means I should output them in the order
     [1, 2, 3].
+
+    Examples:
+        >>> env = Autoencode()
+        >>> env.reset()
 
     Args:
         num_decks: The maximum number of decks the agent must memorize
@@ -46,11 +53,11 @@ class Autoencode(POPGymEnv):
         )
         self.mode = Mode.WATCH
 
-    def make_obs(self, card_idx):
+    def make_obs(self, card_idx) -> Tuple[int, int]:
         card_suit = self.deck.suits_idx[card_idx].reshape(-1)
         return int(self.mode.value), card_suit.item()
 
-    def get_state(self):
+    def get_state(self) -> Tuple[np.ndarray, int, np.ndarray]:
         cards = self.deck.suits_idx[self.deck.idx].copy()
         mode = int(self.mode.value)
         pos = np.array(

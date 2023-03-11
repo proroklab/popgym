@@ -1,7 +1,7 @@
 import math
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
@@ -13,21 +13,25 @@ from popgym.baselines.ray_models.base_model import BaseModel
 class FastWeightProgrammer(BaseModel):
     r"""The fast weight programmer from
 
-    @inproceedings{schlag_linear_2021,
-        title = {Linear {Transformers} {Are} {Secretly} {Fast} {Weight} {Programmers}},
-        url = {https://proceedings.mlr.press/v139/schlag21a.html},
-        language = {en},
-        urldate = {2022-09-21},
-        booktitle = {
-            Proceedings of the 38th International Conference on Machine Learning
-        },
-        publisher = {PMLR},
-        author = {Schlag, Imanol and Irie, Kazuki and Schmidhuber, Jürgen},
-        month = jul,
-        year = {2021},
-        note = {ISSN: 2640-3498},
-        pages = {9355--9366},
-    }
+    .. code-block:: text
+
+        @inproceedings{schlag_linear_2021,
+            title = {
+                Linear {Transformers} {Are} {Secretly} {Fast} {Weight} {Programmers}
+            },
+            url = {https://proceedings.mlr.press/v139/schlag21a.html},
+            language = {en},
+            urldate = {2022-09-21},
+            booktitle = {
+                Proceedings of the 38th International Conference on Machine Learning
+            },
+            publisher = {PMLR},
+            author = {Schlag, Imanol and Irie, Kazuki and Schmidhuber, Jürgen},
+            month = jul,
+            year = {2021},
+            note = {ISSN: 2640-3498},
+            pages = {9355--9366},
+        }
 
     without the RNN extensions."""
 

@@ -15,6 +15,7 @@ from popgym.core.env import POPGymEnv
 
 class StatelessCartPole(CartPoleEnv, POPGymEnv):
     """Partially observable variant of the CartPole gym environment.
+
     https://github.com/openai/gym/blob/master/gym/envs/classic_control/
     cartpole.py
     We delete the x- and angular velocity components of the state, so that it

@@ -16,6 +16,6 @@ class TestRepeatFirst(AbstractTest.POPGymTest):
             self.assertTrue(item < 4)
             reward += rew
 
-        self.assertTrue(truncated)
-        self.assertFalse(terminated)
+        self.assertTrue(terminated)
+        self.assertFalse(truncated)
         self.assertAlmostEqual(1.0, reward)

@@ -1,6 +1,6 @@
 from typing import List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
 from torch import nn
@@ -11,16 +11,18 @@ from popgym.baselines.ray_models.base_model import BaseModel
 class Elman(BaseModel):
     """The Elman Network (RNN) from
 
-    @article{elman_finding_1990,
-        title = {Finding structure in time},
-        volume = {14},
-        number = {2},
-        journal = {Cognitive science},
-        author = {Elman, Jeffrey L},
-        year = {1990},
-        note = {Publisher: Wiley Online Library},
-        pages = {179--211},
-    }
+    .. code-block:: text
+
+        @article{elman_finding_1990,
+            title = {Finding structure in time},
+            volume = {14},
+            number = {2},
+            journal = {Cognitive science},
+            author = {Elman, Jeffrey L},
+            year = {1990},
+            note = {Publisher: Wiley Online Library},
+            pages = {179--211},
+        }
     """
 
     MODEL_CONFIG = {

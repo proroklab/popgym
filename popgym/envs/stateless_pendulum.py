@@ -14,6 +14,7 @@ from popgym.core.env import POPGymEnv
 
 class StatelessPendulum(PendulumEnv, POPGymEnv):
     """Partially observable variant of the Pendulum gym environment.
+
     https://github.com/openai/gym/blob/master/gym/envs/classic_control/
     pendulum.py
     We delete the angular velocity component of the state, so that it
