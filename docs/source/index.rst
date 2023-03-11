@@ -18,4 +18,3 @@ Contents
 .. toctree::
 
    usage
-   api
