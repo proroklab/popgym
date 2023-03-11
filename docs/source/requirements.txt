@@ -7,3 +7,4 @@ wandb
 dnc
 einops
 ray[rllib]==2.3.0
+sphinx-autoapi
