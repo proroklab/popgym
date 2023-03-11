@@ -28,4 +28,3 @@ python:
    install:
    - method: pip
    - path: popgym
-   - requirements: docs/requirements.txt
