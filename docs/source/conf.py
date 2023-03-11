@@ -7,7 +7,7 @@ copyright = "2022, Steven Morad"
 author = "Steven Morad"
 
 release = "0.1"
-version = "1.0.0"
+version = "1.0.1"
 
 # -- General configuration
 
