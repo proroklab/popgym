@@ -7,7 +7,7 @@ copyright = "2022, Steven Morad"
 author = "Steven Morad"
 
 release = "0.1"
-version = "0.1.0"
+version = "1.0.0"
 
 # -- General configuration
 
@@ -26,6 +26,8 @@ autoapi_options = [
     "show-inheritance",
     "show-module-summary",
 ]
+autodoc_typehints = "signature"
+
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),

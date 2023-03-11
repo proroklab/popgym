@@ -5,9 +5,6 @@ Welcome to POPGym's documentation!
 reinforcement learning. It contains 15 fast, partially observable gym
 environments and 13 types of memory models.
 
-.. note::
-
-   This project is under active development.
 
 Contents
 --------
