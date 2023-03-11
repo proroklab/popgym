@@ -20,6 +20,12 @@ extensions = [
     "autoapi.extension",
 ]
 autoapi_dirs = ["../../popgym"]
+autoapi_options = [
+    "members",
+    "undoc-members",
+    "show-inheritance",
+    "show-module-summary",
+]
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
