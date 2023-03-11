@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Tuple
 
-import gym
+import gymnasium as gym
 import torch
 from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
@@ -119,6 +119,11 @@ class BaseModel(TorchModelV2, nn.Module):
         self.features = None
 
     def setup_embedding(self, max_seq_len: int):
+        """Setup positional embedding module
+
+        Args:
+            max_seq_len (int): Maximum sequence length
+        """
         assert self.cfg["embedding_mode"] in [
             "cat",
             "add",
@@ -157,13 +162,14 @@ class BaseModel(TorchModelV2, nn.Module):
 
     def initial_state(self) -> List[TensorType]:
         """Return the initial states for your memory model.
+
         The shape of states returned here should NOT contain
         the batch dimension. The batch dimension will be prepended
         by RLlib, depending on the number of episodes/rollouts
         in the batch
 
         Returns:
-            List of tensors denoting the zeroth recurrent state"""
+            List of tensors denoting the t=0 recurrent state"""
 
         raise NotImplementedError()
 
@@ -210,7 +216,7 @@ class BaseModel(TorchModelV2, nn.Module):
     ) -> Tuple[TensorType, List[TensorType]]:
         """Forward for your custom memory model.
 
-        Inputs:
+        Args:
             z: Preprocessed features of shape [B, T, F], with padding along the time
                 dimension
             state: Recurrent states of shape [B, ...]
@@ -223,16 +229,25 @@ class BaseModel(TorchModelV2, nn.Module):
                 elements of the second batch dimension are valid. Rest are padding.
 
         Returns:
-            output: Output features of shape [B, T, D]. Note that the padding
-                must be present here, don't worry we won't actually use it.
-            state: Output states of shape [B, ...]. Note that these shapes should
-                be exactly the same as input state shapes or you will have issues.
+            (output, state)
+                where output is [B, T, D] and state is
+                [B, ...]. Note that the padding must be present in the output.
+                The state must be exactly the same shape as the input state.
         """
 
         raise NotImplementedError()
 
     def apply_embedding(self, x, t_starts):
-        """Applies temporal embeddings to x"""
+        """Applies temporal embeddings to x
+
+        Args:
+            x: Tensor of shape [B, T, F]
+            t_starts: Tensor of shape [B] denoting the time offset
+                of the first element in x
+
+        Returns:
+            Tensor of shape [B, T, F] with the temporal embeddings
+        """
         B, T, F = x.shape
         # indices used to include padding
         # note that T could be > seq_lens.max() due to shoddy RLlib batch-splitting

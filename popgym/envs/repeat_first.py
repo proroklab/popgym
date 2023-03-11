@@ -9,7 +9,7 @@ from popgym.core.env import POPGymEnv
 
 
 class RepeatFirst(POPGymEnv):
-    """A game where the agent must repeat the suit of the first card it saw
+    """A game where the agent must output the suit of the initial card
 
     Args:
         num_decks: The number of decks to cycle through, which determines
@@ -42,7 +42,7 @@ class RepeatFirst(POPGymEnv):
         else:
             reward = -reward_scale
 
-        truncated = len(self.deck) == 1
+        terminated = len(self.deck) == 1
 
         self.deck.deal("player", 1)
         card = self.deck.show("player", ["suits_idx"])[0, -1]
@@ -52,7 +52,7 @@ class RepeatFirst(POPGymEnv):
 
         info: dict = {}
 
-        return obs, reward, False, truncated, info
+        return obs, reward, terminated, False, info
 
     def reset(
         self,

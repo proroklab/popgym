@@ -1,3 +1,4 @@
+"""Receive some cards then output how many of each you've seen"""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -9,7 +10,9 @@ from popgym.core.env import POPGymEnv
 
 
 class CountRecall(POPGymEnv):
-    """A game where the agent is queried on how many times it has observed
+    """A game where the agent is queried on past events
+
+    A game where the agent is queried on how many times it has observed
     an event in the past. This tests long-term order-agnostic memory like sets.
 
     Args:

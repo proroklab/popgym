@@ -1,3 +1,4 @@
+"""The card game Concentration, where the player matches facedown cards"""
 import math
 from typing import Any, Dict, List, Optional, Tuple
 

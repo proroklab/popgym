@@ -60,6 +60,6 @@ class TestRepeatPrevious(AbstractTest.POPGymTest):
             all_obs.append(obs)
             iters += 1
 
-        self.assertTrue(truncated)
-        self.assertFalse(terminated)
+        self.assertTrue(terminated)
+        self.assertFalse(truncated)
         self.assertAlmostEqual(cum_rew, 1.0)

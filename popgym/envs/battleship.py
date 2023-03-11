@@ -1,3 +1,4 @@
+"""Classic game of Battleship, except the player's board is hidden"""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym

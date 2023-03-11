@@ -9,7 +9,7 @@ from popgym.core.env import POPGymEnv
 
 
 class RepeatPrevious(POPGymEnv):
-    """A game where the agent must repeat the suit of the k-previous card it saw
+    """A game where the agent must output the suit of the card from k timesteps ago
 
     Args:
         num_decks: The number of decks to cycle through, which determines
@@ -50,7 +50,7 @@ class RepeatPrevious(POPGymEnv):
         reward_scale = 1 / (self.deck.num_cards - self.k)
         reward = 0
 
-        truncated = len(self.deck) == 1
+        terminated = len(self.deck) == 1
 
         if self.deck.hand_size("player") >= self.k:
             if action == self.deck.suits_idx[self.deck["player"][-self.k]]:
@@ -65,7 +65,7 @@ class RepeatPrevious(POPGymEnv):
 
         info: dict = {}
 
-        return obs, reward, False, truncated, info
+        return obs, reward, terminated, False, info
 
     def reset(
         self,

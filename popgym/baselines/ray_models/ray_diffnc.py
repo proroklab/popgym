@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from typing import Dict, List, Tuple, Union
 
-import gym
+import gymnasium as gym
 import torch
 from dnc import DNC
 from ray.rllib.utils.typing import ModelConfigDict, TensorType
@@ -12,16 +12,19 @@ from popgym.baselines.ray_models.base_model import BaseModel
 class DiffNC(BaseModel):
     r"""The differentiable neural computer from
 
-    @techreport{wayne_unsupervised_2018,
-        title = {Unsupervised {Predictive} {Memory} in a {Goal}-{Directed} {Agent}},
-        url = {http://arxiv.org/abs/1803.10760},
-        number = {arXiv:1803.10760},
-        urldate = {2022-09-09},
-        institution = {arXiv},
-        month = mar,
-        year = {2018},
-        doi = {10.48550/arXiv.1803.10760},
-    }"""
+    .. code-block:: text
+
+        @techreport{wayne_unsupervised_2018,
+            title = {Unsupervised {Predictive} {Memory} in a {Goal}-{Directed} {Agent}},
+            url = {http://arxiv.org/abs/1803.10760},
+            number = {arXiv:1803.10760},
+            urldate = {2022-09-09},
+            institution = {arXiv},
+            month = mar,
+            year = {2018},
+            doi = {10.48550/arXiv.1803.10760},
+        }
+    """
 
     MODEL_CONFIG = {
         # Number of controller hidden layers
