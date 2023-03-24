@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 
 import popgym  # noqa: F401
 from popgym.envs.higher_lower import HigherLower
@@ -9,5 +9,5 @@ env = HigherLower(num_decks=2)
 obs = env.reset()
 
 # or the gym way
-env = gym.make("popgym-Blackjack-v0")
+env = gym.make("popgym-HigherLowerEasy-v0")
 obs = env.reset()
