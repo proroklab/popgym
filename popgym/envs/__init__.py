@@ -2,6 +2,7 @@
 """
 
 import inspect
+from importlib import find_loader
 from typing import Any, Dict
 
 import gymnasium as gym
@@ -35,18 +36,6 @@ from popgym.envs.higher_lower import (
     HigherLowerEasy,
     HigherLowerHard,
     HigherLowerMedium,
-)
-from popgym.envs.labyrinth_escape import (
-    LabyrinthEscape,
-    LabyrinthEscapeEasy,
-    LabyrinthEscapeHard,
-    LabyrinthEscapeMedium,
-)
-from popgym.envs.labyrinth_explore import (
-    LabyrinthExplore,
-    LabyrinthExploreEasy,
-    LabyrinthExploreHard,
-    LabyrinthExploreMedium,
 )
 from popgym.envs.minesweeper import (
     MineSweeper,
@@ -244,25 +233,51 @@ ALL_GAME = {**GAME_EASY, **GAME_MEDIUM, **GAME_HARD}
 #
 # Navigation envs
 #
-NAVIGATION: Dict[gym.Env, Dict[str, Any]] = {
-    LabyrinthExplore: {"id": "popgym-LabyrinthExplore-v0"},
-    LabyrinthEscape: {"id": "popgym-LabyrinthEscape-v0"},
-}
+def has_mazelib():  # noqa: E302
+    """Check if mazelib is installed"""
+    return find_loader("mazelib") is not None
 
-NAVIGATION_EASY: Dict[gym.Env, Dict[str, Any]] = {
-    LabyrinthExploreEasy: {"id": "popgym-LabyrinthExploreEasy-v0"},
-    LabyrinthEscapeEasy: {"id": "popgym-LabyrinthEscapeEasy-v0"},
-}
 
-NAVIGATION_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
-    LabyrinthExploreMedium: {"id": "popgym-LabyrinthExploreMedium-v0"},
-    LabyrinthEscapeMedium: {"id": "popgym-LabyrinthEscapeMedium-v0"},
-}
+if has_mazelib():
+    # mazelib can somtimes be a headache to install
+    # mazes are also a poor test of memory
+    from popgym.envs.labyrinth_escape import (
+        LabyrinthEscape,
+        LabyrinthEscapeEasy,
+        LabyrinthEscapeHard,
+        LabyrinthEscapeMedium,
+    )
+    from popgym.envs.labyrinth_explore import (
+        LabyrinthExplore,
+        LabyrinthExploreEasy,
+        LabyrinthExploreHard,
+        LabyrinthExploreMedium,
+    )
 
-NAVIGATION_HARD: Dict[gym.Env, Dict[str, Any]] = {
-    LabyrinthExploreHard: {"id": "popgym-LabyrinthExploreHard-v0"},
-    LabyrinthEscapeHard: {"id": "popgym-LabyrinthEscapeHard-v0"},
-}
+    NAVIGATION: Dict[gym.Env, Dict[str, Any]] = {
+        LabyrinthExplore: {"id": "popgym-LabyrinthExplore-v0"},
+        LabyrinthEscape: {"id": "popgym-LabyrinthEscape-v0"},
+    }
+
+    NAVIGATION_EASY: Dict[gym.Env, Dict[str, Any]] = {
+        LabyrinthExploreEasy: {"id": "popgym-LabyrinthExploreEasy-v0"},
+        LabyrinthEscapeEasy: {"id": "popgym-LabyrinthEscapeEasy-v0"},
+    }
+
+    NAVIGATION_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
+        LabyrinthExploreMedium: {"id": "popgym-LabyrinthExploreMedium-v0"},
+        LabyrinthEscapeMedium: {"id": "popgym-LabyrinthEscapeMedium-v0"},
+    }
+
+    NAVIGATION_HARD: Dict[gym.Env, Dict[str, Any]] = {
+        LabyrinthExploreHard: {"id": "popgym-LabyrinthExploreHard-v0"},
+        LabyrinthEscapeHard: {"id": "popgym-LabyrinthEscapeHard-v0"},
+    }
+else:
+    NAVIGATION = {}
+    NAVIGATION_EASY = {}
+    NAVIGATION_MEDIUM = {}
+    NAVIGATION_HARD = {}
 
 ALL_NAVIGATION = {
     **NAVIGATION_EASY,

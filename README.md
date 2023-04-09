@@ -7,7 +7,8 @@ POPGym is designed to benchmark memory in deep reinforcement learning. It contai
 ## Quickstart Install
 
 ```python
-pip install popgym # environments only
+pip install popgym # base environments only, only requires numpy and gymnasium
+pip install "popgym[navigation]" # also include navigation environments, which require mazelib
 pip install "popgym[baselines]" # environments and memory baselines
 ```
 
