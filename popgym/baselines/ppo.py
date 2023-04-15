@@ -32,7 +32,7 @@ from popgym.core.env import POPGymEnv
 def main():
     env_names: List[Any] = []
 
-    env_types = os.environ.get("POPGYM_EXPERIMENT", "ALL_ENVS")
+    env_types = os.environ.get("POPGYM_EXPERIMENT", "ALL")
     desired_models = os.environ.get("POPGYM_MODELS", "ALL")
     num_splits = int(os.environ.get("POPGYM_NUM_SPLITS", 1))
     split_id = int(os.environ.get("POPGYM_SPLIT_ID", 0))
@@ -59,7 +59,7 @@ def main():
         return wrappers.Antialias(wrappers.PreviousAction(env))
 
     # Register all envs with ray
-    envs = popgym.ALL_ENVS
+    envs = popgym.envs.ALL
     for cls, info in envs.items():
         env_name = info["id"]
         register_env(env_name, lambda x: wrap(cls()))
@@ -69,7 +69,7 @@ def main():
     for e in env_types.split(","):
         # getattr will either return a dict of {class: info[name}}
         # or just a class
-        res = getattr(popgym, e)
+        res = getattr(popgym.envs, e)
         if isinstance(res, dict):
             desired_envs = list(res.keys())
         else:

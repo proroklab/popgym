@@ -44,9 +44,6 @@ class FastWeightProgrammer(BaseModel):
         # Which cumulative aggregator to use. Only sum is used in the paper.
         # This can be sum or max
         "aggregator": "sum",
-        # Whether the recurrent state size should be hidden_size
-        # or hidden_size ** 2
-        "big_hidden": False,
     }
 
     def __init__(
@@ -59,18 +56,14 @@ class FastWeightProgrammer(BaseModel):
         **custom_model_kwargs,
     ):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
-        if self.cfg["big_hidden"]:
-            self.h = self.cfg["hidden_size"]
-        else:
-            self.h = round(math.sqrt(self.cfg["hidden_size"]))
+        self.h = round(math.sqrt(self.cfg["hidden_size"]))
         self.core = FWPBlock(
             input_size=self.cfg["preprocessor_output_size"],
             hidden_size=self.h,
             aggregator=self.cfg["aggregator"],
             sum_normalization=self.cfg["sum_normalization"],
         )
-        if not self.cfg["big_hidden"]:
-            self.unmap = nn.Linear(self.h, self.cfg["hidden_size"])
+        self.unmap = nn.Linear(self.h, self.cfg["hidden_size"])
 
     def initial_state(self) -> List[TensorType]:
         return [
@@ -88,8 +81,7 @@ class FastWeightProgrammer(BaseModel):
         [memory] = state
         z, memory = self.core(z, memory)
         h = z.shape[-1]
-        if not self.cfg["big_hidden"]:
-            z = self.unmap(z)
+        z = self.unmap(z)
         return z, [
             memory[:, -1].reshape(B, 1, h, h),
         ]
@@ -157,21 +149,4 @@ class DeepFastWeightProgrammer(FastWeightProgrammer):
         for i, cell in enumerate(self.core):
             z, state[i] = cell(z, state[i])
         z = self.unmap(z)
-        h = z.shape[-1]
-        return z, [s[:, -1].reshape(B, 1, h, h) for s in state]
-
-
-class BigFastWeightProgrammer(FastWeightProgrammer):
-    MODEL_CONFIG = {
-        # Whether to use the sum normalization over the key/query term
-        # as in the paper
-        "sum_normalization": True,
-        # Which positional embedding to use
-        "embedding": "sine",
-        # Which cumulative aggregator to use. Only sum is used in the paper.
-        # This can be sum or max
-        "aggregator": "sum",
-        # Whether the recurrent state size should be hidden_size
-        # or hidden_size ** 2
-        "big_hidden": True,
-    }
+        return z, [s[:, -1].reshape(B, 1, self.h, self.h) for s in state]
