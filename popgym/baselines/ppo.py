@@ -15,7 +15,10 @@ from popgym.baselines.ray_models.ray_diffnc import DiffNC  # noqa: F401
 from popgym.baselines.ray_models.ray_elman import Elman
 from popgym.baselines.ray_models.ray_frameconv import Frameconv
 from popgym.baselines.ray_models.ray_framestack import Framestack
-from popgym.baselines.ray_models.ray_fwp import FastWeightProgrammer
+from popgym.baselines.ray_models.ray_fwp import (
+    DeepFastWeightProgrammer,
+    FastWeightProgrammer,
+)
 from popgym.baselines.ray_models.ray_gru import GRU
 from popgym.baselines.ray_models.ray_indrnn import IndRNN
 from popgym.baselines.ray_models.ray_linear_attention import LinearAttention
@@ -81,6 +84,7 @@ def main():
     attn_models = [
         LinearAttention,
         FastWeightProgrammer,
+        DeepFastWeightProgrammer,
     ]
     rnn_models = [LSTM, GRU, Elman, LMU, IndRNN, DiffNC]
     conv_models = [S4D]

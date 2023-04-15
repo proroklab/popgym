@@ -95,6 +95,72 @@ class FastWeightProgrammer(BaseModel):
         ]
 
 
+class DeepFastWeightProgrammer(FastWeightProgrammer):
+    """A multi-layer version of the fast weight programmer."""
+
+    MODEL_CONFIG = {
+        # Whether to use the sum normalization over the key/query term
+        # as in the paper
+        "sum_normalization": True,
+        # Which positional embedding to use
+        "embedding": None,
+        # Which cumulative aggregator to use. Only sum is used in the paper.
+        # This can be sum or max
+        "aggregator": "sum",
+        # Number of layers
+        "num_layers": 2,
+    }
+
+    def __init__(
+        self,
+        obs_space: gym.spaces.Space,
+        action_space: gym.spaces.Space,
+        num_outputs: int,
+        model_config: ModelConfigDict,
+        name: str,
+        **custom_model_kwargs,
+    ):
+        super().__init__(obs_space, action_space, num_outputs, model_config, name)
+        assert self.cfg["num_layers"] >= 1
+        self.h = round(math.sqrt(self.cfg["hidden_size"] // self.cfg["num_layers"]))
+        core = [
+            FWPBlock(
+                input_size=self.cfg["preprocessor_output_size"],
+                hidden_size=self.h,
+                aggregator=self.cfg["aggregator"],
+                sum_normalization=self.cfg["sum_normalization"],
+            )
+        ]
+        for _ in range(self.cfg["num_layers"] - 1):
+            core.append(
+                FWPBlock(
+                    input_size=self.h,
+                    hidden_size=self.h,
+                    aggregator=self.cfg["aggregator"],
+                    sum_normalization=self.cfg["sum_normalization"],
+                )
+            )
+        self.core = nn.ModuleList(core)
+        self.unmap = nn.Linear(self.h, self.cfg["hidden_size"])
+
+    def initial_state(self) -> List[TensorType]:
+        return [torch.zeros(1, self.h, self.h) for _ in range(self.cfg["num_layers"])]
+
+    def forward_memory(
+        self,
+        z: TensorType,
+        state: List[TensorType],
+        t_starts: TensorType,
+        seq_lens: TensorType,
+    ) -> Tuple[TensorType, List[TensorType]]:
+        B, T, _ = z.shape
+        for i, cell in enumerate(self.core):
+            z, state[i] = cell(z, state[i])
+        z = self.unmap(z)
+        h = z.shape[-1]
+        return z, [s[:, -1].reshape(B, 1, h, h) for s in state]
+
+
 class BigFastWeightProgrammer(FastWeightProgrammer):
     MODEL_CONFIG = {
         # Whether to use the sum normalization over the key/query term
