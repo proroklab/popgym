@@ -100,7 +100,7 @@ class DeepFastWeightProgrammer(FastWeightProgrammer):
         # This can be sum or max
         "aggregator": "sum",
         # Number of layers
-        "num_layers": 2,
+        "num_layers": 4,
     }
 
     def __init__(
