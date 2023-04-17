@@ -98,7 +98,7 @@ class LinearAttentionBlock(nn.Module):
             output = self.ff(output)
 
         if self.residual:
-            output = output + self.shortcut(output)
+            output = output + self.shortcut(x)
 
         state = [S, Z]
 

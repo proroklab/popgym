@@ -78,5 +78,5 @@ class FWPBlock(nn.Module):
             y = self.ff(y)
 
         if self.residual:
-            y = y + self.shortcut(y)
+            y = y + self.shortcut(x)
         return y, state
