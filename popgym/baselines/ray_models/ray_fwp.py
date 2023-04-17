@@ -121,6 +121,7 @@ class DeepFastWeightProgrammer(FastWeightProgrammer):
                 hidden_size=self.h,
                 aggregator=self.cfg["aggregator"],
                 sum_normalization=self.cfg["sum_normalization"],
+                feed_forward=True,
             )
         ]
         for _ in range(self.cfg["num_layers"] - 1):
@@ -130,6 +131,7 @@ class DeepFastWeightProgrammer(FastWeightProgrammer):
                     hidden_size=self.h,
                     aggregator=self.cfg["aggregator"],
                     sum_normalization=self.cfg["sum_normalization"],
+                    feed_forward=True,
                 )
             )
         self.core = nn.ModuleList(core)

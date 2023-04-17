@@ -21,6 +21,8 @@ class LinearAttentionBlock(nn.Module):
         hidden_size: Size of key/query/value space
         S_aggregator: Which type of aggregation to use for the numerator (S term)
         Z_aggregator: Which type of aggregation to use for the denominator (Z term)
+        feed_forward: Whether to apply a perceptron to the output
+        residual: Whether to apply a residual connection from input to output
     """
 
     def __init__(
@@ -29,6 +31,8 @@ class LinearAttentionBlock(nn.Module):
         hidden_size: int,
         S_aggregator: str = "sum",
         Z_aggregator: str = "sum",
+        feed_forward=True,
+        residual=True,
     ):
         super().__init__()
         self.key = nn.Linear(input_size, hidden_size, bias=False)
@@ -38,6 +42,18 @@ class LinearAttentionBlock(nn.Module):
         self.phi = Phi()
         self.S_aggregator = get_aggregator(S_aggregator)()
         self.Z_aggregator = get_aggregator(Z_aggregator)()
+        self.feed_forward = feed_forward
+        self.residual = residual
+
+        if self.feed_forward:
+            self.ff = nn.Sequential(
+                nn.Linear(hidden_size, hidden_size),
+                nn.ReLU(inplace=True),
+                nn.Linear(hidden_size, hidden_size),
+                nn.ReLU(inplace=True)
+            )
+        if self.residual:
+            self.shortcut = nn.Linear(input_size, hidden_size)
 
     def forward(
         self, x: torch.Tensor, state: List[torch.Tensor]
@@ -77,6 +93,12 @@ class LinearAttentionBlock(nn.Module):
         denominator = torch.einsum("bti, btl -> bt", Q, Z).reshape(B, T, 1) + 1e-5
         # output = (Q^T S) / (Q^T Z)
         output = numerator / denominator
+
+        if self.feed_forward:
+            output = self.ff(output)
+
+        if self.residual:
+            output = output + self.shortcut(output)
 
         state = [S, Z]
 

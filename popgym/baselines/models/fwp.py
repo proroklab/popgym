@@ -9,12 +9,17 @@ class FWPBlock(nn.Module):
     The building block in the fast weight transformers paper. This is
     a form of linear transformer.
 
+    Note that this is a "simplified" version of FWP without the delta
+    update rule and DPFP. We use ReLU instead of DPFP.
+
     Inputs:
         input_size: Size of input feature dim
         hidden_size: Size of key/query/value space
         aggregator: Which type of aggregation to use
         sum_normalization: Whether to use the sum normalization described
             in the paper
+        feed_forward: Whether to apply a perceptron to the output
+        residual: Whether to apply a residual connection from input to output
     """
 
     def __init__(
@@ -23,6 +28,8 @@ class FWPBlock(nn.Module):
         hidden_size,
         aggregator="sum",
         sum_normalization=True,
+        feed_forward=True,
+        residual=True,
     ):
         super().__init__()
         self.key = nn.Linear(input_size, hidden_size, bias=False)
@@ -30,9 +37,20 @@ class FWPBlock(nn.Module):
         self.value = nn.Linear(input_size, hidden_size, bias=False)
         self.norm = nn.LayerNorm(input_size)
         self.sum_normalization = sum_normalization
+        self.feed_forward = feed_forward
+        self.residual = residual
         self.aggregator = get_aggregator(aggregator)(
             max_len=1024, d_model=hidden_size**2
         )
+        if self.feed_forward:
+            self.ff = nn.Sequential(
+                nn.Linear(hidden_size, hidden_size),
+                nn.ReLU(inplace=True),
+                nn.Linear(hidden_size, hidden_size),
+                nn.ReLU(inplace=True)
+            )
+        if self.residual:
+            self.shortcut = nn.Linear(input_size, hidden_size)
 
     def forward(self, x: torch.Tensor, state: torch.Tensor) -> torch.Tensor:
         """
@@ -55,5 +73,10 @@ class FWPBlock(nn.Module):
         shape = kv.shape
         state = self.aggregator(kv.flatten(-2), state.flatten(-2)).reshape(shape)
 
-        y = torch.einsum("btij, bti -> btj", state, Q)
+        y = torch.einsum("btij, btj -> bti", state, Q)
+        if self.feed_forward:
+            y = self.ff(y)
+
+        if self.residual:
+            y = y + self.shortcut(y)
         return y, state
