@@ -21,7 +21,7 @@ from popgym.baselines.ray_models.ray_fwp import (
 )
 from popgym.baselines.ray_models.ray_gru import GRU
 from popgym.baselines.ray_models.ray_indrnn import IndRNN
-from popgym.baselines.ray_models.ray_linear_attention import LinearAttention
+from popgym.baselines.ray_models.ray_linear_attention import LinearAttention, DeepLinearAttention
 from popgym.baselines.ray_models.ray_lmu import LMU
 from popgym.baselines.ray_models.ray_lstm import LSTM
 from popgym.baselines.ray_models.ray_mlp import MLP, BasicMLP
@@ -38,7 +38,7 @@ def main():
     split_id = int(os.environ.get("POPGYM_SPLIT_ID", 0))
     project_id = os.environ.get("POPGYM_PROJECT", "popgym-debug")
     gpu_per_worker = float(os.environ.get("POPGYM_GPU", 0.25))
-    max_steps = int(os.environ.get("POPGYM_STEPS", 10e6))
+    max_steps = int(os.environ.get("POPGYM_STEPS", 15e6))
     storage_path = os.environ.get("POPGYM_STORAGE", "/tmp/ray_results")
     num_samples = int(os.environ.get("POPGYM_SAMPLES", 1))
 
@@ -85,6 +85,7 @@ def main():
         LinearAttention,
         FastWeightProgrammer,
         DeepFastWeightProgrammer,
+        DeepLinearAttention,
     ]
     rnn_models = [LSTM, GRU, Elman, LMU, IndRNN, DiffNC]
     conv_models = [S4D]

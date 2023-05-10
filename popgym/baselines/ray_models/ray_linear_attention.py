@@ -60,7 +60,7 @@ class LinearAttention(BaseModel):
         **custom_model_kwargs,
     ):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
-        self.h = round(math.sqrt(self.cfg["hidden_size"]))
+        self.h = round(math.sqrt(self.cfg["hidden_size"]) - 1)
         self.core = LinearAttentionBlock(
             input_size=self.cfg["preprocessor_output_size"],
             hidden_size=self.h,
@@ -103,6 +103,7 @@ class DeepLinearAttention(LinearAttention):
         "S_aggregator": "sum",
         # Same as S aggregator, except for the Z (denominator) term
         "Z_aggregator": "sum",
+        "num_layers": 4,
     }
 
     def __init__(
@@ -116,7 +117,7 @@ class DeepLinearAttention(LinearAttention):
     ):
         super().__init__(obs_space, action_space, num_outputs, model_config, name)
         assert self.cfg["num_layers"] >= 1
-        self.h = round(math.sqrt(self.cfg["hidden_size"] // self.cfg["num_layers"]))
+        self.h = round(math.sqrt(self.cfg["hidden_size"] // self.cfg["num_layers"]) - 1)
         core = [
             LinearAttentionBlock(
                 input_size=self.cfg["preprocessor_output_size"],
@@ -140,7 +141,10 @@ class DeepLinearAttention(LinearAttention):
         self.unmap = nn.Linear(self.h, self.cfg["hidden_size"])
 
     def initial_state(self) -> List[TensorType]:
-        return [torch.zeros(1, self.h, self.h) for _ in range(self.cfg["num_layers"])]
+        state = []
+        for _ in range(self.cfg["num_layers"]):
+            state += [torch.zeros(1, self.h, self.h), torch.zeros(1, self.h)]
+        return state
 
     def forward_memory(
         self,
@@ -151,6 +155,8 @@ class DeepLinearAttention(LinearAttention):
     ) -> Tuple[TensorType, List[TensorType]]:
         B, T, _ = z.shape
         for i, cell in enumerate(self.core):
-            z, state[i] = cell(z, state[i])
+            z, (s0, s1) = cell(z, [state[2 * i], state[2 * i + 1]])
+            state[2 * i] = s0
+            state[2 * i + 1] = s1
         z = self.unmap(z)
-        return z, [s[:, -1].reshape(B, 1, self.h, self.h) for s in state]
+        return z, [s[:, -1:] for s in state]
