@@ -34,7 +34,6 @@ class Flatten(POPGymWrapper):
                     self.env.action_space
                 )
         if flatten_observation:
-            self.continuous(self.env.observation_space)
             self.need_flatten_obs = isinstance(
                 self.env.observation_space, gym.spaces.Tuple
             ) or isinstance(self.env.observation_space, gym.spaces.Dict)
