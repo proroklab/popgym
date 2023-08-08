@@ -9,7 +9,7 @@ Let's create an environment and add some wrappers to it. First, let's do all req
 
     import gymnasium as gym
     import popgym
-    from popgym.wrappers import PreviousAction, Antialias, Markovian, Flatten
+    from popgym.wrappers import PreviousAction, Antialias, Markovian, Flatten, DiscreteAction
     from popgym.core.observability import Observability, STATE
     env_classes = popgym.envs.ALL.keys()
     print(env_classes)
@@ -45,8 +45,12 @@ At the initial timestep, there is no previous action. By default, PreviousAction
 
     wrapped_env = Antialias(wrapped_env)
 
+Many RL libraries have spotty support for nested observations or MultiDiscrete action spaces. If you are using DQN or similar approaches, you might want to flatten the observation and action spaces, then convert the action space into a single large Discrete space
 
-Finally, we can decide if we want the hidden Markov state. We can add it as part of the observation, into the info dict, etc. See Observability for more options.
+.. code-block:: python
+    DiscreteAction(Flatten(wrapped_env))
+
+We will not actually assign this to wrapped env, as for this example we want to inspect the observation and action spaces. Finally, we can decide if we want the hidden Markov state. We can add it as part of the observation, into the info dict, etc. See Observability for more options.
 
 .. code-block:: python
 
