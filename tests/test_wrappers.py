@@ -4,6 +4,7 @@ from gymnasium.utils.env_checker import check_env
 from popgym import envs
 from popgym.core.observability import OBS, STATE, Observability
 from popgym.wrappers.antialias import Antialias
+from popgym.wrappers.discrete_action import DiscreteAction
 from popgym.wrappers.flatten import Flatten
 from popgym.wrappers.markovian import Markovian
 from popgym.wrappers.previous_action import PreviousAction
@@ -106,3 +107,12 @@ def test_flatten_step(env):
     obs, _ = wrapped_aa.reset()
     assert wrapped_aa.observation_space.contains(obs)
     check_env(wrapped_aa, skip_render_check=True)
+
+
+@pytest.mark.parametrize("env", envs.ALL.keys())
+def test_discrete_action(env):
+    if issubclass(env, (envs.StatelessPendulum, envs.NoisyStatelessPendulum)):
+        pytest.skip("StatelessPendulum does not support discrete action space")
+    wrapped = DiscreteAction(Flatten(env()))
+    _, _ = wrapped.reset()
+    wrapped.step(wrapped.action_space.sample())
