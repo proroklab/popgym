@@ -4,10 +4,10 @@ import gymnasium as gym
 import numpy as np
 from gymnasium.core import ActType, ObsType
 
-from popgym.envs.stateless_pendulum import StatelessPendulum
+from popgym.envs.position_only_pendulum import PositionOnlyPendulum
 
 
-class NoisyStatelessPendulum(StatelessPendulum):
+class NoisyPositionOnlyPendulum(PositionOnlyPendulum):
     def __init__(self, *args, **kwargs):
         noise_sigma = kwargs.pop("noise_sigma", 0.1)
         super().__init__(*args, **kwargs)
@@ -32,16 +32,16 @@ class NoisyStatelessPendulum(StatelessPendulum):
         return init_obs, info
 
 
-class NoisyStatelessPendulumEasy(NoisyStatelessPendulum):
+class NoisyPositionOnlyPendulumEasy(NoisyPositionOnlyPendulum):
     def __init__(self):
         super().__init__(noise_sigma=0.1)
 
 
-class NoisyStatelessPendulumMedium(NoisyStatelessPendulum):
+class NoisyPositionOnlyPendulumMedium(NoisyPositionOnlyPendulum):
     def __init__(self):
         super().__init__(noise_sigma=0.2)
 
 
-class NoisyStatelessPendulumHard(NoisyStatelessPendulum):
+class NoisyPositionOnlyPendulumHard(NoisyPositionOnlyPendulum):
     def __init__(self):
         super().__init__(noise_sigma=0.3)

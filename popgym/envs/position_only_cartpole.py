@@ -13,7 +13,7 @@ from gymnasium.spaces import Box
 from popgym.core.env import POPGymEnv
 
 
-class StatelessCartPole(CartPoleEnv, POPGymEnv):
+class PositionOnlyCartPole(CartPoleEnv, POPGymEnv):
     """Partially observable variant of the CartPole gym environment.
 
     https://github.com/openai/gym/blob/master/gym/envs/classic_control/
@@ -73,15 +73,15 @@ class StatelessCartPole(CartPoleEnv, POPGymEnv):
         return init_obs, info
 
 
-class StatelessCartPoleEasy(StatelessCartPole):
+class PositionOnlyCartPoleEasy(PositionOnlyCartPole):
     pass
 
 
-class StatelessCartPoleMedium(StatelessCartPole):
+class PositionOnlyCartPoleMedium(PositionOnlyCartPole):
     def __init__(self, *args, **kwargs):
         super().__init__(max_episode_length=400)
 
 
-class StatelessCartPoleHard(StatelessCartPole):
+class PositionOnlyCartPoleHard(PositionOnlyCartPole):
     def __init__(self, *args, **kwargs):
         super().__init__(max_episode_length=600)

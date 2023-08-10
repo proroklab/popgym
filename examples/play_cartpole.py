@@ -1,7 +1,7 @@
-from popgym.envs.stateless_cartpole import StatelessCartPole
+from popgym.envs.stateless_cartpole import PositionOnlyCartPole
 
 if __name__ == "__main__":
-    game = StatelessCartPole()
+    game = PositionOnlyCartPole()
     done = False
     obs, info = game.reset(return_info=True)
     reward = -float("inf")
