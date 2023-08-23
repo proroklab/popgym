@@ -12,7 +12,7 @@ from gymnasium.spaces import Box
 from popgym.core.env import POPGymEnv
 
 
-class StatelessPendulum(PendulumEnv, POPGymEnv):
+class PositionOnlyPendulum(PendulumEnv, POPGymEnv):
     """Partially observable variant of the Pendulum gym environment.
 
     https://github.com/openai/gym/blob/master/gym/envs/classic_control/
@@ -64,15 +64,15 @@ class StatelessPendulum(PendulumEnv, POPGymEnv):
         return init_obs[:-1], info
 
 
-class StatelessPendulumEasy(StatelessPendulum):
+class PositionOnlyPendulumEasy(PositionOnlyPendulum):
     pass
 
 
-class StatelessPendulumMedium(StatelessPendulum):
+class PositionOnlyPendulumMedium(PositionOnlyPendulum):
     def __init__(self):
         super().__init__(max_episode_length=150)
 
 
-class StatelessPendulumHard(StatelessPendulum):
+class PositionOnlyPendulumHard(PositionOnlyPendulum):
     def __init__(self):
         super().__init__(max_episode_length=100)

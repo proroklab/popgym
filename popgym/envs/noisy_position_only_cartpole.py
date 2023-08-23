@@ -4,10 +4,10 @@ import gymnasium as gym
 import numpy as np
 from gymnasium.core import ActType, ObsType
 
-from popgym.envs.stateless_cartpole import StatelessCartPole
+from popgym.envs.position_only_cartpole import PositionOnlyCartPole
 
 
-class NoisyStatelessCartPole(StatelessCartPole):
+class NoisyPositionOnlyCartPole(PositionOnlyCartPole):
     def __init__(self, *args, **kwargs):
         noise_sigma = kwargs.pop("noise_sigma", 0.1)
         super().__init__(*args, **kwargs)
@@ -33,16 +33,16 @@ class NoisyStatelessCartPole(StatelessCartPole):
         return init_obs, info
 
 
-class NoisyStatelessCartPoleEasy(NoisyStatelessCartPole):
+class NoisyPositionOnlyCartPoleEasy(NoisyPositionOnlyCartPole):
     def __init__(self):
         super().__init__(noise_sigma=0.1)
 
 
-class NoisyStatelessCartPoleMedium(NoisyStatelessCartPole):
+class NoisyPositionOnlyCartPoleMedium(NoisyPositionOnlyCartPole):
     def __init__(self):
         super().__init__(noise_sigma=0.2)
 
 
-class NoisyStatelessCartPoleHard(NoisyStatelessCartPole):
+class NoisyPositionOnlyCartPoleHard(NoisyPositionOnlyCartPole):
     def __init__(self):
         super().__init__(noise_sigma=0.3)

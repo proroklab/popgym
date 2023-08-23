@@ -1,7 +1,7 @@
-from popgym.envs.stateless_pendulum import StatelessPendulum
+from popgym.envs.stateless_pendulum import PositionOnlyPendulum
 
 if __name__ == "__main__":
-    game = StatelessPendulum()
+    game = PositionOnlyPendulum()
     done = False
     obs, info = game.reset(return_info=True)
     reward = -float("inf")

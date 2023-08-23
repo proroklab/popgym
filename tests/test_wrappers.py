@@ -111,7 +111,7 @@ def test_flatten_step(env):
 
 @pytest.mark.parametrize("env", envs.ALL.keys())
 def test_discrete_action(env):
-    if issubclass(env, (envs.StatelessPendulum, envs.NoisyStatelessPendulum)):
+    if issubclass(env, (envs.PositionOnlyPendulum, envs.NoisyPositionOnlyPendulum)):
         pytest.skip("StatelessPendulum does not support discrete action space")
     wrapped = DiscreteAction(Flatten(env()))
     _, _ = wrapped.reset()

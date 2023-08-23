@@ -49,17 +49,29 @@ from popgym.envs.multiarmed_bandit import (
     MultiarmedBanditHard,
     MultiarmedBanditMedium,
 )
-from popgym.envs.noisy_stateless_cartpole import (
-    NoisyStatelessCartPole,
-    NoisyStatelessCartPoleEasy,
-    NoisyStatelessCartPoleHard,
-    NoisyStatelessCartPoleMedium,
+from popgym.envs.noisy_position_only_cartpole import (
+    NoisyPositionOnlyCartPole,
+    NoisyPositionOnlyCartPoleEasy,
+    NoisyPositionOnlyCartPoleHard,
+    NoisyPositionOnlyCartPoleMedium,
 )
 from popgym.envs.noisy_stateless_pendulum import (
-    NoisyStatelessPendulum,
-    NoisyStatelessPendulumEasy,
-    NoisyStatelessPendulumHard,
-    NoisyStatelessPendulumMedium,
+    NoisyPositionOnlyPendulum,
+    NoisyPositionOnlyPendulumEasy,
+    NoisyPositionOnlyPendulumHard,
+    NoisyPositionOnlyPendulumMedium,
+)
+from popgym.envs.position_only_cartpole import (
+    PositionOnlyCartPole,
+    PositionOnlyCartPoleEasy,
+    PositionOnlyCartPoleHard,
+    PositionOnlyCartPoleMedium,
+)
+from popgym.envs.position_only_pendulum import (
+    PositionOnlyPendulum,
+    PositionOnlyPendulumEasy,
+    PositionOnlyPendulumHard,
+    PositionOnlyPendulumMedium,
 )
 from popgym.envs.repeat_first import (
     RepeatFirst,
@@ -73,17 +85,11 @@ from popgym.envs.repeat_previous import (
     RepeatPreviousHard,
     RepeatPreviousMedium,
 )
-from popgym.envs.stateless_cartpole import (
-    StatelessCartPole,
-    StatelessCartPoleEasy,
-    StatelessCartPoleHard,
-    StatelessCartPoleMedium,
-)
-from popgym.envs.stateless_pendulum import (
-    StatelessPendulum,
-    StatelessPendulumEasy,
-    StatelessPendulumHard,
-    StatelessPendulumMedium,
+from popgym.envs.velocity_only_cartpole import (
+    VelocityOnlyCartPole,
+    VelocityOnlyCartPoleEasy,
+    VelocityOnlyCartPoleHard,
+    VelocityOnlyCartPoleMedium,
 )
 
 #
@@ -123,34 +129,46 @@ ALL_DIAGNOSTIC = {**DIAGNOSTIC_EASY, **DIAGNOSTIC_MEDIUM, **DIAGNOSTIC_HARD}
 # Control envs
 #
 CONTROL: Dict[gym.Env, Dict[str, Any]] = {
-    StatelessCartPole: {"id": "popgym-StatelessCartPole-v0"},
-    StatelessPendulum: {
-        "id": "popgym-StatelessPendulum-v0",
+    PositionOnlyCartPole: {"id": "popgym-PositionOnlyCartPole-v0"},
+    PositionOnlyPendulum: {
+        "id": "popgym-PositionOnlyPendulum-v0",
     },
+    VelocityOnlyCartPole: {
+        "id": "popgym-VelocityOnlyCartpole-v0",
+    }
     # BipedalWalker: {"id": "popgym-BipedalWalker-v0"},
 }
 
 CONTROL_EASY: Dict[gym.Env, Dict[str, Any]] = {
-    StatelessCartPoleEasy: {"id": "popgym-StatelessCartPoleEasy-v0"},
-    StatelessPendulumEasy: {
-        "id": "popgym-StatelessPendulumEasy-v0",
+    PositionOnlyCartPoleEasy: {"id": "popgym-PositionOnlyCartPoleEasy-v0"},
+    PositionOnlyPendulumEasy: {
+        "id": "popgym-PositionOnlyPendulumEasy-v0",
     },
+    VelocityOnlyCartPoleEasy: {
+        "id": "popgym-VelocityOnlyCartpoleEasy-v0",
+    }
     # BipedalWalkerEasy: {"id": "popgym-BipedalWalkerEasy-v0"},
 }
 
 CONTROL_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
-    StatelessCartPoleMedium: {"id": "popgym-StatelessCartPoleMedium-v0"},
-    StatelessPendulumMedium: {
-        "id": "popgym-StatelessPendulumMedium-v0",
+    PositionOnlyCartPoleMedium: {"id": "popgym-PositionOnlyCartPoleMedium-v0"},
+    PositionOnlyPendulumMedium: {
+        "id": "popgym-PositionOnlyPendulumMedium-v0",
     },
+    VelocityOnlyCartPoleMedium: {
+        "id": "popgym-VelocityOnlyCartpoleMedium-v0",
+    }
     # BipedalWalkerMedium: {"id": "popgym-BipedalWalkerMedium-v0"},
 }
 
 CONTROL_HARD: Dict[gym.Env, Dict[str, Any]] = {
-    StatelessCartPoleHard: {"id": "popgym-StatelessCartPoleHard-v0"},
-    StatelessPendulumHard: {
-        "id": "popgym-StatelessPendulumHard-v0",
+    PositionOnlyCartPoleHard: {"id": "popgym-PositionOnlyCartPoleHard-v0"},
+    PositionOnlyPendulumHard: {
+        "id": "popgym-PositionOnlyPendulumHard-v0",
     },
+    VelocityOnlyCartPoleHard: {
+        "id": "popgym-VelocityOnlyCartpoleHard-v0",
+    }
     # BipedalWalkerHard: {"id": "popgym-BipedalWalkerHard-v0"},
 }
 
@@ -160,36 +178,38 @@ ALL_CONTROL = {**CONTROL_EASY, **CONTROL_MEDIUM, **CONTROL_HARD}
 # Noisy envs
 #
 NOISY: Dict[gym.Env, Dict[str, Any]] = {
-    NoisyStatelessCartPole: {"id": "popgym-NoisyStatelessCartPole-v0"},
-    NoisyStatelessPendulum: {
-        "id": "popgym-NoisyStatelessPendulum-v0",
+    NoisyPositionOnlyCartPole: {"id": "popgym-NoisyPositionOnlyCartPole-v0"},
+    NoisyPositionOnlyPendulum: {
+        "id": "popgym-NoisyPositionOnlyPendulum-v0",
     },
     MultiarmedBandit: {"id": "popgym-MultiarmedBandit-v0"},
     # NonstationaryBandit: {"id": "popgym-NonstationaryBandit-v0"},
 }
 
 NOISY_EASY: Dict[gym.Env, Dict[str, Any]] = {
-    NoisyStatelessCartPoleEasy: {"id": "popgym-NoisyStatelessCartPoleEasy-v0"},
-    NoisyStatelessPendulumEasy: {
-        "id": "popgym-NoisyStatelessPendulumEasy-v0",
+    NoisyPositionOnlyCartPoleEasy: {"id": "popgym-NoisyPositionOnlyCartPoleEasy-v0"},
+    NoisyPositionOnlyPendulumEasy: {
+        "id": "popgym-NoisyPositionOnlyPendulumEasy-v0",
     },
     MultiarmedBanditEasy: {"id": "popgym-MultiarmedBanditEasy-v0"},
     # NonstationaryBanditEasy: {"id": "popgym-NonstationaryBanditEasy-v0"},
 }
 
 NOISY_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
-    NoisyStatelessCartPoleMedium: {"id": "popgym-NoisyStatelessCartPoleMedium-v0"},
-    NoisyStatelessPendulumMedium: {
-        "id": "popgym-NoisyStatelessPendulumMedium-v0",
+    NoisyPositionOnlyCartPoleMedium: {
+        "id": "popgym-NoisyPositionOnlyCartPoleMedium-v0"
+    },
+    NoisyPositionOnlyPendulumMedium: {
+        "id": "popgym-NoisyPositionOnlyPendulumMedium-v0",
     },
     MultiarmedBanditMedium: {"id": "popgym-MultiarmedBanditMedium-v0"},
     # NonstationaryBanditMedium: {"id": "popgym-NonstationaryBanditMedium-v0"},
 }
 
 NOISY_HARD: Dict[gym.Env, Dict[str, Any]] = {
-    NoisyStatelessCartPoleHard: {"id": "popgym-NoisyStatelessCartPoleHard-v0"},
-    NoisyStatelessPendulumHard: {
-        "id": "popgym-NoisyStatelessPendulumHard-v0",
+    NoisyPositionOnlyCartPoleHard: {"id": "popgym-NoisyPositionOnlyCartPoleHard-v0"},
+    NoisyPositionOnlyPendulumHard: {
+        "id": "popgym-NoisyPositionOnlyPendulumHard-v0",
     },
     MultiarmedBanditHard: {"id": "popgym-MultiarmedBanditHard-v0"},
     # NonstationaryBanditHard: {"id": "popgym-NonstationaryBanditHard-v0"},
