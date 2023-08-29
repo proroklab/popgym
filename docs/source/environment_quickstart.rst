@@ -7,7 +7,6 @@ Let's create an environment and add some wrappers to it. First, let's do all req
 
 .. code-block:: python
 
-    import gymnasium as gym
     import popgym
     from popgym.wrappers import PreviousAction, Antialias, Markovian, Flatten, DiscreteAction
     from popgym.core.observability import Observability, STATE
