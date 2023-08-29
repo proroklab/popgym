@@ -1,4 +1,10 @@
-"""Receive some cards then output how many of each you've seen"""
+"""A game where the agent is queried on past events
+
+The agent is queried on how many times it has observed a specific
+event in the past. This tests long-term order-agnostic memory like sets.
+The agent is dealt a card, and then asked how many times it has seen
+a specific card in the past. The agent must answer correctly to receive
+a reward."""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -12,8 +18,11 @@ from popgym.core.env import POPGymEnv
 class CountRecall(POPGymEnv):
     """A game where the agent is queried on past events
 
-    A game where the agent is queried on how many times it has observed
-    an event in the past. This tests long-term order-agnostic memory like sets.
+    The agent is queried on how many times it has observed a specific
+    event in the past. This tests long-term order-agnostic memory like sets.
+    The agent is dealt a card, and then asked how many times it has seen
+    a specific card in the past. The agent must answer correctly to receive
+    a reward.
 
     Args:
         max_episode_length: The maximum number of timesteps in an episode

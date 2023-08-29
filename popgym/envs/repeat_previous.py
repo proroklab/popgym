@@ -1,3 +1,8 @@
+"""A game where the agent must output the suit of the card from k timesteps ago
+
+The agent receives a sequence of cards, and must output the suit of the card
+from k timesteps ago. E.g., if k == 1, then the agent must output the suit of
+the previous card."""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -10,6 +15,10 @@ from popgym.core.env import POPGymEnv
 
 class RepeatPrevious(POPGymEnv):
     """A game where the agent must output the suit of the card from k timesteps ago
+
+    The agent receives a sequence of cards, and must output the suit of the card
+    from k timesteps ago. E.g., if k == 1, then the agent must output the suit of
+    the previous card.
 
     Args:
         num_decks: The number of decks to cycle through, which determines

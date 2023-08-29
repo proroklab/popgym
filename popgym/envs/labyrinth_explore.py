@@ -1,3 +1,9 @@
+"""A procedurally-generated maze that the agent must explore
+
+The agent is dropped into a procedurally-generated maze and must explore
+it. The agent receives reward for visiting new grid squares. Once all squares
+are visited or the time limit is reached, the episode ends."""
+
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -8,8 +14,11 @@ from popgym.core.maze import Actions, Cell, Explored, MazeEnv
 
 
 class LabyrinthExplore(MazeEnv):
-    """A maze environment where the agent receives reward for visiting
-    new grid squares
+    """A procedurally-generated maze that the agent must explore
+
+    The agent is dropped into a procedurally-generated maze and must explore
+    it. The agent receives reward for visiting new grid squares. Once all squares
+    are visited or the time limit is reached, the episode ends.
 
     Args:
         maze_dims: (heigh, width) of the generated mazes in blocks

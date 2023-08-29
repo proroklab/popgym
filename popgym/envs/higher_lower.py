@@ -1,4 +1,10 @@
-"""Guess if the next card in the deck is higher or lower than the last card drawn."""
+"""A game of the higher/lower card game
+
+Given a deck of cards, the agent predicts whether the
+next card drawn from the deck is higher or lower than the last card drawn from
+the deck. A push results in zero reward, while a correct/incorrect guess result
+in 1/deck_size and -1/deck_size reward. The agent can learn to count cards to
+infer which cards are left in the deck, improving accuracy."""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -19,7 +25,7 @@ def value_fn(hand):
 
 
 class HigherLower(POPGymEnv):
-    """A game of higher/lower
+    """A game of the higher/lower card game
 
     Given a deck of cards, the agent predicts whether the
     next card drawn from the deck is higher or lower than the last card drawn from

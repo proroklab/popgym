@@ -2,7 +2,11 @@
 ![tests](https://github.com/smorad/popgym/actions/workflows/python-app.yml/badge.svg)
 [![codecov](https://codecov.io/gh/smorad/popgym/branch/master/graph/badge.svg?token=I47IDFZXSV)](https://codecov.io/gh/smorad/popgym)
 
-POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines). The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K). Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for advanced installation instructions and examples. 
+POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines). 
+
+The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K). 
+
+Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for advanced installation instructions and examples. 
 
 ## Quickstart Install
 
@@ -18,21 +22,22 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 
 | Environment                                                                                             |         Tags      | Temporal Ordering | Colab FPS         | Macbook Air (2020) FPS    |
 |---------------------------------------------------------------------------------------------------------|-------------------|-------------------|-------------------|---------------------------|
-| [Battleship](#battleship) [(Code)](popgym/envs/battleship.py)                                           |Game               |None               |  117,158          |  235,402                  |
-| [Concentration](#concentration) [(Code)](popgym/envs/concentration.py)                                  |Game               |Weak               |  47,515           |  157,217                  |
-| [Higher Lower](#higher-lower) [(Code)](popgym/envs/higher_lower.py)                                     |Game, Noisy        |None               |  24,312           |  76,903                   |
-| [Labyrinth Escape](#labyrinth-escape) [(Code)](popgym/envs/labyrinth_escape.py)                         |Navigation         |Strong             |  1,399            |  41,122                   |
-| [Labyrinth Explore](#labyrinth-explore) [(Code)](popgym/envs/labyrinth_explore.py)                      |Navigation         |Strong             |  1,374            |  30,611                   |
-| [Minesweeper](#minesweeper) [(Code)](popgym/envs/minesweeper.py)                                        |Game               |None               |  8,434            |  32,003                   |
-| [Multiarmed Bandit](#multiarmed-bandit) [(Code)](popgym/envs/multiarmed_bandit.py)                      |Noisy              |None               |  48,751           |  469,325                  |
-| [Autoencode](#autoencode) [(Code)](popgym/envs/autoencode.py)                                           |Diagnostic         |Strong             |  121,756          |  251,997                  |
-| [Count Recall](#count-recall) [(Code)](popgym/envs/count_recall.py)                                     |Diagnostic, Noisy  |None               |  16,799           |  50,311                   |
-| [Repeat First](#repeat-first) [(Code)](popgym/envs/repeat_first.py)                                     |Diagnostic         |None               |  23,895           |  155,201                  |
-| [Repeat Previous](#repeat-previous) [(Code)](popgym/envs/repeat_previous.py)                            |Diagnostic         |Strong             |  50,349           |  136,392                  |
-| [Stateless Cartpole](#stateless-cartpole) [(Code)](popgym/envs/stateless_cartpole.py)                   |Control            |Strong             |  73,622           |  218,446                  |
-| [Noisy Stateless Cartpole](#noisy-stateless-cartpole) [(Code)](popgym/envs/noisy_stateless_cartpole.py) |Control, Noisy     |Strong             |  6,269            |  66,891                   |
-| [Stateless Pendulum](#noisy-stateless-pendulum) [(Code)](popgym/envs/stateless_pendulum.py)             |Control            |Strong             |  8,168            |  26,358                   |
-| [Noisy Stateless Pendulum](#noisy-stateless-pendulum) [(Code)](popgym/envs/noisy_stateless_pendulum.py) |Control, Noisy     |Strong             |  6,808            |  20,090                   |
+| [Battleship](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/autoencode/index.html) |Game               |None               |  117,158          |  235,402                  |
+| [Concentration](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/concentration/index.html) |Game               |Weak               |  47,515           |  157,217                  |
+| [Higher Lower](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/higher_lower/index.html) |Game, Noisy        |None               |  24,312           |  76,903                   |
+| [Labyrinth Escape](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/labyrinth_escape/index.html)                         |Navigation         |Strong             |  1,399            |  41,122                   |
+| [Labyrinth Explore](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/labyrinth_explore/index.html) |Navigation         |Strong             |  1,374            |  30,611                   |
+| [Minesweeper](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/minesweeper/index.html) |Game               |None               |  8,434            |  32,003                   |
+| [Multiarmed Bandit](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/multiarmed_bandit/index.html) |Noisy              |None               |  48,751           |  469,325                  |
+| [Autoencode](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/autoencode/index.html) |Diagnostic         |Strong             |  121,756          |  251,997                  |
+| [Count Recall](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/count_recall/index.html) |Diagnostic, Noisy  |None               |  16,799           |  50,311                   |
+| [Repeat First](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/repeat_first/index.html) |Diagnostic         |None               |  23,895           |  155,201                  |
+| [Repeat Previous](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/repeat_previous/index.html) |Diagnostic         |Strong             |  50,349           |  136,392                  |
+| [Position Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/position_only_cartpole/index.html) |Control            |Strong             |  73,622           |  218,446                  |
+| [Velocity Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/velocity_only_cartpole/index.html) |Control            |Strong             |  73,622           |  130,474                  |
+| [Noisy Position Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/noisy_position_only_cartpole/index.html) |Control, Noisy     |Strong             |  6,269            |  66,891                   |
+| [Position Only Pendulum](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/position_only_pendulum/index.html) |Control            |Strong             |  8,168            |  26,358                   |
+| [Noisy Position Only Pendulum](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/noisy_position_only_pendulum/index.html) |Control, Noisy     |Strong             |  6,808            |  20,090                   |
 
 Feel free to rerun this benchmark using [this colab notebook](https://colab.research.google.com/drive/1_ew-Piq5d9R_NkmP1lSzFX1fbK-swuAN?usp=sharing).
 

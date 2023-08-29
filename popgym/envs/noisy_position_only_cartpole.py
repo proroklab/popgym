@@ -1,5 +1,7 @@
 from typing import Optional, Tuple
 
+"""Position only cartpole with noise added to the observations"""
+
 import gymnasium as gym
 import numpy as np
 from gymnasium.core import ActType, ObsType
@@ -8,6 +10,13 @@ from popgym.envs.position_only_cartpole import PositionOnlyCartPole
 
 
 class NoisyPositionOnlyCartPole(PositionOnlyCartPole):
+    """Position only cartpole with noise added to the observations
+
+    Args:
+        noise_sigma: The standard deviation of the noise to add to the observations
+        **kwargs: To be passed to PositionOnlyCartPole
+    """
+
     def __init__(self, *args, **kwargs):
         noise_sigma = kwargs.pop("noise_sigma", 0.1)
         super().__init__(*args, **kwargs)

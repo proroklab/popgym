@@ -1,3 +1,4 @@
+"""Position only pendulum with noise added to the observations"""
 from typing import Optional, Tuple
 
 import gymnasium as gym
@@ -8,6 +9,13 @@ from popgym.envs.position_only_pendulum import PositionOnlyPendulum
 
 
 class NoisyPositionOnlyPendulum(PositionOnlyPendulum):
+    """Position only pendulum with noise added to the observations
+
+    Args:
+        noise_sigma: The standard deviation of the noise to add to the observations
+        **kwargs: To be passed to PositionOnlyPendulum
+    """
+
     def __init__(self, *args, **kwargs):
         noise_sigma = kwargs.pop("noise_sigma", 0.1)
         super().__init__(*args, **kwargs)
