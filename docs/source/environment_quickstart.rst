@@ -48,6 +48,7 @@ At the initial timestep, there is no previous action. By default, PreviousAction
 Many RL libraries have spotty support for nested observations or MultiDiscrete action spaces. If you are using DQN or similar approaches, you might want to flatten the observation and action spaces, then convert the action space into a single large Discrete space
 
 .. code-block:: python
+
     DiscreteAction(Flatten(wrapped_env))
 
 We will not actually assign this to wrapped env, as for this example we want to inspect the observation and action spaces. Finally, we can decide if we want the hidden Markov state. We can add it as part of the observation, into the info dict, etc. See Observability for more options.
