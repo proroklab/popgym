@@ -55,7 +55,7 @@ from popgym.envs.noisy_position_only_cartpole import (
     NoisyPositionOnlyCartPoleHard,
     NoisyPositionOnlyCartPoleMedium,
 )
-from popgym.envs.noisy_stateless_pendulum import (
+from popgym.envs.noisy_position_only_pendulum import (
     NoisyPositionOnlyPendulum,
     NoisyPositionOnlyPendulumEasy,
     NoisyPositionOnlyPendulumHard,
