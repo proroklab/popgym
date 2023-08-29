@@ -26,7 +26,7 @@ We also might want to add some wrappers. In POMDPs, we often condition on the pr
 
     wrapped_env = PreviousAction(env)
 
-At the initial timestep, there is no previous action. By default, PreviousAction will return a zero action. To prevent aliasing for the initial, we can add an indicator to the observation space, indicating whether this is the initial timestep.
+At the initial timestep, there is no previous action. By default, PreviousAction will return a zero action. To prevent aliasing the initial action, we can add an indicator to the observation space, indicating whether this is the initial timestep.
 
 .. code-block:: python
 
