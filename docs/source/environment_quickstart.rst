@@ -19,19 +19,7 @@ now let's create a stateless cartpole environment
 
 .. code-block:: python
 
-    env = popgym.envs.stateless_cartpole.StatelessCartPoleEasy()
-
-If we imported gymnasium, we can also use the gym.make api
-
-.. code-block:: python
-
-    import gymnasium as gym
-    import popgym
-
-    env_names = [e["id"] for e in popgym.envs.ALL.values()]
-    print(env_names)
-    env = gym.make("popgym-StatelessCartPoleEasy-v0")
-
+    env = popgym.envs.position_only_cartpole.PositionOnlyCartPoleEasy()
 
 We also might want to add some wrappers. In POMDPs, we often condition on the previous action. We can do this using the PreviousAction wrapper.
 
