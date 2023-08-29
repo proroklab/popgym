@@ -2,7 +2,7 @@
 
 The agent receives a sequence of cards, and must output the cards it saw
 in reverse order. E.g., seeing [1, 2, 3] means I should output them in the order
-[1, 2, 3].
+[3, 2, 1].
 """
 import enum
 from typing import Any, Dict, Optional, Tuple
@@ -25,7 +25,7 @@ class Autoencode(POPGymEnv):
 
     The agent receives a sequence of cards, and must output the cards it saw
     in reverse order. E.g., seeing [1, 2, 3] means I should output them in the order
-    [1, 2, 3].
+    [3, 2, 1].
 
     Examples:
         >>> env = Autoencode()
@@ -81,8 +81,6 @@ class Autoencode(POPGymEnv):
             self.deck.deal("system", 1)
             if len(self.deck) == 0:
                 self.mode = Mode.PLAY
-                # Flip the cards so they play backwards
-                # self.deck["system"].reverse()
             obs = self.make_obs(self.deck["system"][-1])
         else:
             # Recited all cards
