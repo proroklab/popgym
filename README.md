@@ -6,7 +6,7 @@ POPGym is designed to benchmark memory in deep reinforcement learning. It contai
 
 The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K). 
 
-Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for advanced installation instructions and examples. 
+Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for advanced installation instructions and examples. The [environment quickstart](https://popgym.readthedocs.io/en/latest/environment_quickstart.html) will get you up and running in a few minutes.
 
 ## Quickstart Install
 
@@ -18,7 +18,7 @@ pip install "popgym[baselines]" # environments and memory baselines
 
 ## POPGym Environments
 
-POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Gymnasium](https://github.com/Farama-Foundation/Gymnaisum) interface. POPGym environments have minimal dependencies and fast enough to solve on a laptop CPU in less than a day. We provide the following environments:
+POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) interface. POPGym environments have minimal dependencies and fast enough to solve on a laptop CPU in less than a day. We provide the following environments:
 
 | Environment                                                                                             |         Tags      | Temporal Ordering | Colab FPS         | Macbook Air (2020) FPS    |
 |---------------------------------------------------------------------------------------------------------|-------------------|-------------------|-------------------|---------------------------|
@@ -34,7 +34,7 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 | [Repeat First](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/repeat_first/index.html) |Diagnostic         |None               |  23,895           |  155,201                  |
 | [Repeat Previous](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/repeat_previous/index.html) |Diagnostic         |Strong             |  50,349           |  136,392                  |
 | [Position Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/position_only_cartpole/index.html) |Control            |Strong             |  73,622           |  218,446                  |
-| [Velocity Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/velocity_only_cartpole/index.html) |Control            |Strong             |  73,622           |  130,474                  |
+| [Velocity Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/velocity_only_cartpole/index.html) |Control            |Strong             |  73,622           |  214,352                  |
 | [Noisy Position Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/noisy_position_only_cartpole/index.html) |Control, Noisy     |Strong             |  6,269            |  66,891                   |
 | [Position Only Pendulum](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/position_only_pendulum/index.html) |Control            |Strong             |  8,168            |  26,358                   |
 | [Noisy Position Only Pendulum](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/noisy_position_only_pendulum/index.html) |Control, Noisy     |Strong             |  6,808            |  20,090                   |
