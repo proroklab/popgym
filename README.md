@@ -32,7 +32,7 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 | [Repeat First](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/repeat_first/index.html) |Diagnostic         |None               |  23,895           |  155,201                  |
 | [Repeat Previous](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/repeat_previous/index.html) |Diagnostic         |Strong             |  50,349           |  136,392                  |
 | [Position Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/position_only_cartpole/index.html) |Control            |Strong             |  73,622           |  218,446                  |
-| [Velocity Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/velocity_only_cartpole/index.html) |Control            |Strong             |  73,622           |  214,352                  |
+| [Velocity Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/velocity_only_cartpole/index.html) |Control            |Strong             |  69,476           |  214,352                  |
 | [Noisy Position Only Cartpole](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/noisy_position_only_cartpole/index.html) |Control, Noisy     |Strong             |  6,269            |  66,891                   |
 | [Position Only Pendulum](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/position_only_pendulum/index.html) |Control            |Strong             |  8,168            |  26,358                   |
 | [Noisy Position Only Pendulum](https://popgym.readthedocs.io/en/latest/autoapi/popgym/envs/noisy_position_only_pendulum/index.html) |Control, Noisy     |Strong             |  6,808            |  20,090                   |
