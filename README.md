@@ -10,7 +10,7 @@ Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for adv
 
 ```python
 pip install popgym # base environments only, only requires numpy and gymnasium
-pip install "popgym[navigation]" # also include navigation environments, which require mazelib
+pip install --use-pep517 "popgym[navigation]" # also include navigation environments, which require mazelib
 pip install "popgym[baselines]" # environments and memory baselines
 ```
 
