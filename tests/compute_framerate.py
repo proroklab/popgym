@@ -12,8 +12,8 @@ def run_sample(e, num_steps):
     env.reset()
     start = time.time()
     for i in range(NUM_STEPS):
-        _, _, done, _ = env.step(env.action_space.sample())
-        if done:
+        _, _, terminated, truncated, _ = env.step(env.action_space.sample())
+        if terminated or truncated:
             env.reset()
     end = time.time()
     elapsed = end - start
@@ -22,13 +22,13 @@ def run_sample(e, num_steps):
 
 
 def main():
-    for e in popgym.ALL_BASE_ENVS:
+    for e in popgym.envs.ALL_BASE:
         fps = run_sample(e, NUM_STEPS)
         print(f"{e.__name__} (1x) FPS: {fps:.0f}")
 
     p = multiprocessing.Pool(processes=NUM_WORKERS)
     with p:
-        for e in popgym.ALL_ENVS:
+        for e in popgym.envs.ALL_BASE:
             envs = NUM_WORKERS * [e]
             steps = NUM_WORKERS * [int(NUM_STEPS / NUM_WORKERS)]
             fps = sum(p.starmap(run_sample, zip(envs, steps)))

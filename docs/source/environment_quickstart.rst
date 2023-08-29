@@ -7,7 +7,6 @@ Let's create an environment and add some wrappers to it. First, let's do all req
 
 .. code-block:: python
 
-    import gymnasium as gym
     import popgym
     from popgym.wrappers import PreviousAction, Antialias, Markovian, Flatten, DiscreteAction
     from popgym.core.observability import Observability, STATE
@@ -19,19 +18,7 @@ now let's create a stateless cartpole environment
 
 .. code-block:: python
 
-    env = popgym.envs.stateless_cartpole.StatelessCartPoleEasy()
-
-If we imported gymnasium, we can also use the gym.make api
-
-.. code-block:: python
-
-    import gymnasium as gym
-    import popgym
-
-    env_names = [e["id"] for e in popgym.envs.ALL.values()]
-    print(env_names)
-    env = gym.make("popgym-StatelessCartPoleEasy-v0")
-
+    env = popgym.envs.position_only_cartpole.PositionOnlyCartPoleEasy()
 
 We also might want to add some wrappers. In POMDPs, we often condition on the previous action. We can do this using the PreviousAction wrapper.
 
@@ -39,7 +26,7 @@ We also might want to add some wrappers. In POMDPs, we often condition on the pr
 
     wrapped_env = PreviousAction(env)
 
-At the initial timestep, there is no previous action. By default, PreviousAction will return a zero action. To prevent aliasing for the initial, we can add an indicator to the observation space, indicating whether this is the initial timestep.
+At the initial timestep, there is no previous action. By default, PreviousAction will return a zero action. To prevent aliasing the initial action, we can add an indicator to the observation space, indicating whether this is the initial timestep.
 
 .. code-block:: python
 
@@ -48,6 +35,7 @@ At the initial timestep, there is no previous action. By default, PreviousAction
 Many RL libraries have spotty support for nested observations or MultiDiscrete action spaces. If you are using DQN or similar approaches, you might want to flatten the observation and action spaces, then convert the action space into a single large Discrete space
 
 .. code-block:: python
+
     DiscreteAction(Flatten(wrapped_env))
 
 We will not actually assign this to wrapped env, as for this example we want to inspect the observation and action spaces. Finally, we can decide if we want the hidden Markov state. We can add it as part of the observation, into the info dict, etc. See Observability for more options.

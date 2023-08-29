@@ -1,3 +1,10 @@
+"""Episodic multiarmed bandits
+
+Multiarmed Bandits over an episode. In each episode, bandits are randomly
+initialized and may be positive or negative. Each bandit has some
+probability of payout, and will otherwise return zero reward. The agent
+must sample and then exploit the bandits that pay best."""
+
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -8,13 +15,17 @@ from popgym.core.env import POPGymEnv
 
 
 class MultiarmedBandit(POPGymEnv):
-    """Multiarmed Bandits over an episode. Bandits are initialized that have some
-    probability of positive reward and negative reward. The agent must sample
-    and then exploit the bandits that pay best.
+    """Episodic multiarmed bandits
+
+    Multiarmed Bandits over an episode. In each episode, bandits are randomly
+    initialized and may be positive or negative. Each bandit has some
+    probability of payout, and will otherwise return zero reward. The agent
+    must sample and then exploit the bandits that pay best.
 
     Args:
         num_bandits: Number of individual bandits
         episode_length: Max episode length
+
     Returns:
         A gym env
     """

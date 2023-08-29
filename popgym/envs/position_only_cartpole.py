@@ -1,3 +1,7 @@
+"""A partially observable variant of the CartPole gym environment.
+
+We delete the position and angular velocity components of the state, so that it
+can only be solved by a memory enhanced model (policy)."""
 # Inspired by ray rllib at
 # https://github.com/ray-project/ray/blob/master/rllib/examples/env/stateless_cartpole.py
 
@@ -14,11 +18,9 @@ from popgym.core.env import POPGymEnv
 
 
 class PositionOnlyCartPole(CartPoleEnv, POPGymEnv):
-    """Partially observable variant of the CartPole gym environment.
+    """A partially observable variant of the CartPole gym environment.
 
-    https://github.com/openai/gym/blob/master/gym/envs/classic_control/
-    cartpole.py
-    We delete the x- and angular velocity components of the state, so that it
+    We delete the position and angular velocity components of the state, so that it
     can only be solved by a memory enhanced model (policy).
 
     Args:

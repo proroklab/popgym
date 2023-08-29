@@ -1,3 +1,10 @@
+"""Classic Microsoft MineSweeper but with the board obscured
+
+Mines are hidden underneath a grid of tiles. The player clicks a tile,
+which returns the coordinates of the tile and how many mines are present
+in adjacent tiles. Clicking a mine ends in a loss. The player must click
+all free squares to win."""
+
 import enum
 from typing import Any, Dict, Optional, Tuple
 
@@ -15,10 +22,12 @@ class HiddenSquare(enum.IntEnum):
 
 
 class MineSweeper(POPGymEnv):
-    """Classic Microsoft MineSweeper but with the board obscured. Mines are hidden
-    underneath a grid of tiles. The player clicks a tile, which returns the
-    coordinates of the tile and how many mines are present in adjacent tiles.
-    Clicking a mine loses. Player must click all free squares to win.
+    """Classic Microsoft MineSweeper but with the board obscured
+
+    Mines are hidden underneath a grid of tiles. The player clicks a tile,
+    which returns the coordinates of the tile and how many mines are present
+    in adjacent tiles. Clicking a mine ends in a loss. The player must click
+    all free squares to win.
 
     Args:
         difficulty: Easy, medium, or hard. Sets the board size and number of

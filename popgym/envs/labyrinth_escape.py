@@ -1,3 +1,9 @@
+"""The agent is dropped in a procedurally-generated maze and must escape
+
+A maze environment where the agent receives negative rewards
+until it finds the goal. The goal is the "exit" of the maze.
+It exists somewhere along the border of the maze. Once the agent
+reaches the goal or the time limit is reached, the episode ends."""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -7,8 +13,12 @@ from popgym.core.maze import Actions, Cell, MazeEnv
 
 
 class LabyrinthEscape(MazeEnv):
-    """A maze environment where the agent receives negative rewards
-     until it finds the goal.
+    """The agent is dropped in a procedurally-generated maze and must escape
+
+    A maze environment where the agent receives negative rewards
+    until it finds the goal. The goal is the "exit" of the maze.
+    It exists somewhere along the border of the maze. Once the agent
+    reaches the goal or the time limit is reached, the episode ends.
 
     Args:
         maze_dims: (heigh, width) of the generated mazes in blocks

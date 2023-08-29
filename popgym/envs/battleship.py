@@ -1,4 +1,5 @@
-"""Classic game of Battleship, except the player's board is hidden"""
+"""Classic game of Battleship, except the board is obscured. Instead, the agent
+receives a hit/miss notification with the tile coordinates."""
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym

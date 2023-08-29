@@ -1,6 +1,10 @@
 # Inspired by ray rllib at
 # https://github.com/ray-project/ray/blob/master/rllib/examples/env/stateless_pendulum.py
 
+"""Partially observable variant of the Pendulum gym environment.
+
+We delete the angular velocity component of the state, so that it
+can only be solved by a memory enhanced model (policy)."""
 from typing import Optional, Tuple
 
 import gymnasium as gym
@@ -15,8 +19,6 @@ from popgym.core.env import POPGymEnv
 class PositionOnlyPendulum(PendulumEnv, POPGymEnv):
     """Partially observable variant of the Pendulum gym environment.
 
-    https://github.com/openai/gym/blob/master/gym/envs/classic_control/
-    pendulum.py
     We delete the angular velocity component of the state, so that it
     can only be solved by a memory enhanced model (policy).
 

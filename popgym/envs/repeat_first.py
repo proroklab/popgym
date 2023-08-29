@@ -1,3 +1,9 @@
+"""A game where the agent must output the suit of the initial card
+
+The agent receives an initial card and indicator that this is the initial
+card. Then, the agent receives a sequence of cards, and must output the
+initial card at each timestep to receive a reward."""
+
 from typing import Any, Dict, Optional, Tuple
 
 import gymnasium as gym
@@ -10,6 +16,10 @@ from popgym.core.env import POPGymEnv
 
 class RepeatFirst(POPGymEnv):
     """A game where the agent must output the suit of the initial card
+
+    The agent receives an initial card and indicator that this is the initial
+    card. Then, the agent receives a sequence of cards, and must output the
+    initial card at each timestep to receive a reward.
 
     Args:
         num_decks: The number of decks to cycle through, which determines

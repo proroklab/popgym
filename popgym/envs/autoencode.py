@@ -1,4 +1,9 @@
-"""A game very similar to Simon, but backwards."""
+"""A game very similar to Simon, but backwards.
+
+The agent receives a sequence of cards, and must output the cards it saw
+in reverse order. E.g., seeing [1, 2, 3] means I should output them in the order
+[1, 2, 3].
+"""
 import enum
 from typing import Any, Dict, Optional, Tuple
 

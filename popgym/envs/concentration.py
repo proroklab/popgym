@@ -1,4 +1,6 @@
-"""The card game Concentration, where the player matches facedown cards"""
+"""Classic game of concentration. A deck of cards is shuffled and placed
+face-down. The player can flip two cards, if they match they get a reward
+otherwise they dont."""
 import math
 from typing import Any, Dict, List, Optional, Tuple
 
