@@ -2,7 +2,7 @@
 """
 
 import inspect
-from importlib import find_loader
+from importlib.util import find_spec
 from typing import Any, Dict
 
 import gymnasium as gym
@@ -255,7 +255,7 @@ ALL_GAME = {**GAME_EASY, **GAME_MEDIUM, **GAME_HARD}
 #
 def has_mazelib():  # noqa: E302
     """Check if mazelib is installed"""
-    return find_loader("mazelib") is not None
+    return find_spec("mazelib") is not None
 
 
 if has_mazelib():
