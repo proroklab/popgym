@@ -19,6 +19,7 @@ pip install "popgym[baselines]"
 ```
 
 ## Quickstart Usage
+
 ```python
 import popgym
 from popgym.wrappers import PreviousAction, Antialias, Flatten, DiscreteAction
