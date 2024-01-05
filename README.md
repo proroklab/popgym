@@ -9,9 +9,13 @@ Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for adv
 ## Quickstart Install
 
 ```python
-pip install popgym # base environments only, only requires numpy and gymnasium
-pip install --use-pep517 "popgym[navigation]" # also include navigation environments, which require mazelib
-pip install "popgym[baselines]" # environments and memory baselines
+# Install base environments, only requires numpy and gymnasium
+pip install popgym 
+# Also include navigation environments, which require mazelib
+# NOTE: navigation envs require python <3.12 due to mazelib not supporting 3.12
+pip install "popgym[navigation]" 
+# Install memory baselines w/ RLlib 
+pip install "popgym[baselines]" 
 ```
 
 ## POPGym Environments
