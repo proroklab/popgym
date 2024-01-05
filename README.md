@@ -25,7 +25,7 @@ import popgym
 from popgym.wrappers import PreviousAction, Antialias, Flatten, DiscreteAction
 env = popgym.envs.position_only_cartpole.PositionOnlyCartPoleEasy()
 print(env.reset(seed=0))
-wrapped = DiscreteAction(Flatten(PreviousAction(env))) # Append prev action to obs and flatten action space to a single discrete action for Q learning
+wrapped = DiscreteAction(Flatten(PreviousAction(env))) # Append prev action to obs, flatten obs/action spaces, then map the multidiscrete action space to a single discrete action for Q learning
 print(wrapped.reset(seed=0))
 ```
 
