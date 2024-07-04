@@ -90,7 +90,7 @@ class LinearAttentionBlock(nn.Module):
         # numerator = Q^T S
         numerator = torch.einsum("bti, btil -> btl", Q, S)
         # denominator = Q^T Z
-        denominator = torch.einsum("bti, btl -> bt", Q, Z).reshape(B, T, 1) + 1e-5
+        denominator = torch.einsum("bti, bti -> bt", Q, Z).reshape(B, T, 1) + 1e-5
         # output = (Q^T S) / (Q^T Z)
         output = numerator / denominator
 
