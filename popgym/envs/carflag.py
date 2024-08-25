@@ -31,16 +31,20 @@ class CarFlag(POPGymEnv):
     """
 
     def __init__(self, discrete=True, difficulty="easy"):
-        assert difficulty in ["easy", "medium", "hard"]
-        if difficulty == "easy":
+        self.difficulty = difficulty
+        assert self.difficulty in ["easy", "medium", "hard"]
+        if self.difficulty == "easy":
             self.heaven_position = 1.0
             self.hell_position = -1.0
-        elif difficulty == "medium":
+            self.max_steps = 200
+        elif self.difficulty == "medium":
             self.heaven_position = 3.0
             self.hell_position = -3.0
-        elif difficulty == "hard":
+            self.max_steps = 300
+        elif self.difficulty == "hard":
             self.heaven_position = 5.0
             self.hell_position = -5.0
+            self.max_steps = 400
         else:
             raise NotImplementedError(f"Invalid difficulty {difficulty}")
         self.max_position = self.heaven_position + 0.1
@@ -50,13 +54,8 @@ class CarFlag(POPGymEnv):
         self.min_action = -1.0
         self.max_action = 1.0
 
-        self.heaven_position = 1.0
-        self.hell_position = -1.0
         self.oracle_position = 0.5
         self.power = 0.0015
-
-        self.low_state = np.array([self.min_position, -self.max_speed])
-        self.high_state = np.array([self.max_position, self.max_speed])
 
         # When the cart is within this vicinity, it observes the direction given
         # by the oracle
@@ -81,10 +80,18 @@ class CarFlag(POPGymEnv):
             low=self.low_state, high=self.high_state, shape=(3,), dtype=np.float32
         )
 
+        self.state_space = gym.spaces.Box(
+            low=self.low_state, high=self.high_state, shape=(3,), dtype=np.float32
+        )
+
         self.np_random = None
         self.state = None
 
+        self.current_step = 0
+
     def step(self, action):
+        self.current_step += 1
+
         position = self.state[0]
         velocity = self.state[1]
         if self.discrete:
@@ -105,7 +112,8 @@ class CarFlag(POPGymEnv):
         max_position = max(self.heaven_position, self.hell_position)
         min_position = min(self.heaven_position, self.hell_position)
 
-        done = bool(position >= max_position or position <= min_position)
+        terminated = bool(position >= max_position or position <= min_position)
+        truncated = bool(self.current_step >= self.max_steps)
 
         env_reward = 0
 
@@ -135,9 +143,19 @@ class CarFlag(POPGymEnv):
                 # Heaven on the left
                 direction = -1.0
 
+        position = np.clip(position, self.min_position, self.max_position)
+        velocity = np.clip(velocity, -self.max_speed, self.max_speed)
+        direction = np.clip(direction, -1.0, 1.0)
+
         self.state = np.array([position, velocity, direction])
 
-        return self.state, env_reward, done, {"is_success": env_reward > 0}
+        return (
+            self.state,
+            env_reward,
+            terminated,
+            truncated,
+            {"is_success": env_reward > 0},
+        )
 
     def reset(
         self,
@@ -148,13 +166,29 @@ class CarFlag(POPGymEnv):
         super().reset(seed=seed)
         # Randomize the heaven/hell location
         if self.np_random.integers(low=0, high=2, size=1) == 0:
-            self.heaven_position = 1.0
+            if self.difficulty == "easy":
+                self.heaven_position = 1.0
+            elif self.difficulty == "medium":
+                self.heaven_position = 3.0
+            elif self.difficulty == "hard":
+                self.heaven_position = 5.0
         else:
-            self.heaven_position = -1.0
+            if self.difficulty == "easy":
+                self.heaven_position = -1.0
+            elif self.difficulty == "medium":
+                self.heaven_position = -3.0
+            elif self.difficulty == "hard":
+                self.heaven_position = -5.0
 
         self.hell_position = -self.heaven_position
 
-        self.state = np.array([self.np_random.uniform(low=-0.2, high=0.2), 0, 0.0])
+        position = self.np_random.uniform(low=self.min_position, high=self.max_position)
+        velocity = 0.0
+        direction = 0.0
+
+        self.state = np.array([position, velocity, direction], dtype=np.float32)
+        self.current_step = 0  # Reset step counter
+
         return np.array(self.state), {}
 
     def get_state(self):
