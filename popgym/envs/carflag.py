@@ -80,9 +80,17 @@ class CarFlag(POPGymEnv):
             low=self.low_state, high=self.high_state, shape=(3,), dtype=np.float32
         )
 
-        self.state_space = gym.spaces.Box(
-            low=self.low_state, high=self.high_state, shape=(3,), dtype=np.float32
+        # Define the lower and upper bounds for the state space
+        low = np.array(
+            [self.min_position, -self.max_speed, -1.0, self.oracle_position, -5, -5],
+            dtype=np.float32,
         )
+        high = np.array(
+            [self.max_position, self.max_speed, 1.0, self.oracle_position, 5, 5],
+            dtype=np.float32,
+        )
+
+        self.state_space = gym.spaces.Box(low=low, high=high, dtype=np.float32)
 
         self.np_random = None
         self.state = None
@@ -143,11 +151,7 @@ class CarFlag(POPGymEnv):
                 # Heaven on the left
                 direction = -1.0
 
-        position = np.clip(position, self.min_position, self.max_position)
-        velocity = np.clip(velocity, -self.max_speed, self.max_speed)
-        direction = np.clip(direction, -1.0, 1.0)
-
-        self.state = np.array([position, velocity, direction])
+        self.state = np.array([position, velocity, direction], dtype=np.float32)
 
         return (
             self.state,
@@ -189,15 +193,20 @@ class CarFlag(POPGymEnv):
         self.state = np.array([position, velocity, direction], dtype=np.float32)
         self.current_step = 0  # Reset step counter
 
-        return np.array(self.state), {}
+        return self.state, {}
 
     def get_state(self):
         # Return the position of the car, oracle, and goal
-        return (
-            self.state,
-            self.oracle_position,
-            self.heaven_position,
-            self.hell_position,
+        return np.array(
+            [
+                self.state[0],
+                self.state[1],
+                self.state[2],
+                self.oracle_position,
+                self.heaven_position,
+                self.hell_position,
+            ],
+            dtype=np.float32,
         )
 
     def render(self):
