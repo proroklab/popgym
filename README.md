@@ -2,6 +2,8 @@
 ![tests](https://github.com/smorad/popgym/actions/workflows/python-app.yml/badge.svg)
 [![codecov](https://codecov.io/gh/smorad/popgym/branch/master/graph/badge.svg?token=I47IDFZXSV)](https://codecov.io/gh/smorad/popgym)
 
+## 🚨 **Try our new GPU-accelerated, Atari-style [POPGym Arcade](https://github.com/bolt-research/popgym_arcade)** 🚨
+
 POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines). The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K). 
 
 Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for advanced installation instructions and examples. The [environment quickstart](https://popgym.readthedocs.io/en/latest/environment_quickstart.html) will get you up and running in a few minutes.
