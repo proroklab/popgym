@@ -81,11 +81,11 @@ class MineSweeper(POPGymEnv):
             self.hidden_grid[action] = HiddenSquare.VIEWED
             reward = self.success_reward_scale
 
-        truncated = self.timestep == self.max_episode_length
+        self.timestep += 1
         terminated |= np.all(self.hidden_grid != HiddenSquare.CLEAR).item()
+        truncated = (self.timestep == self.max_episode_length) and not terminated
 
         obs = self.neighbor_grid[action].item()
-        self.timestep += 1
 
         return obs, reward, terminated, truncated, {}
 
