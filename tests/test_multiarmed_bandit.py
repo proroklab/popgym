@@ -12,12 +12,10 @@ class TestMultiarmedBandit(AbstractTest.POPGymTest):
         obs, info = self.env.reset()
         bandits = info["bandits"]
         action = np.argmax(bandits)
+        best_bandit = float(np.max(bandits))
         terminated = truncated = False
         reward = 0
-        expected_value = (
-            self.env.max_episode_length * np.max(bandits)
-            - self.env.max_episode_length * (1 - np.max(bandits))
-        ) / self.env.max_episode_length
+        expected_value = 2 * best_bandit - 1
 
         for i in range(self.env.max_episode_length):
             self.assertFalse(terminated or truncated)
@@ -26,4 +24,6 @@ class TestMultiarmedBandit(AbstractTest.POPGymTest):
 
         self.assertTrue(truncated)
         self.assertFalse(terminated)
-        self.assertTrue(np.abs(expected_value - reward) < 0.1)
+        # Reward is stochastic; compare against a 4-sigma bound for finite horizon.
+        reward_std = 2 * np.sqrt(best_bandit * (1 - best_bandit) / self.env.max_episode_length)
+        self.assertTrue(np.abs(expected_value - reward) < 4 * reward_std)

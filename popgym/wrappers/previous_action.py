@@ -116,10 +116,11 @@ class PreviousAction(POPGymWrapper):
         Returns:
             The null action.
         """
-        if isinstance(
-            action_space,
-            (spaces.Discrete, spaces.MultiBinary, spaces.MultiDiscrete, spaces.Box),
-        ):
+        if isinstance(action_space, spaces.Discrete):
+            action = 0
+            if not action_space.contains(action):
+                action = int(action_space.start)
+        elif isinstance(action_space, (spaces.MultiBinary, spaces.MultiDiscrete, spaces.Box)):
             action = np.zeros(action_space.shape, action_space.dtype)
             if not action_space.contains(action):
                 action = action_space.low
