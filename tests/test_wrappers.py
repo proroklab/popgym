@@ -1,5 +1,4 @@
 import pytest
-from gymnasium.utils.env_checker import check_env
 
 from popgym import envs
 from popgym.core.observability import OBS, STATE, Observability
@@ -8,6 +7,7 @@ from popgym.wrappers.discrete_action import DiscreteAction
 from popgym.wrappers.flatten import Flatten
 from popgym.wrappers.markovian import Markovian
 from popgym.wrappers.previous_action import PreviousAction
+from tests.test_utils import check_env_no_warnings
 
 
 def check_space(space, data):
@@ -20,21 +20,21 @@ def check_space(space, data):
 def test_previousaction_step(env):
     wrapped_noaa = PreviousAction(env())
     wrapped_noaa.reset()
-    check_env(wrapped_noaa, skip_render_check=True)
+    check_env_no_warnings(wrapped_noaa)
 
 
 @pytest.mark.parametrize("env", envs.ALL.keys())
 def test_antialias_step(env):
     wrapped_aa = Antialias(env())
     wrapped_aa.reset()
-    check_env(wrapped_aa, skip_render_check=True)
+    check_env_no_warnings(wrapped_aa)
 
 
 @pytest.mark.parametrize("env", envs.ALL.keys())
 def test_previousaction_antialias_step(env):
     wrapped_aa = Antialias(PreviousAction(env()))
     wrapped_aa.reset()
-    check_env(wrapped_aa, skip_render_check=True)
+    check_env_no_warnings(wrapped_aa)
 
 
 @pytest.mark.parametrize("env", envs.ALL.keys())
@@ -99,6 +99,8 @@ def test_state_space_full_and_partial(env):
         check_space(wrapped.observation_space[STATE], obs[STATE])
         check_space(wrapped.observation_space[OBS], obs[OBS])
         check_space(e.observation_space, obs[OBS])
+        if terminated or truncated:
+            _ = wrapped.reset()
 
 
 @pytest.mark.parametrize("env", envs.ALL.keys())
@@ -106,7 +108,7 @@ def test_flatten_step(env):
     wrapped_aa = Flatten(env())
     obs, _ = wrapped_aa.reset()
     assert wrapped_aa.observation_space.contains(obs)
-    check_env(wrapped_aa, skip_render_check=True)
+    check_env_no_warnings(wrapped_aa)
 
 
 @pytest.mark.parametrize("env", envs.ALL.keys())

@@ -162,7 +162,7 @@ class Concentration(POPGymEnv):
         super().reset(seed=seed)
         self.flip_next_turn = False
         self.deck.reset(rng=self.np_random)
-        self.state = self.deck_idx_type[self.deck.idx].copy().astype(np.float32)
+        self.state = self.deck_idx_type[self.deck.idx].copy().astype(np.int64)
         self.curr_step = 0
         self.turn_counter = 0
         self.flipped_counter = 0
