@@ -19,6 +19,12 @@ from popgym.envs.battleship import (
     BattleshipHard,
     BattleshipMedium,
 )
+from popgym.envs.carflag import (
+    CarFlag,
+    CarFlagEasy,
+    CarFlagMedium,
+    CarFlagHard,
+)
 from popgym.envs.concentration import (
     Concentration,
     ConcentrationEasy,
@@ -225,6 +231,7 @@ GAME: Dict[gym.Env, Dict[str, Any]] = {
     Battleship: {"id": "popgym-Battleship-v0"},
     Concentration: {"id": "popgym-Concentration-v0"},
     MineSweeper: {"id": "popgym-MineSweeper-v0"},
+    CarFlag: {"id": "popgym-CarFlag-v0"},
 }
 
 GAME_EASY: Dict[gym.Env, Dict[str, Any]] = {
@@ -232,6 +239,7 @@ GAME_EASY: Dict[gym.Env, Dict[str, Any]] = {
     BattleshipEasy: {"id": "popgym-BattleshipEasy-v0"},
     ConcentrationEasy: {"id": "popgym-ConcentrationEasy-v0"},
     MineSweeperEasy: {"id": "popgym-MineSweeperEasy-v0"},
+    CarFlagEasy: {"id": "popgym-CarFlagEasy-v0"},
 }
 
 GAME_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
@@ -239,6 +247,7 @@ GAME_MEDIUM: Dict[gym.Env, Dict[str, Any]] = {
     BattleshipMedium: {"id": "popgym-BattleshipMedium-v0"},
     ConcentrationMedium: {"id": "popgym-ConcentrationMedium-v0"},
     MineSweeperMedium: {"id": "popgym-MineSweeperMedium-v0"},
+    CarFlagMedium: {"id": "popgym-CarFlagMedium-v0"},
 }
 
 GAME_HARD: Dict[gym.Env, Dict[str, Any]] = {
@@ -246,6 +255,7 @@ GAME_HARD: Dict[gym.Env, Dict[str, Any]] = {
     BattleshipHard: {"id": "popgym-BattleshipHard-v0"},
     ConcentrationHard: {"id": "popgym-ConcentrationHard-v0"},
     MineSweeperHard: {"id": "popgym-MineSweeperHard-v0"},
+    CarFlagHard: {"id": "popgym-CarFlagHard-v0"},
 }
 
 ALL_GAME = {**GAME_EASY, **GAME_MEDIUM, **GAME_HARD}
