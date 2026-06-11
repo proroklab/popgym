@@ -72,7 +72,7 @@ class CountRecall(POPGymEnv):
         )
         self.last_obs = np.array([0, 0])
 
-        self.action_space = gym.spaces.Discrete(self.max_card_count)
+        self.action_space = gym.spaces.Discrete(self.max_card_count + 1)
         self.max_episode_length = self.value_deck.num_cards - 1
         self.error_clamp = error_clamp
         self.reward_scale = 1 / self.max_episode_length

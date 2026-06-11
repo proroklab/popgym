@@ -23,8 +23,9 @@ class TestCountRecall(AbstractTest.POPGymTest):
             obs, rew, terminated, truncated, info = self.env.step(action)
             d, q = obs
             counts[d] += 1
-            action = np.array([counts[q]])
+            action = np.array(counts[q])
             self.assertEqual(rew, 1 / (self.env.value_deck.num_cards - 1))
+            self.assertTrue(self.env.action_space.contains(action))
             reward += rew
             t += 1
 
