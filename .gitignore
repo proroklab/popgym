@@ -6,3 +6,5 @@
 *.DS_Store
 *.idea
 build/
+dist/
+.venv/

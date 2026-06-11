@@ -1,3 +1,50 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "popgym"
+version = "1.0.7"
+description = "A collection of partially-observable procedural gym environments"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Steven Morad" }]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+keywords = [
+    "gym",
+    "gymnasium",
+    "pomdp",
+    "partially observable",
+    "reinforcement learning",
+    "rl",
+]
+dependencies = [
+    "numpy",
+    "gymnasium",
+]
+
+[project.optional-dependencies]
+navigation = ["mazelib"]
+
+[dependency-groups]
+dev = [
+    "flake8",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["popgym*"]
+
+[tool.uv]
+default-groups = ["dev"]
