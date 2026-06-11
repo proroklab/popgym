@@ -1,9 +1,12 @@
 # POPGym: Partially Observable Process Gym
-![tests](https://github.com/smorad/popgym/actions/workflows/python-app.yml/badge.svg)
-[![codecov](https://codecov.io/gh/smorad/popgym/branch/master/graph/badge.svg?token=I47IDFZXSV)](https://codecov.io/gh/smorad/popgym)
 
-> [!TIP] 
-> 🚨 **Try our new GPU-accelerated, Atari-style [POPGym Arcade](https://github.com/bolt-research/popgym_arcade)** 🚨
+[![tests](https://github.com/proroklab/popgym/actions/workflows/python-app.yml/badge.svg)](https://github.com/proroklab/popgym/actions/workflows/python-app.yml)
+[![PyPI version](https://img.shields.io/pypi/v/popgym)](https://pypi.org/project/popgym/)
+[![Python versions](https://img.shields.io/pypi/pyversions/popgym)](https://pypi.org/project/popgym/)
+[![License: MIT](https://img.shields.io/github/license/proroklab/popgym)](https://github.com/proroklab/popgym/blob/master/LICENSE.md)
+[![Documentation](https://readthedocs.org/projects/popgym/badge/?version=latest)](https://popgym.readthedocs.io/en/latest/)
+
+## 🚨 **Try our new GPU-accelerated, Atari-style [POPGym Arcade](https://github.com/bolt-research/popgym_arcade)** 🚨
 
 POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines). The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K). 
 
