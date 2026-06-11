@@ -61,7 +61,13 @@ Feel free to rerun this benchmark using [this colab notebook](https://colab.rese
 > [!WARNING] 
 > The baselines rely on difficult-to-maintain dependencies that are no longer supported. You will need to install an old version of python and downgrade some packages if you intend to use them.
 
-POPGym baselines implements recurrent and memory model in an efficient manner. POPGym baselines is implemented on top of [`rllib`](https://github.com/ray-project/ray) using their custom model API. We provide the following baselines:
+POPGym baselines implements recurrent and memory model in an efficient manner. POPGym baselines is implemented on top of [`rllib`](https://github.com/ray-project/ray) using their custom model API.
+
+```bash
+pip install "popgym[baselines]"
+```
+
+We provide the following baselines:
 
 1. [MLP](popgym/baselines/ray_models/ray_mlp.py)
 2. [Positional MLP](popgym/baselines/ray_models/ray_mlp.py)
