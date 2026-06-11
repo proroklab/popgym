@@ -25,7 +25,7 @@ pip install "popgym[baselines]"
 ```python
 import popgym
 from popgym.wrappers import PreviousAction, Antialias, Flatten, DiscreteAction
-env = popgym.envs.position_only_cartpole.PositionOnlyCartPoleEasy()
+env = popgym.envs.PositionOnlyCartPoleEasy()
 print(env.reset(seed=0))
 wrapped = DiscreteAction(Flatten(PreviousAction(env))) # Append prev action to obs, flatten obs/action spaces, then map the multidiscrete action space to a single discrete action for Q learning
 print(wrapped.reset(seed=0))
@@ -33,7 +33,7 @@ print(wrapped.reset(seed=0))
 
 ## POPGym Environments
 
-POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) interface. POPGym environments have minimal dependencies and fast enough to solve on a laptop CPU in less than a day. We provide the following environments:
+POPGym contains Partially Observable Markov Decision Process (POMDP) environments following the [Gymnasium](https://github.com/Farama-Foundation/Gymnasium) interface. POPGym environments have minimal dependencies and are fast enough to solve on a laptop CPU in less than a day. We provide the following environments:
 
 | Environment                                                                                             |         Tags      | Temporal Ordering | Colab FPS         | Macbook Air (2020) FPS    |
 |---------------------------------------------------------------------------------------------------------|-------------------|-------------------|-------------------|---------------------------|
