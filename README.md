@@ -74,15 +74,11 @@ POPGym baselines implements recurrent and memory model in an efficient manner. P
 12. [Diagonal State Space Models](popgym/baselines/ray_models/ray_s4d.py) [(Paper)](https://arxiv.org/abs/2206.11893)
 13. [Differentiable Neural Computers](popgym/baselines/ray_models/ray_diffnc.py) [(Paper)](http://clgiles.ist.psu.edu/IST597/materials/slides/papers-memory/2016-graves.pdf)
 
-# Leaderboard
-
-The leaderboard is available at [paperswithcode](https://paperswithcode.com/dataset/popgym).
-
 # Contributing
 Follow style and ensure tests pass
 
 ```bash
-# uv
+# Using uv, you can also use pip instead
 uv sync --extra navigation
 uv run pre-commit install
 uv run pytest tests/
