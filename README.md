@@ -2,7 +2,8 @@
 ![tests](https://github.com/smorad/popgym/actions/workflows/python-app.yml/badge.svg)
 [![codecov](https://codecov.io/gh/smorad/popgym/branch/master/graph/badge.svg?token=I47IDFZXSV)](https://codecov.io/gh/smorad/popgym)
 
-## 🚨 **Try our new GPU-accelerated, Atari-style [POPGym Arcade](https://github.com/bolt-research/popgym_arcade)** 🚨
+> [!TIP] 
+> 🚨 **Try our new GPU-accelerated, Atari-style [POPGym Arcade](https://github.com/bolt-research/popgym_arcade)** 🚨
 
 POPGym is designed to benchmark memory in deep reinforcement learning. It contains a set of [environments](#popgym-environments) and a collection of [memory model baselines](#popgym-baselines). The full paper is available on [OpenReview](https://openreview.net/forum?id=chDrutUTs0K). 
 
@@ -10,14 +11,11 @@ Please see the [documentation](https://popgym.readthedocs.io/en/latest/) for adv
 
 ## Quickstart Install
 
-```python
+```bash
 # Install base environments, only requires numpy and gymnasium
-pip install popgym 
+pip install popgym
 # Also include navigation environments, which require mazelib
-# NOTE: navigation envs require python <3.12 due to mazelib not supporting 3.12
-pip install "popgym[navigation]" 
-# Install memory baselines w/ RLlib 
-pip install "popgym[baselines]" 
+pip install "popgym[navigation]"
 ```
 
 ## Quickstart Usage
@@ -57,6 +55,9 @@ POPGym contains Partially Observable Markov Decision Process (POMDP) environment
 Feel free to rerun this benchmark using [this colab notebook](https://colab.research.google.com/drive/1_ew-Piq5d9R_NkmP1lSzFX1fbK-swuAN?usp=sharing).
 
 ## POPGym Baselines
+> [!WARNING] 
+> The baselines rely on difficult-to-maintain dependencies that are no longer supported. You will need to install an old version of python and downgrade some packages if you intend to use them.
+
 POPGym baselines implements recurrent and memory model in an efficient manner. POPGym baselines is implemented on top of [`rllib`](https://github.com/ray-project/ray) using their custom model API. We provide the following baselines:
 
 1. [MLP](popgym/baselines/ray_models/ray_mlp.py)
@@ -80,10 +81,11 @@ The leaderboard is available at [paperswithcode](https://paperswithcode.com/data
 # Contributing
 Follow style and ensure tests pass
 
-```python
-pip install pre-commit
-pre-commit install
-pytest popgym/tests
+```bash
+# uv
+uv sync --extra navigation
+uv run pre-commit install
+uv run pytest tests/
 ```
 
 # Citing
